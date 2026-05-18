@@ -106,7 +106,7 @@
   /* 角落浮水印,長按時可看到更新日期 */
   .version-corner {
     position: fixed;
-    bottom: 6px;
+    bottom: 80px;       /* 上移以避開固定底部導覽列 */
     right: 8px;
     font-family: 'Cormorant Garamond', serif;
     font-size: 10px;
@@ -179,24 +179,33 @@
     letter-spacing: 2px;
   }
 
-  /* ---------- TAB NAVIGATION ---------- */
+  /* ---------- TAB NAVIGATION (固定於頁面底部) ---------- */
   .tabs {
     display: grid;
-    grid-template-columns: repeat(5, 1fr);
-    background: rgba(34, 26, 18, 0.92);
-    position: sticky;
-    top: 0;
-    z-index: 30;
+    grid-template-columns: repeat(6, 1fr);
+    background: rgba(58, 44, 30, 0.94);
+    background-image:
+      linear-gradient(180deg, rgba(176,132,86,0.10), transparent 40%),
+      url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence baseFrequency='0.9' numOctaves='2'/><feColorMatrix values='0 0 0 0 0.9  0 0 0 0 0.78  0 0 0 0 0.55  0 0 0 0.04 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 50;
+    border-top: 1px solid var(--gold);
+    box-shadow: 0 -6px 24px rgba(0,0,0,0.18);
+    /* 安全區(iPhone 底部圓弧) */
+    padding-bottom: env(safe-area-inset-bottom, 0);
   }
   .tab {
     text-align: center;
-    padding: 14px 6px;
-    color: rgba(244, 234, 215, 0.65);
+    padding: 12px 4px;
+    color: rgba(252, 244, 228, 0.88);
     font-family: 'ZCOOL XiaoWei', serif;
     font-size: 13px;
-    letter-spacing: 2px;
+    letter-spacing: 1.5px;
     cursor: pointer;
-    border-right: 1px solid rgba(244, 234, 215, 0.08);
+    border-right: 1px solid rgba(244, 234, 215, 0.10);
     transition: all 0.25s;
     position: relative;
     user-select: none;
@@ -205,21 +214,26 @@
   .tab .num {
     display: block;
     font-family: 'Cormorant Garamond', serif;
-    font-size: 11px;
-    color: var(--gold);
+    font-size: 10px;
+    color: var(--gold-light);
     margin-bottom: 2px;
     letter-spacing: 1px;
-    opacity: 0.7;
+    opacity: 0.9;
   }
-  .tab:hover { color: var(--paper); background: rgba(176, 132, 86, 0.08); }
+  .tab:hover {
+    color: #fff;
+    background: rgba(176, 132, 86, 0.18);
+  }
   .tab.active {
-    color: var(--paper);
-    background: linear-gradient(180deg, rgba(138, 42, 31, 0.4), rgba(138, 42, 31, 0.15));
+    color: #fff;
+    background: linear-gradient(180deg, rgba(138, 42, 31, 0.55), rgba(138, 42, 31, 0.25));
   }
-  .tab.active::after {
+  .tab.active .num { color: var(--gold); opacity: 1; }
+  .tab.active::before {
+    /* 改為頂部金線(因為列在底部) */
     content: '';
     position: absolute;
-    bottom: 0; left: 20%; right: 20%;
+    top: 0; left: 18%; right: 18%;
     height: 2px;
     background: var(--gold);
   }
@@ -227,7 +241,7 @@
   /* ---------- PANELS ---------- */
   .panel {
     display: none;
-    padding: 22px 18px 80px;
+    padding: 22px 18px 120px;  /* 底部多留空間給固定 tab */
     animation: fadeIn 0.35s ease;
   }
   .panel.active { display: block; }
@@ -283,6 +297,122 @@
   .btn.outline:hover { background: var(--ink); color: var(--paper); }
   .btn.gold { background: var(--gold); }
   .btn.gold:hover { background: var(--gold-light); color: var(--ink); }
+
+  /* ---------- RESET DEFAULT SECTION ---------- */
+  .reset-default-section {
+    margin-top: 36px;
+    padding: 18px 20px;
+    background: rgba(255, 240, 230, 0.6);
+    border: 1px dashed var(--vermillion);
+    border-radius: 2px;
+    text-align: center;
+  }
+  .reset-default-title {
+    font-family: 'ZCOOL XiaoWei', serif;
+    font-size: 16px;
+    color: var(--vermillion);
+    letter-spacing: 2px;
+    margin-bottom: 8px;
+  }
+  .reset-default-desc {
+    font-size: 12px;
+    color: var(--ink-soft);
+    line-height: 1.8;
+    margin-bottom: 14px;
+  }
+  #reset-calendar-btn {
+    min-width: 180px;
+    transition: all 0.3s;
+  }
+  #reset-calendar-btn.confirming {
+    background: var(--vermillion) !important;
+    color: var(--paper) !important;
+    transform: scale(1.05);
+  }
+  .reset-progress {
+    margin-top: 10px;
+    font-family: 'ZCOOL XiaoWei', serif;
+    font-size: 13px;
+    color: var(--vermillion);
+    letter-spacing: 3px;
+    min-height: 22px;
+  }
+  .reset-progress .dot {
+    display: inline-block;
+    width: 12px; height: 12px;
+    border-radius: 50%;
+    margin: 0 4px;
+    background: rgba(138, 42, 31, 0.15);
+    border: 1px solid var(--vermillion);
+    transition: all 0.3s;
+  }
+  .reset-progress .dot.on {
+    background: var(--vermillion);
+    transform: scale(1.2);
+  }
+
+  /* ---------- SETTINGS PANEL ---------- */
+  .settings-section {
+    background: rgba(255, 252, 245, 0.55);
+    border: 1px solid var(--line);
+    border-left: 3px solid var(--gold);
+    padding: 18px 20px;
+    margin-bottom: 14px;
+    border-radius: 2px;
+  }
+  .settings-section.danger {
+    border-left-color: var(--vermillion);
+    background: rgba(255, 240, 235, 0.55);
+  }
+  .settings-title {
+    font-family: 'ZCOOL XiaoWei', serif;
+    font-size: 17px;
+    color: var(--ink);
+    letter-spacing: 2px;
+    margin-bottom: 6px;
+  }
+  .settings-section.danger .settings-title { color: var(--vermillion); }
+  .settings-desc {
+    font-size: 12px;
+    color: var(--ink-soft);
+    line-height: 1.7;
+    margin-bottom: 12px;
+  }
+  .settings-actions {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  .danger-btn {
+    color: var(--vermillion) !important;
+    border-color: var(--vermillion) !important;
+  }
+  .danger-btn:hover {
+    background: var(--vermillion) !important;
+    color: var(--paper) !important;
+  }
+  .info-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 6px 16px;
+  }
+  .info-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 8px 0;
+    border-bottom: 1px dashed var(--line);
+    font-size: 13px;
+  }
+  .info-row span {
+    color: var(--ink-soft);
+    font-family: 'ZCOOL XiaoWei', serif;
+    letter-spacing: 2px;
+  }
+  .info-row strong {
+    color: var(--ink);
+    font-family: 'Cormorant Garamond', serif;
+    letter-spacing: 1px;
+  }
 
   /* ---------- MEMBER CARDS ---------- */
   .member-list {
@@ -670,27 +800,32 @@
 
   /* 桌機:加入最大寬度,避免在大螢幕上元素過寬而失去比例 */
   @media (min-width: 1100px) {
-    .header, .meta-bar, .tabs, .panel {
+    .header, .meta-bar, .panel {
       max-width: 1280px;
       margin-left: auto;
       margin-right: auto;
     }
-    .panel { padding: 32px 40px 100px; }
+    .tabs {
+      /* 底欄保持滿版,但內容置中 */
+      grid-template-columns: repeat(6, minmax(0, 213px));
+      justify-content: center;
+    }
+    .panel { padding: 32px 40px 140px; }
     .meta-bar { padding: 16px 40px; grid-template-columns: 1fr 1fr 1.2fr; }
     .member-list { grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 18px; }
     .practice-grid { grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); }
     .title { font-size: 48px; letter-spacing: 6px; }
     .subtitle { font-size: 14px; letter-spacing: 8px; }
-    .tab { font-size: 15px; padding: 16px 8px; letter-spacing: 4px; }
+    .tab { font-size: 15px; padding: 14px 8px; letter-spacing: 3px; }
     .tab .num { font-size: 12px; }
   }
 
   /* 平板:介於手機與桌機之間的中型版面 */
   @media (min-width: 641px) and (max-width: 1099px) {
-    .panel { padding: 24px 28px 80px; }
+    .panel { padding: 24px 28px 120px; }
     .meta-bar { padding: 16px 28px; }
     .member-list { grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); }
-    .tab { font-size: 14px; padding: 15px 8px; letter-spacing: 3px; }
+    .tab { font-size: 13px; padding: 13px 6px; letter-spacing: 2px; }
     .header::before, .header::after { font-size: 26px; }
   }
 
@@ -714,12 +849,12 @@
     .datetime-cell { grid-column: 1 / -1; text-align: center; }
     .clock { font-size: 20px; }
     .tab {
-      font-size: 11px;
-      padding: 12px 4px;
-      letter-spacing: 1px;
+      font-size: 10px;
+      padding: 10px 2px;
+      letter-spacing: 0.5px;
     }
     .tab .num { display: none; }
-    .panel { padding: 18px 12px 80px; }
+    .panel { padding: 18px 12px 100px; }
     .panel-head { flex-direction: column; align-items: flex-start; gap: 10px; }
     .panel-title { font-size: 20px; letter-spacing: 2px; }
     .member-list { grid-template-columns: 1fr; gap: 10px; }
@@ -727,6 +862,7 @@
     .actions .btn { font-size: 12px; padding: 6px 10px; letter-spacing: 1px; }
     .item-row { grid-template-columns: auto 1fr; }
     .item-row .item-action { grid-column: 1 / -1; text-align: right; padding-top: 4px; }
+    .version-corner { bottom: 70px; font-size: 9px; }
   }
 
   /* 極窄螢幕:再縮一級 */
@@ -734,7 +870,7 @@
     .title { font-size: 20px; letter-spacing: 0.5px; }
     .subtitle { font-size: 9px; letter-spacing: 2px; }
     .header::before, .header::after { display: none; }
-    .tab { font-size: 10px; padding: 11px 2px; }
+    .tab { font-size: 9px; padding: 10px 1px; letter-spacing: 0; }
   }
 </style>
 </head>
@@ -745,7 +881,7 @@
   <div class="title-wrap">
     <div class="title">安東道場 宏化分壇</div>
     <div class="subtitle">道 務 自 我 紀 錄 管 理</div>
-    <div class="version-tag" id="version-tag">v1.1.0</div>
+    <div class="version-tag" id="version-tag">v1.3.0</div>
   </div>
 </header>
 
@@ -774,13 +910,14 @@
   </div>
 </div>
 
-<!-- ============ TABS ============ -->
+<!-- ============ TABS (固定底部) ============ -->
 <nav class="tabs">
-  <div class="tab active" data-tab="members"><span class="num">壹</span>成全道親名單</div>
-  <div class="tab" data-tab="calendar"><span class="num">貳</span>道場行事曆</div>
-  <div class="tab" data-tab="library"><span class="num">參</span>學習資料庫</div>
-  <div class="tab" data-tab="practice"><span class="num">肆</span>自我功課實踐</div>
-  <div class="tab" data-tab="ai"><span class="num">伍</span>線上 AI 問答</div>
+  <div class="tab active" data-tab="members"><span class="num">壹</span>成全道親</div>
+  <div class="tab" data-tab="calendar"><span class="num">貳</span>行事曆</div>
+  <div class="tab" data-tab="library"><span class="num">參</span>學習資料</div>
+  <div class="tab" data-tab="practice"><span class="num">肆</span>功課實踐</div>
+  <div class="tab" data-tab="ai"><span class="num">伍</span>AI 問答</div>
+  <div class="tab" data-tab="settings"><span class="num">陸</span>其他設定</div>
 </nav>
 
 <!-- ============ PANEL: MEMBERS ============ -->
@@ -792,11 +929,6 @@
     </div>
     <div class="actions">
       <button class="btn" onclick="openMemberModal()">＋ 新增道親</button>
-      <button class="btn outline" onclick="exportExcel('members')">匯出 Excel</button>
-      <label class="btn outline" style="cursor:pointer;">
-        匯入 Excel
-        <input type="file" id="import-file" accept=".xlsx,.xls,.csv" style="display:none;" onchange="importExcel(event)">
-      </label>
     </div>
   </div>
 
@@ -812,17 +944,28 @@
   <div class="panel-head">
     <div>
       <div class="panel-title">道場行事曆</div>
-      <div class="panel-sub">法會 · 共修 · 課程 · 出班時程</div>
+      <div class="panel-sub">法會 · 共修 · 課程 · 出班時程 · 內建 115 年度預設行事</div>
     </div>
     <div class="actions">
       <button class="btn" onclick="openCalendarModal()">＋ 新增行事</button>
-      <button class="btn outline" onclick="exportExcel('calendar')">匯出 Excel</button>
     </div>
   </div>
   <div class="item-list" id="calendar-list"></div>
   <div class="empty" id="calendar-empty" style="display:none;">
     <div class="lotus">📜</div>
     <p>尚無行事 · 歡迎建立首條紀錄</p>
+  </div>
+
+  <!-- 回到預設內容 -->
+  <div class="reset-default-section">
+    <div class="reset-default-title">🔄 回到預設行事曆內容</div>
+    <div class="reset-default-desc">
+      將清除目前所有自訂行事曆紀錄,還原為 <strong>115 年 (2026) 安東道場宏宗總壇</strong> 預設行事曆。<br>
+      此動作無法復原,建議先至「其他設定 → 一鍵備份」匯出後再執行。<br>
+      <span style="color:var(--vermillion);">為防止誤觸,需連按 <strong>三次</strong> 確定按鈕。</span>
+    </div>
+    <button class="btn danger-btn" id="reset-calendar-btn" onclick="resetCalendarToDefault()">回到預設內容</button>
+    <div class="reset-progress" id="reset-progress"></div>
   </div>
 </section>
 
@@ -835,7 +978,6 @@
     </div>
     <div class="actions">
       <button class="btn" onclick="openLibraryModal()">＋ 新增資料</button>
-      <button class="btn outline" onclick="exportExcel('library')">匯出 Excel</button>
     </div>
   </div>
   <div class="item-list" id="library-list"></div>
@@ -854,7 +996,6 @@
     </div>
     <div class="actions">
       <button class="btn" onclick="openPracticeModal()">＋ 新增功課</button>
-      <button class="btn outline" onclick="exportExcel('practice')">匯出 Excel</button>
     </div>
   </div>
   <div class="practice-grid" id="practice-grid"></div>
@@ -879,6 +1020,62 @@
     <div class="chat-input">
       <input type="text" id="chat-input" placeholder="請輸入您的問題…" onkeydown="if(event.key==='Enter') sendChat()">
       <button class="btn gold" onclick="sendChat()">請示</button>
+    </div>
+  </div>
+</section>
+
+<!-- ============ PANEL: SETTINGS ============ -->
+<section class="panel" id="panel-settings">
+  <div class="panel-head">
+    <div>
+      <div class="panel-title">其他設定</div>
+      <div class="panel-sub">資料備份 · 還原 · 版本資訊</div>
+    </div>
+  </div>
+
+  <div class="settings-section">
+    <div class="settings-title">📤 資料備份匯出</div>
+    <div class="settings-desc">將所有資料(道親、行事曆、學習資料、功課紀錄、個人設定)一次匯出為單一 Excel 檔,建議每週備份一次。</div>
+    <div class="settings-actions">
+      <button class="btn gold" onclick="exportAllExcel()">📦 一鍵備份所有資料</button>
+      <button class="btn outline" onclick="exportExcel('members')">道親名單</button>
+      <button class="btn outline" onclick="exportExcel('calendar')">行事曆</button>
+      <button class="btn outline" onclick="exportExcel('library')">學習資料</button>
+      <button class="btn outline" onclick="exportExcel('practice')">功課紀錄</button>
+    </div>
+  </div>
+
+  <div class="settings-section">
+    <div class="settings-title">📥 資料備份匯入</div>
+    <div class="settings-desc">匯入先前備份的 Excel 檔,系統會依資料表名稱自動還原至各分類。同 ID 紀錄將會覆蓋更新。</div>
+    <div class="settings-actions">
+      <label class="btn gold" style="cursor:pointer;">
+        📂 匯入備份檔(全部)
+        <input type="file" accept=".xlsx,.xls" style="display:none;" onchange="importAllExcel(event)">
+      </label>
+      <label class="btn outline" style="cursor:pointer;">
+        僅匯入道親
+        <input type="file" accept=".xlsx,.xls,.csv" style="display:none;" onchange="importExcel(event)">
+      </label>
+    </div>
+  </div>
+
+  <div class="settings-section danger">
+    <div class="settings-title">⚠️ 危險區域</div>
+    <div class="settings-desc">清除所有本機資料 · 此動作無法復原,請務必先完成備份匯出。</div>
+    <div class="settings-actions">
+      <button class="btn outline danger-btn" onclick="clearAllData()">清除所有資料</button>
+    </div>
+  </div>
+
+  <div class="settings-section">
+    <div class="settings-title">ℹ️ 系統資訊</div>
+    <div class="info-grid">
+      <div class="info-row"><span>應用版本</span><strong id="info-version">v1.2.0</strong></div>
+      <div class="info-row"><span>更新日期</span><strong id="info-build">2026-05-18</strong></div>
+      <div class="info-row"><span>版本代號</span><strong id="info-codename">底欄聚焦</strong></div>
+      <div class="info-row"><span>資料儲存</span><strong>本機 localStorage</strong></div>
+      <div class="info-row"><span>資料筆數</span><strong id="info-count">計算中…</strong></div>
     </div>
   </div>
 </section>
@@ -956,16 +1153,94 @@
 </div>
 
 <div class="toast" id="toast"></div>
-<div class="version-corner" id="version-corner">v1.1.0 · 2026-05-18</div>
+<div class="version-corner" id="version-corner">v1.3.0 · 2026-05-18</div>
 
 <script>
 /* =========================================================
    APP VERSION  ─ 每次改版請更新此處 + 檔名
    ========================================================= */
-const APP_VERSION   = 'v1.1.0';
+const APP_VERSION   = 'v1.3.0';
 const APP_BUILD     = '2026-05-18';
-const APP_CODENAME  = '宣紙初版';
+const APP_CODENAME  = '行事曆預設';
 document.title = `安東道場 宏化分壇 · ${APP_VERSION}`;
+
+/* =========================================================
+   DEFAULT CALENDAR EVENTS  (115年安東道場宏宗總壇行事曆 - 內建預設)
+   ========================================================= */
+const DEFAULT_CALENDAR_EVENTS = [{"date":"2026-01-02","title":"敦化班(2) / (總壇國語)","content":"農曆:(114.11.14) / (114.11.16) · 星期:五~日 · 天數:三天 三夜 · 截止:2026-01-04 · 主辦:總壇道務組 / 陳正修經理 · 協辦:一貫人才專修苑 · 地點:宏宗 · 勤務:ˇ"},{"date":"2026-01-17","title":"中華宏宗傳統文化推廣協會會員大會","content":"農曆:(114.11.29) · 星期:六 · 天數:下午 · 主辦:傳統文化協會 / 蔡月秀經理 · 協辦:宏教分壇 · 地點:宏宗 · 烹飪:ˇ"},{"date":"2026-01-24","title":"學界敦化班","content":"農曆:(114.12.6) / (114.12.7) · 星期:六~日 · 天數:二天一夜 · 截止:2026-01-25 · 主辦:宏化教育組 · 地點:華林 · 勤務:總務：化善 · 烹飪:烹飪:化定 / 熱血烹飪團"},{"date":"2026-01-31","title":"點傳師會議(4)","content":"農曆:(114.12.13) · 星期:六 · 天數:一天 · 主辦:總壇秘書室 · 協辦:宏世分壇 · 地點:宏宗 · 勤務:ˇ"},{"date":"2026-02-01","title":"2025年年末懺悔班","content":"農曆:(114.12.14) · 星期:日 · 天數:一天 · 主辦:宏化道務組 · 地點:華林 · 勤務:總務：化力 · 烹飪:烹飪:化定"},{"date":"2026-02-17","title":"新春團拜","content":"農曆:正月初一 · 星期:二 · 天數:上午 · 協辦:除夕晚上8點到初一晚上8點(宏教分壇) · 地點:彌勒山 · 勤務:林經理 / 楊文堯 / 黃嘉衛 / 黃建彰 / 王國超 / 黃國財\n主辦:總壇總務組 / 協辦/時段:初一晚上8點到初二早上8點(宏化分壇)\n主辦:李火梨經理 / 協辦/時段:初二早上8點到初二晚上8點(宏世分壇)\n協辦/時段:初二晚上8點到初三早上8點(宏天分壇)\n協辦/時段:初三早上8點到初三晚上6點(宏尊分壇)"},{"date":"2026-02-19","title":"點燈法會","content":"農曆:正月初三 / 正月初四 · 星期:四-五 · 天數:二天 · 截止:2026-02-20 · 主辦:宏化總務組 · 協辦:初三:真善美志慧 / 初四:孝仁勇定力 · 地點:華林 · 勤務:初三:總務化善 / 初四:總務化孝 · 烹飪:2/1前報出勤務名單"},{"date":"2026-02-21","title":"點傳師禪修班","content":"農曆:正月初五 / 正月十一 · 星期:六~五 · 天數:七天 七夜 · 截止:2026-02-27 · 主辦:禪修協會 / 黃火玉經理 · 協辦:總壇總務安排 · 地點:宏宗 · 勤務:ˇ"},{"date":"2026-02-28","title":"家庭指導師進階班","content":"農曆:正月十二 / 正月十三 · 星期:六~日 · 天數:兩天 一夜 · 截止:2026-03-01 · 主辦:傳統文化協會 / 蔡月秀經理 · 協辦:宏尊分壇 · 地點:彌勒山 · 勤務:ˇ"},{"date":"2026-03-04","title":"生活禪(週三)","content":"禪修協會 · 地點:彌勒山致中樓 · 非假日"},{"date":"2026-03-07","title":"生活禪(週日)","content":"禪修協會 · 地點:彌勒山致中樓 · 假日"},{"date":"2026-03-08","title":"全球師資幹部培訓班","content":"農曆:正月二十 · 星期:日 · 天數:一天 · 主辦:總壇教育組 / 陳瓏仁經理 · 協辦:宏教分壇 · 地點:彌勒山 · 勤務:ˇ"},{"date":"2026-03-14","title":"各位老前人掃墓 / 安東彌勒山追思","content":"農曆:正月二十六 · 星期:六 · 天數:上午 下午 · 主辦:總壇總務組 / 李火梨經理 · 協辦:宏化分壇 / 宏教分壇 · 地點:觀音山 / 彌勒山 · 勤務:化仁：總務 / 化孝：主持 · 烹飪:烹飪:化美"},{"date":"2026-03-14","title":"外文道義研習營","content":"農曆:正月二十六 · 星期:六 · 天數:一天 · 主辦:總壇教育組 / 陳瓏仁經理 · 協辦:宏天分壇 · 地點:彌勒山 · 勤務:ˇ"},{"date":"2026-03-15","title":"關懷小組培訓","content":"農曆:正月27日 · 星期:日 · 天數:一天 · 主辦:宏化道務組 · 地點:華林 · 勤務:化美：總務、烹飪"},{"date":"2026-03-21","title":"壇主辦事共修班","content":"農曆:二月初三 / 二月初四 · 星期:六~日 · 天數:兩天 兩夜 · 截止:2026-03-22 · 主辦:總壇道務組 / 陳正修經理 · 協辦:宏化分壇 · 地點:彌勒山 · 勤務:化真：總務、烹飪"},{"date":"2026-04-01","title":"生活禪(週三)","content":"禪修協會 · 地點:彌勒山致中樓 · 非假日"},{"date":"2026-04-04","title":"生活禪(週日)","content":"禪修協會 · 地點:彌勒山致中樓 · 假日"},{"date":"2026-04-11","title":"講員會稿","content":"農曆:(115.2.24) · 星期:六 · 天數:一天 · 主辦:宏化道務組 · 地點:華林 · 烹飪:化仁:烹飪"},{"date":"2026-04-12","title":"關懷小組培訓","content":"農曆:(115.2.25) · 星期:日 · 天數:一天 · 主辦:宏化道務組 · 地點:華林 · 烹飪:化定:烹飪"},{"date":"2026-04-17","title":"樂齡禪修班","content":"農曆:三月初一 / 三月初三 · 星期:五~日 · 天數:三天 兩夜 · 截止:2026-04-19 · 主辦:禪修協會 / 黃火玉經理 · 協辦:宏世分壇 · 地點:宏世 / 佛院 · 勤務:ˇ"},{"date":"2026-04-18","title":"師資研習營","content":"農曆:三月初二 / 三月初三 · 星期:六~日 · 天數:兩天 一夜 · 截止:2026-04-19 · 主辦:總壇教育組 / 陳瓏仁經理 · 協辦:宏尊分壇 · 地點:彌勒山 · 勤務:ˇ"},{"date":"2026-04-25","title":"點傳師會班(1) / (含點傳師會議)","content":"農曆:(115.3.09) / (115.3.15) · 星期:六~五 · 天數:七天 七夜 · 截止:2026-05-01 · 主辦:總壇秘書室 · 協辦:25~27(宏化分壇) / 28~30(宏天分壇) · 地點:宏宗 · 勤務:化善：總務、烹飪"},{"date":"2026-05-01","title":"各位老前人暨厚德大帝成道追思紀念日","content":"農曆:(115.3.15) · 星期:五 · 天數:上午 · 主辦:總壇總務組 / 李火梨經理 · 協辦:宏教分壇 · 地點:彌勒山 · 勤務:ˇ"},{"date":"2026-05-01","title":"禪修協會第五屆第七次理監事會暨第四次會員代表大會","content":"農曆:(115.3.15) · 星期:五 · 天數:下午 · 主辦:禪修協會 / 黃火玉經理 · 協辦:宏教分壇 · 地點:彌勒山 · 勤務:ˇ"},{"date":"2026-05-02","title":"生活禪(週日)","content":"禪修協會 · 地點:彌勒山致中樓 · 假日"},{"date":"2026-05-06","title":"初階敦化班-菲道親","content":"農曆:(115.3.20) / (115.3.27) · 星期:三-三 · 天數:七天 · 截止:2026-05-13 · 主辦:化定 · 地點:華林 / 彌勒山 · 勤務:化定 · 烹飪:視聽支援"},{"date":"2026-05-06","title":"生活禪(週三)","content":"禪修協會 · 地點:彌勒山致中樓 · 非假日"},{"date":"2026-05-16","title":"宏宗聖堂道學院 / 會員大會","content":"農曆:(115.3.30) · 星期:六 · 天數:上午 · 主辦:總務/會計組 / 謝德勝經理 · 協辦:宏教分壇 · 地點:宏宗 · 勤務:ˇ"},{"date":"2026-05-17","title":"分壇師資研習","content":"農曆:(115.4.1) · 星期:日 · 天數:一天 · 主辦:宏化教育組 · 地點:華林 · 勤務:x · 烹飪:化志:烹飪"},{"date":"2026-05-22","title":"進階禪修班","content":"農曆:(115.4.6) / (115.4.8) · 星期:五~日 · 天數:三天 三夜 · 截止:2026-05-24 · 主辦:禪修協會 / 黃火玉經理 · 協辦:禪修協會 · 地點:宏宗 · 勤務:ˇ"},{"date":"2026-05-30","title":"人才團培訓","content":"農曆:(115.4.14) · 星期:六 · 天數:一天 · 主辦:宏化總務組 · 地點:華林 · 勤務:化善：總務 / 化孝：烹飪 · 烹飪:政忠主持"},{"date":"2026-05-31","title":"講員人才培訓 / 開荒人才培訓","content":"農曆:(115.4.15) · 星期:日 · 天數:上午 下午 · 主辦:宏化道務組 · 地點:華林 · 勤務:化真：總務、烹飪"},{"date":"2026-06-03","title":"生活禪(週三)","content":"禪修協會 · 地點:彌勒山致中樓 · 非假日"},{"date":"2026-06-06","title":"生活禪(週日)","content":"禪修協會 · 地點:彌勒山致中樓 · 假日"},{"date":"2026-06-07","title":"專修苑修道實驗班","content":"農曆:(115.4.22) / (115.4.28) · 星期:日~六 · 天數:七天 七夜 · 截止:2026-06-13 · 主辦:總壇教育組陳瓏仁經理 · 協辦:6~9(宏世分壇) / 10~13(宏教分壇) · 地點:宏宗 · 勤務:ˇ"},{"date":"2026-06-20","title":"分壇師資研習","content":"農曆:(115.5.6) · 星期:六 · 天數:一天 · 主辦:宏化教育組 · 地點:華林 · 勤務:x · 烹飪:化美:烹飪"},{"date":"2026-06-21","title":"拾珠之宴","content":"農曆:(115.5.7) · 星期:日 · 天數:一天 · 主辦:總壇教育組 / 陳瓏仁經理 · 協辦:宏教分壇 · 地點:宏宗 · 勤務:ˇ"},{"date":"2026-06-27","title":"帶班人才培訓班","content":"農曆:(115.5.13) / (115.5.14) · 星期:六~日 · 天數:兩天 一夜 · 截止:2026-06-28 · 主辦:總壇道務組 / 陳正修經理 · 協辦:宏化分壇 · 地點:宏宗 · 勤務:化善：總務、烹飪"},{"date":"2026-07-01","title":"生活禪(週三)","content":"禪修協會 · 地點:彌勒山致中樓 · 非假日"},{"date":"2026-07-03","title":"暑期三營","content":"農曆:(115.5.19) / (115.5.21) · 星期:五~日 · 天數:三天 三夜 · 截止:2026-07-05 · 主辦:總壇教育組 / 陳瓏仁經理 · 協辦:勤務：宏天分壇 / 烹飪：宏教分壇 · 地點:彌勒山 · 勤務:ˇ"},{"date":"2026-07-04","title":"生活禪(週日)","content":"禪修協會 · 地點:彌勒山致中樓 · 假日"},{"date":"2026-07-11","title":"點傳師會議(2)","content":"農曆:(115.5.27) · 星期:六 · 天數:一天 · 主辦:總壇秘書室 · 協辦:宏教分壇 · 地點:宏宗 · 勤務:ˇ"},{"date":"2026-07-12","title":"專修苑第十七屆畢業典禮","content":"農曆:(115.5.28) · 星期:日 · 天數:一天 · 主辦:總壇教育組 / 陳瓏仁經理 · 協辦:宏世分壇 · 地點:彌勒山 · 勤務:ˇ"},{"date":"2026-07-12","title":"分壇親子夏令營","content":"農曆:(115.5.28) / (115.6.05) · 星期:日~日 · 天數:七天 六夜 · 截止:2026-07-18 · 主辦:宏化教育組 · 地點:華林 · 勤務:7/12~13化真、7/14~15化善 / 7/16~17化美、7/18化志"},{"date":"2026-07-19","title":"關懷小組培訓","content":"農曆:(115.6.06) · 星期:日 · 天數:一天 · 主辦:宏化道務組 · 地點:華林 · 勤務:化志:總務 · 烹飪:化仁:烹飪"},{"date":"2026-07-24","title":"敦化班(1)","content":"農曆:(115.6.11) / (115.6.13) · 星期:五~日 · 天數:三天 三夜 · 截止:2026-07-26 · 主辦:總壇道務組 / 陳正修經理 · 協辦:宏尊分壇 · 地點:彌勒山 · 勤務:ˇ"},{"date":"2026-07-26","title":"急救教育CPR+AED訓練","content":"農曆:(115.6.13) · 星期:日 · 天數:一天 · 主辦:宏化總務組 · 地點:華林 · 勤務:化善：總務、烹飪"},{"date":"2026-07-29","title":"親子禪修班","content":"農曆:(115.6.16) / (115.6.20) · 星期:三~日 · 天數:五天 四夜 · 截止:2026-08-02 · 主辦:禪修協會 / 黃火玉經理 · 協辦:禪修協會 · 地點:宏世 / 佛院 · 勤務:ˇ"},{"date":"2026-08-01","title":"生活禪(週日)","content":"禪修協會 · 地點:彌勒山致中樓 · 假日"},{"date":"2026-08-05","title":"生活禪(週三)","content":"禪修協會 · 地點:彌勒山致中樓 · 非假日"},{"date":"2026-08-08","title":"暑修營","content":"農曆:(115.6.26) / (115.7.04) · 星期:六-日 · 天數:九天 八夜 · 截止:2026-08-16 · 主辦:宏化教育組 · 地點:華林 · 勤務:8/8~9化孝、8/10~11化仁、8/12~13化定、8/14~15化力、8/16化志"},{"date":"2026-08-15","title":"親子幸福家庭營","content":"農曆:(115.7.03) / (115.7.04) · 星期:六~日 · 天數:兩天 二夜 · 截止:2026-08-16 · 主辦:傳統文化協會 / 蔡月秀經理 · 協辦:宏教分壇 / (只勤務交通視聽) · 勤務:ˇ"},{"date":"2026-08-23","title":"彌勒山中元普渡","content":"農曆:(115.7.11) · 星期:日 · 天數:一天 · 主辦:懷恩堂服務處 · 協辦:宏天分壇 · 地點:勒彌山 · 勤務:ˇ"},{"date":"2026-09-02","title":"生活禪(週三)","content":"禪修協會 · 地點:彌勒山致中樓 · 非假日"},{"date":"2026-09-05","title":"生活禪(週日)","content":"禪修協會 · 地點:彌勒山致中樓 · 假日"},{"date":"2026-09-06","title":"宏教/宏化/宏世分壇 / 青年小會師","content":"農曆:(115.7.25) · 星期:日 · 天數:一天 · 主辦:宏化教育組 · 地點:待確定"},{"date":"2026-09-10","title":"華林中元普渡","content":"農曆:(115.7.29) · 星期:四 · 天數:下午 · 主辦:宏化總務組 · 地點:華林 · 勤務:化孝：總務、烹飪"},{"date":"2026-09-12","title":"精勤金仙成道追思","content":"農曆:(115.8.02) · 星期:六 · 天數:上午 · 主辦:宏化總務組 · 地點:華林 · 勤務:化定：總務、烹飪"},{"date":"2026-09-12","title":"分壇壇辦共修班","content":"農曆:(115.8.02) / (115.8.03) · 星期:六-日 · 天數:二天一夜 · 截止:2026-09-13 · 主辦:宏化道務組 · 地點:華林"},{"date":"2026-09-19","title":"初中級講員評鑑","content":"農曆:(115.8.09) · 星期:六 · 天數:一天 · 主辦:總壇道務組 / 陳正修經理 · 協辦:宏世分壇 · 地點:宏世 / 佛院 · 勤務:ˇ"},{"date":"2026-10-03","title":"初階敦化班-化孝、化仁","content":"農曆:(115.8.23) / (115.8.24) · 星期:六-日 · 天數:二天一夜 · 截止:2026-10-04 · 主辦:化孝、化仁"},{"date":"2026-10-03","title":"生活禪(週日)","content":"禪修協會 · 地點:彌勒山致中樓 · 假日"},{"date":"2026-10-07","title":"生活禪(週三)","content":"禪修協會 · 地點:彌勒山致中樓 · 非假日"},{"date":"2026-10-09","title":"青年禪修班 / (18~25歲)","content":"農曆:(115.8.29) / (115.9.02) · 星期:五~日 · 天數:三天 三夜 · 截止:2026-10-11 · 主辦:禪修協會 / 黃火玉經理 · 協辦:禪修協會 · 地點:宏宗 · 勤務:ˇ"},{"date":"2026-10-10","title":"初階敦化班-化善","content":"農曆:(115.9.01) / (115.9.02) · 星期:六-日 · 天數:二天一夜 · 截止:2026-10-11 · 主辦:化善 · 地點:碩德"},{"date":"2026-10-17","title":"點傳師會議(3) / (兼審核2027年行事曆)","content":"農曆:(115.9.08) · 星期:六 · 天數:一天 · 主辦:總壇秘書室 · 協辦:宏化分壇 · 地點:宏宗 · 勤務:化孝：總務、烹飪"},{"date":"2026-10-24","title":"初階敦化班-化定、化美","content":"農曆:(115.9.15) / (115.9.16) · 星期:六-日 · 天數:二天一夜 · 截止:2026-10-25 · 主辦:化定、化美 · 地點:華林"},{"date":"2026-10-31","title":"初階敦化班-化真","content":"農曆:(115.9.22) / (115.9.23) · 星期:六-日 · 天數:二天一夜 · 截止:2026-11-01 · 主辦:化真 · 地點:宏德"},{"date":"2026-11-04","title":"生活禪(週三)","content":"禪修協會 · 地點:彌勒山致中樓 · 非假日"},{"date":"2026-11-07","title":"初階敦化班-化志","content":"農曆:(115.9.29) / (115.9.30) · 星期:六-日 · 天數:二天 · 截止:2026-11-08 · 主辦:化志 · 地點:高雄"},{"date":"2026-11-07","title":"生活禪(週日)","content":"禪修協會 · 地點:彌勒山致中樓 · 假日"},{"date":"2026-11-14","title":"敬老活動","content":"農曆:(115.10.06) · 星期:六 · 天數:上午 · 主辦:宏化總務組 · 地點:華林 · 勤務:化真：總務、烹飪"},{"date":"2026-11-15","title":"分壇師資研習","content":"農曆:(115.10.07) · 星期:日 · 天數:一天 · 主辦:宏化教育組 · 地點:其它 · 勤務:x · 烹飪:x"},{"date":"2026-11-16","title":"高階禪修班","content":"農曆:(115.10.08) / (115.10.14) · 星期:一~日 · 天數:七天 七夜 · 截止:2026-11-22 · 主辦:禪修協會 / 黃火玉經理 · 協辦:禪修協會 · 地點:宏宗 · 勤務:ˇ"},{"date":"2026-11-28","title":"初階敦化班-化志","content":"農曆:(115.10.20) / (115.10.21) · 星期:六~日 · 天數:二天 · 截止:2026-11-29 · 主辦:化志 · 地點:信東"},{"date":"2026-12-02","title":"生活禪(週三)","content":"禪修協會 · 地點:彌勒山致中樓 · 非假日"},{"date":"2026-12-05","title":"堂慶(青年運動會,獎學金頒獎)","content":"農曆:(115.10.27) / (115.10.28) · 星期:六~日 · 天數:兩天 一夜 · 截止:2026-12-06 · 主辦:總壇教育組 / 陳瓏仁經理 · 協辦:宏尊分壇+ / 宏尊分壇 · 地點:彌勒山 · 勤務:ˇ"},{"date":"2026-12-05","title":"生活禪(週日)","content":"禪修協會 · 地點:彌勒山致中樓 · 假日"},{"date":"2026-12-06","title":"禪修協會第五屆第八次理監事會議","content":"農曆:(115.10.28) · 星期:日 · 天數:下午 · 主辦:禪修協會 / 黃火玉經理 · 協辦:禪修協會 · 地點:彌勒山 · 烹飪:ˇ"},{"date":"2026-12-12","title":"企業主管禪修班","content":"農曆:(115.11.04) / (115.11.08) · 星期:六~三 · 天數:五天 五夜 · 截止:2026-12-16 · 主辦:禪修協會 / 黃火玉經理 · 協辦:禪修協會 · 地點:宏世 / 佛院 · 勤務:ˇ"},{"date":"2027-01-01","title":"敦化班(2)","content":"農曆:(115.11.24) / (115.11.26) · 星期:五~日 · 天數:三天 三夜 · 截止:2027-01-03 · 主辦:總壇道務組 / 陳正修經理 · 協辦:一貫人才專修苑 / +宏世分壇 · 地點:彌勒山 · 勤務:ˇ"},{"date":"2027-01-09","title":"中華宏宗傳統文化推廣協會會員大會","content":"農曆:(115.12.02) · 星期:六 · 天數:下午 · 主辦:傳統文化協會 / 蔡月秀經理 · 協辦:宏教分壇 · 地點:宏宗 · 烹飪:ˇ"},{"date":"2027-01-16","title":"點傳師會議(4)","content":"農曆:(115.12.09) · 星期:六 · 天數:一天 · 主辦:總壇秘書室 · 協辦:宏化分壇 · 地點:宏宗 · 勤務:化定：總務、烹飪"},{"date":"2027-01-17","title":"年末懺悔班","content":"農曆:(115.12.10) · 星期:日 · 天數:一天 · 主辦:宏化道務組 · 地點:華林 · 勤務:化力：總務 · 烹飪:烹飪:化真"},{"date":"2027-01-23","title":"學界敦化班","content":"農曆:(115.12.16) / (115.12.17) · 星期:六~日 · 天數:二天一夜 · 截止:2027-01-24 · 主辦:宏化教育組 · 地點:華林 · 勤務:化孝：總務 / 總務:王國超 · 烹飪:烹飪:化仁"},{"date":"2027-02-06","title":"新春團拜","content":"農曆:(116.01.01) · 星期:日 · 天數:上午 · 主辦:總壇總務組 · 協辦:除夕晚上8點到初一晚上8點(宏教分壇) · 地點:彌勒山 · 勤務:總務： / 楊文堯壇主 / 勤務： / 各區負責67~73人 · 烹飪:烹飪：沈慧愛壇主\n主辦:李火梨經理 / 協辦/時段:初一晚上8點到初二早上8點(宏世分壇)\n協辦/時段:初二早上8點到初二晚上8點(宏化分壇)\n協辦/時段:初二晚上8點到初三早上8點(宏尊分壇)\n協辦/時段:初三早上8點到初三晚上6點(宏天分壇)"}];
+
+/* 安裝預設行事曆(僅在第一次或回復預設時呼叫) */
+async function installDefaultCalendar(){
+  for(const ev of DEFAULT_CALENDAR_EVENTS){
+    const id = uid();
+    const now = new Date().toISOString();
+    await Store.save('calendar:'+id, {
+      id,
+      title: ev.title,
+      content: ev.content,
+      date: ev.date,
+      isDefault: true,
+      createdAt: now,
+      updatedAt: now
+    });
+  }
+}
+
+/* 三次確認回復預設 */
+let resetCalendarClickCount = 0;
+let resetCalendarTimer = null;
+async function resetCalendarToDefault(){
+  resetCalendarClickCount++;
+  const btn = document.getElementById('reset-calendar-btn');
+  const progress = document.getElementById('reset-progress');
+
+  // 清除舊計時器
+  if(resetCalendarTimer) clearTimeout(resetCalendarTimer);
+
+  // 顯示進度點點
+  let dots = '';
+  for(let i=0;i<3;i++){
+    dots += `<span class="dot ${i<resetCalendarClickCount?'on':''}"></span>`;
+  }
+
+  if(resetCalendarClickCount === 1){
+    btn.textContent = '⚠ 第一次確定 · 再按兩次回復預設';
+    btn.classList.add('confirming');
+    progress.innerHTML = dots + ' (5秒內未按下將自動取消)';
+    resetCalendarTimer = setTimeout(()=>cancelResetCalendar(), 5000);
+  }else if(resetCalendarClickCount === 2){
+    btn.textContent = '⚠ 第二次確定 · 再按一次將清除所有行事!';
+    progress.innerHTML = dots + ' (5秒內未按下將自動取消)';
+    resetCalendarTimer = setTimeout(()=>cancelResetCalendar(), 5000);
+  }else if(resetCalendarClickCount >= 3){
+    // 執行清除並重建
+    progress.innerHTML = '<span style="color:var(--vermillion);">正在還原預設行事曆…</span>';
+    btn.disabled = true;
+    // 清除既有行事曆
+    const items = await Store.list('calendar:');
+    for(const it of items) await Store.remove('calendar:'+it.id);
+    // 重新安裝預設
+    await installDefaultCalendar();
+    toast(`已還原 ${DEFAULT_CALENDAR_EVENTS.length} 筆預設行事`);
+    cancelResetCalendar();
+    btn.disabled = false;
+    renderList('calendar');
+  }
+}
+function cancelResetCalendar(){
+  resetCalendarClickCount = 0;
+  if(resetCalendarTimer) clearTimeout(resetCalendarTimer);
+  resetCalendarTimer = null;
+  const btn = document.getElementById('reset-calendar-btn');
+  const progress = document.getElementById('reset-progress');
+  if(btn){
+    btn.textContent = '回到預設內容';
+    btn.classList.remove('confirming');
+  }
+  if(progress) progress.innerHTML = '';
+}
+
+
 document.addEventListener('DOMContentLoaded',()=>{
   const t=document.getElementById('version-tag');
   if(t) t.textContent = APP_VERSION;
@@ -1119,6 +1394,7 @@ document.querySelectorAll('.tab').forEach(t=>{
     if(t.dataset.tab==='calendar') renderList('calendar');
     if(t.dataset.tab==='library') renderList('library');
     if(t.dataset.tab==='practice') renderPractice();
+    if(t.dataset.tab==='settings') updateSettingsInfo();
   });
 });
 
@@ -1489,6 +1765,178 @@ function importExcel(e){
 }
 
 /* =========================================================
+   SETTINGS PANEL FUNCTIONS
+   ========================================================= */
+async function updateSettingsInfo(){
+  document.getElementById('info-version').textContent = APP_VERSION;
+  document.getElementById('info-build').textContent = APP_BUILD;
+  document.getElementById('info-codename').textContent = APP_CODENAME;
+  const [m,c,l,p] = await Promise.all([
+    Store.list('members:'), Store.list('calendar:'),
+    Store.list('library:'), Store.list('practice:')
+  ]);
+  document.getElementById('info-count').textContent =
+    `道親 ${m.length} · 行事 ${c.length} · 資料 ${l.length} · 功課 ${p.length}`;
+}
+
+/* 一鍵備份所有資料(單一 Excel,含多個工作表) */
+async function exportAllExcel(){
+  const [members, calendar, library, practice] = await Promise.all([
+    Store.list('members:'), Store.list('calendar:'),
+    Store.list('library:'), Store.list('practice:')
+  ]);
+  const settings = await Store.get('settings') || {};
+
+  const wb = XLSX.utils.book_new();
+
+  // 道親名單
+  const mRows = members.map(m=>({
+    ID:m.id, 姓名:m.name, 年齡:m.age||'', 關係:m.relation||'',
+    認識管道:m.channel||'', 分區:m.region||'',
+    最新關心紀錄:(m.notes&&m.notes.length)?m.notes[m.notes.length-1].content:'',
+    所有關心紀錄:(m.notes||[]).map(n=>`[${n.date}] ${n.content}`).join(' | '),
+    建檔日期:m.createdAt, 更新日期:m.updatedAt
+  }));
+  XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(mRows.length?mRows:[{備註:'(尚無資料)'}]), 'members');
+
+  // 行事曆
+  const cRows = calendar.map(it=>({ID:it.id, 日期:it.date||'', 行事名稱:it.title||'', 內容:it.content||'', 建檔:it.createdAt, 更新:it.updatedAt}));
+  XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(cRows.length?cRows:[{備註:'(尚無資料)'}]), 'calendar');
+
+  // 學習資料
+  const lRows = library.map(it=>({ID:it.id, 標題:it.title||'', 內容:it.content||'', 建檔:it.createdAt, 更新:it.updatedAt}));
+  XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(lRows.length?lRows:[{備註:'(尚無資料)'}]), 'library');
+
+  // 功課
+  const pRows = practice.map(p=>({ID:p.id, 功課:p.title, 圖示:p.icon||'', 紀錄JSON:JSON.stringify(p.checks||{}), 建檔:p.createdAt, 更新:p.updatedAt}));
+  XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(pRows.length?pRows:[{備註:'(尚無資料)'}]), 'practice');
+
+  // 設定 & 版本
+  const sRows = [
+    {鍵:'region', 值:settings.region||''},
+    {鍵:'name', 值:settings.name||''},
+    {鍵:'app_version', 值:APP_VERSION},
+    {鍵:'app_build', 值:APP_BUILD},
+    {鍵:'export_at', 值:new Date().toISOString()}
+  ];
+  XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(sRows), 'settings');
+
+  const stamp = new Date().toISOString().slice(0,10);
+  XLSX.writeFile(wb, `安東道場_全部備份_${stamp}_${APP_VERSION}.xlsx`);
+  toast('已匯出完整備份');
+}
+
+/* 從備份檔還原全部資料 */
+function importAllExcel(e){
+  const f = e.target.files[0]; if(!f) return;
+  if(!confirm('匯入備份將覆蓋同 ID 的資料,確定繼續?')) { e.target.value=''; return; }
+  const r = new FileReader();
+  r.onload = async ev => {
+    try{
+      const wb = XLSX.read(ev.target.result, {type:'array'});
+      let total = 0;
+      // members
+      if(wb.Sheets.members){
+        const rows = XLSX.utils.sheet_to_json(wb.Sheets.members);
+        for(const row of rows){
+          if(!row['姓名']) continue;
+          const id = row.ID || uid();
+          const now = new Date().toISOString();
+          const notes = [];
+          if(row['所有關心紀錄']){
+            String(row['所有關心紀錄']).split('|').forEach(en=>{
+              const match = en.trim().match(/^\[(.+?)\]\s*(.+)$/);
+              if(match) notes.push({date:match[1], content:match[2]});
+            });
+          }
+          await Store.save('members:'+id, {
+            id, name:row['姓名'], age:parseInt(row['年齡'])||null,
+            relation:row['關係']||'', channel:row['認識管道']||'',
+            region:row['分區']||'化真區', notes,
+            createdAt:row['建檔日期']||now, updatedAt:row['更新日期']||now
+          });
+          total++;
+        }
+      }
+      // calendar
+      if(wb.Sheets.calendar){
+        const rows = XLSX.utils.sheet_to_json(wb.Sheets.calendar);
+        for(const row of rows){
+          if(!row['行事名稱']&&!row['ID']) continue;
+          const id = row.ID || uid();
+          await Store.save('calendar:'+id, {
+            id, title:row['行事名稱']||'', content:row['內容']||'', date:row['日期']||'',
+            createdAt:row['建檔']||new Date().toISOString(),
+            updatedAt:row['更新']||new Date().toISOString()
+          });
+          total++;
+        }
+      }
+      // library
+      if(wb.Sheets.library){
+        const rows = XLSX.utils.sheet_to_json(wb.Sheets.library);
+        for(const row of rows){
+          if(!row['標題']&&!row['ID']) continue;
+          const id = row.ID || uid();
+          await Store.save('library:'+id, {
+            id, title:row['標題']||'', content:row['內容']||'',
+            createdAt:row['建檔']||new Date().toISOString(),
+            updatedAt:row['更新']||new Date().toISOString()
+          });
+          total++;
+        }
+      }
+      // practice
+      if(wb.Sheets.practice){
+        const rows = XLSX.utils.sheet_to_json(wb.Sheets.practice);
+        for(const row of rows){
+          if(!row['功課']&&!row['ID']) continue;
+          const id = row.ID || uid();
+          let checks = {};
+          try{ checks = JSON.parse(row['紀錄JSON']||'{}'); }catch(e){}
+          await Store.save('practice:'+id, {
+            id, title:row['功課']||'', icon:row['圖示']||'🪷', checks,
+            createdAt:row['建檔']||new Date().toISOString(),
+            updatedAt:row['更新']||new Date().toISOString()
+          });
+          total++;
+        }
+      }
+      // settings
+      if(wb.Sheets.settings){
+        const rows = XLSX.utils.sheet_to_json(wb.Sheets.settings);
+        const s = {};
+        rows.forEach(r => { if(r['鍵']) s[r['鍵']] = r['值']; });
+        if(s.region || s.name){
+          await Store.save('settings', {region:s.region||'化真區', name:s.name||''});
+          await loadSettings();
+        }
+      }
+      toast(`成功匯入 ${total} 筆資料`);
+      updateSettingsInfo();
+    }catch(err){
+      console.error(err);
+      toast('匯入失敗:檔案格式錯誤');
+    }
+  };
+  r.readAsArrayBuffer(f);
+  e.target.value = '';
+}
+
+async function clearAllData(){
+  if(!confirm('⚠️ 此動作將清除所有資料且無法復原。\n\n建議先點擊「一鍵備份所有資料」匯出 Excel 後再執行。\n\n確定要清除嗎?')) return;
+  if(!confirm('再次確認:真的要清除全部資料嗎?')) return;
+  const keys = ['members:','calendar:','library:','practice:'];
+  for(const prefix of keys){
+    const items = await Store.list(prefix);
+    for(const it of items) await Store.remove(prefix + it.id);
+  }
+  await Store.remove('settings');
+  toast('已清除所有資料');
+  setTimeout(()=>location.reload(), 1200);
+}
+
+/* =========================================================
    HELPERS
    ========================================================= */
 function escapeHtml(s){return String(s||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
@@ -1503,6 +1951,12 @@ function toast(msg){
    ========================================================= */
 (async function init(){
   await loadSettings();
+  // 第一次開啟時,自動安裝預設行事曆
+  const installed = await Store.get('__defaults_installed_v1');
+  if(!installed){
+    await installDefaultCalendar();
+    await Store.save('__defaults_installed_v1', {installedAt: new Date().toISOString()});
+  }
   await renderMembers();
 })();
 </script>
