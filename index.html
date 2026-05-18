@@ -129,12 +129,12 @@
   /* ---------- SECOND ROW ---------- */
   .meta-bar {
     display: grid;
-    grid-template-columns: 1.1fr 1fr 1.2fr;
+    grid-template-columns: 1fr 1fr 2.6fr;
     gap: 10px;
     padding: 14px 18px;
     background: rgba(235, 223, 196, 0.45);
     border-bottom: 1px solid var(--line);
-    align-items: center;
+    align-items: stretch;
   }
   .meta-cell {
     display: flex;
@@ -164,16 +164,161 @@
     border-color: var(--gold);
     background: rgba(255, 252, 245, 0.95);
   }
-  .datetime-cell {
-    text-align: right;
-    font-variant-numeric: tabular-nums;
+
+  /* ---------- 歲末倒數警鐘 (large unified panel) ---------- */
+  .countdown-cell {
+    position: relative;
+    background:
+      radial-gradient(at 50% 0%, rgba(138, 42, 31, 0.22) 0px, transparent 70%),
+      radial-gradient(at 50% 100%, rgba(176, 132, 86, 0.10) 0px, transparent 60%),
+      linear-gradient(180deg, rgba(255, 240, 235, 0.92), rgba(255, 230, 225, 0.75));
+    border: 1px solid rgba(138, 42, 31, 0.5);
+    border-radius: 3px;
+    padding: 12px 16px 10px;
+    text-align: center;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    box-shadow:
+      inset 0 0 0 1px rgba(255, 200, 195, 0.4),
+      0 0 0 0 rgba(138, 42, 31, 0.5);
+    animation: countdown-pulse 2.6s ease-in-out infinite;
   }
-  .clock {
+  .countdown-cell::before,
+  .countdown-cell::after {
+    content: '';
+    position: absolute;
+    width: 12px; height: 12px;
+    border: 1.5px solid var(--vermillion);
+    opacity: 0.55;
+  }
+  .countdown-cell::before { top: 6px; left: 6px; border-right: none; border-bottom: none; }
+  .countdown-cell::after { bottom: 6px; right: 6px; border-left: none; border-top: none; }
+  @keyframes countdown-pulse {
+    0%, 100% { box-shadow: inset 0 0 0 1px rgba(255, 200, 195, 0.4), 0 0 0 0 rgba(138, 42, 31, 0.0); }
+    50% { box-shadow: inset 0 0 0 1px rgba(255, 200, 195, 0.65), 0 0 18px 0 rgba(138, 42, 31, 0.30); }
+  }
+
+  .countdown-label {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+    font-family: 'ZCOOL XiaoWei', serif;
+    color: var(--vermillion);
+    margin-bottom: 4px;
+    line-height: 1;
+  }
+  .countdown-year {
     font-family: 'Cormorant Garamond', serif;
-    font-size: 22px;
-    color: var(--ink);
-    font-weight: 500;
+    font-size: 13px;
     letter-spacing: 2px;
+    opacity: 0.75;
+    border-right: 1px solid rgba(138, 42, 31, 0.35);
+    padding-right: 14px;
+  }
+  .countdown-label-text {
+    font-size: 13px;
+    letter-spacing: 6px;
+    text-indent: 6px;
+  }
+
+  /* 日數:最大主體,前綴「剩餘」 */
+  .countdown-days {
+    display: flex;
+    align-items: baseline;
+    justify-content: center;
+    gap: 10px;
+    margin: 4px 0 6px;
+    line-height: 0.95;
+  }
+  .countdown-remaining {
+    font-family: 'ZCOOL XiaoWei', serif;
+    font-size: clamp(18px, 3.2vw, 26px);
+    color: var(--vermillion);
+    letter-spacing: 2px;
+    opacity: 0.85;
+    line-height: 1;
+    align-self: center;
+  }
+  .countdown-days-num {
+    font-family: 'Ma Shan Zheng', 'Cormorant Garamond', serif;
+    font-size: clamp(56px, 12vw, 92px);
+    font-weight: 500;
+    color: var(--vermillion);
+    letter-spacing: -1px;
+    line-height: 0.9;
+    font-variant-numeric: tabular-nums;
+    min-width: 1.6ch;
+    text-align: center;
+    text-shadow:
+      0 0 2px rgba(255, 200, 195, 0.7),
+      0 2px 0 rgba(255, 255, 255, 0.5);
+  }
+  .countdown-days-unit {
+    font-family: 'ZCOOL XiaoWei', serif;
+    font-size: clamp(28px, 5.5vw, 42px);
+    color: var(--vermillion);
+    letter-spacing: 0;
+    line-height: 1;
+    align-self: center;
+  }
+
+  /* 時 分 秒:同列,僅秒閃 */
+  .countdown-hms {
+    display: flex;
+    align-items: baseline;
+    justify-content: center;
+    gap: 2px;
+    margin: 2px 0 6px;
+    font-family: 'Cormorant Garamond', serif;
+    color: var(--vermillion-d);
+  }
+  .hms-num {
+    font-size: clamp(16px, 2.8vw, 20px);
+    font-weight: 600;
+    letter-spacing: 1px;
+    font-variant-numeric: tabular-nums;
+    min-width: 2ch;
+    text-align: center;
+    display: inline-block;
+  }
+  .hms-unit {
+    font-family: 'ZCOOL XiaoWei', serif;
+    font-size: clamp(13px, 2.4vw, 16px);
+    margin: 0 8px 0 2px;
+    letter-spacing: 1px;
+    opacity: 0.85;
+  }
+  /* 只有秒閃 */
+  .hms-sec {
+    animation: hms-sec-tick 1s steps(1) infinite;
+  }
+  @keyframes hms-sec-tick {
+    0%   {
+      text-shadow: 0 0 12px rgba(138, 42, 31, 0.75), 0 1px 0 rgba(255, 255, 255, 0.5);
+      transform: scale(1.08);
+      color: var(--vermillion);
+    }
+    25%  {
+      text-shadow: 0 0 3px rgba(138, 42, 31, 0.4), 0 1px 0 rgba(255, 255, 255, 0.5);
+      transform: scale(1);
+      color: var(--vermillion-d);
+    }
+    100% {
+      text-shadow: none;
+      transform: scale(1);
+    }
+  }
+
+  /* 日期區 */
+  .countdown-dates {
+    padding-top: 6px;
+    margin-top: 4px;
+    border-top: 1px dashed rgba(138, 42, 31, 0.30);
+    width: 92%;
+    margin-left: auto;
+    margin-right: auto;
   }
   .date-greg {
     font-size: 12px;
@@ -185,6 +330,44 @@
     font-size: 13px;
     color: var(--vermillion);
     letter-spacing: 2px;
+    margin-top: 2px;
+  }
+
+  /* 最後 30 天進入緊急模式 */
+  .countdown-cell.urgent {
+    animation: countdown-urgent 1s ease-in-out infinite;
+    background:
+      radial-gradient(at 50% 0%, rgba(138, 42, 31, 0.36) 0px, transparent 70%),
+      linear-gradient(180deg, rgba(255, 215, 210, 0.95), rgba(255, 200, 195, 0.8));
+    border-color: var(--vermillion);
+    border-width: 1.5px;
+  }
+  @keyframes countdown-urgent {
+    0%, 100% { box-shadow: inset 0 0 0 1px rgba(255, 180, 175, 0.7), 0 0 0 0 rgba(138, 42, 31, 0.0); }
+    50% { box-shadow: inset 0 0 0 1px rgba(255, 170, 165, 0.95), 0 0 26px 2px rgba(138, 42, 31, 0.55); }
+  }
+  .countdown-cell.urgent .hms-sec {
+    animation: hms-sec-urgent 1s steps(1) infinite;
+  }
+  @keyframes hms-sec-urgent {
+    0%   {
+      text-shadow: 0 0 18px rgba(138, 42, 31, 0.95), 0 1px 0 rgba(255, 255, 255, 0.5);
+      transform: scale(1.18);
+      color: #4a1410;
+    }
+    25%  {
+      text-shadow: 0 0 6px rgba(138, 42, 31, 0.6), 0 1px 0 rgba(255, 255, 255, 0.5);
+      transform: scale(1);
+      color: var(--vermillion);
+    }
+    100% { text-shadow: none; transform: scale(1); }
+  }
+  /* 緊急時,日數也微微加深 */
+  .countdown-cell.urgent .countdown-days-num {
+    color: var(--vermillion-d);
+    text-shadow:
+      0 0 6px rgba(138, 42, 31, 0.45),
+      0 2px 0 rgba(255, 255, 255, 0.5);
   }
 
   /* ---------- TAB NAVIGATION (固定於頁面底部) ---------- */
@@ -1220,7 +1403,7 @@
       justify-content: center;
     }
     .panel { padding: 32px 40px 140px; }
-    .meta-bar { padding: 16px 40px; grid-template-columns: 1fr 1fr 1.2fr; }
+    .meta-bar { padding: 16px 40px; grid-template-columns: 1fr 1fr 2.6fr; }
     .member-list { grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 18px; }
     .practice-grid { grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); }
     .title { font-size: 48px; letter-spacing: 6px; }
@@ -1255,8 +1438,10 @@
       gap: 8px;
       padding: 12px;
     }
-    .datetime-cell { grid-column: 1 / -1; text-align: center; }
-    .clock { font-size: 20px; }
+    .countdown-cell { grid-column: 1 / -1; padding: 10px 12px 8px; }
+    .countdown-days-num { font-size: clamp(56px, 16vw, 80px); }
+    .countdown-days-unit { font-size: clamp(28px, 7vw, 36px); }
+    .countdown-remaining { font-size: clamp(16px, 4vw, 22px); }
     .tab {
       font-size: 10px;
       padding: 10px 2px;
@@ -1290,7 +1475,7 @@
   <div class="title-wrap">
     <div class="title">安東道場 宏化分壇</div>
     <div class="subtitle">道 務 自 我 紀 錄 管 理</div>
-    <div class="version-tag" id="version-tag">v1.6.0</div>
+    <div class="version-tag" id="version-tag">v1.8.1</div>
   </div>
 </header>
 
@@ -1311,11 +1496,31 @@
     <label>姓　名</label>
     <input type="text" id="user-name" placeholder="請輸入您的道名">
   </div>
-  <div class="meta-cell datetime-cell">
-    <label>時　節</label>
-    <div class="clock" id="clock">--:--:--</div>
-    <div class="date-greg" id="date-greg">國曆</div>
-    <div class="date-lunar" id="date-lunar">農曆</div>
+  <div class="meta-cell countdown-cell" id="countdown-cell">
+    <div class="countdown-label">
+      <span class="countdown-year" id="countdown-year">2026</span>
+      <span class="countdown-label-text">歲 末 倒 數</span>
+    </div>
+
+    <!-- 日數:最大,前綴「剩餘」 -->
+    <div class="countdown-days">
+      <span class="countdown-remaining">剩 餘</span>
+      <span class="countdown-days-num" id="countdown-days">---</span>
+      <span class="countdown-days-unit">日</span>
+    </div>
+
+    <!-- 時 分 秒:只有秒數閃 -->
+    <div class="countdown-hms" id="countdown-hms">
+      <span class="hms-num" id="hms-hour">--</span><span class="hms-unit">時</span>
+      <span class="hms-num" id="hms-min">--</span><span class="hms-unit">分</span>
+      <span class="hms-num hms-sec" id="hms-sec">--</span><span class="hms-unit">秒</span>
+    </div>
+
+    <!-- 國曆農曆 -->
+    <div class="countdown-dates">
+      <div class="date-greg" id="date-greg">國曆</div>
+      <div class="date-lunar" id="date-lunar">農曆</div>
+    </div>
   </div>
 </div>
 
@@ -1610,15 +1815,15 @@
 </div>
 
 <div class="toast" id="toast"></div>
-<div class="version-corner" id="version-corner">v1.6.0 · 2026-05-18</div>
+<div class="version-corner" id="version-corner">v1.8.1 · 2026-05-18</div>
 
 <script>
 /* =========================================================
    APP VERSION  ─ 每次改版請更新此處 + 檔名
    ========================================================= */
-const APP_VERSION   = 'v1.6.0';
+const APP_VERSION   = 'v1.8.1';
 const APP_BUILD     = '2026-05-18';
-const APP_CODENAME  = '層次導覽';
+const APP_CODENAME  = '剩餘日數';
 document.title = `安東道場 宏化分壇 · ${APP_VERSION}`;
 
 /* =========================================================
@@ -1895,13 +2100,35 @@ function toLunar(date){
 function updateClock(){
   const now=new Date();
   const pad=n=>String(n).padStart(2,'0');
-  document.getElementById('clock').textContent=`${pad(now.getHours())}:${pad(now.getMinutes())}:${pad(now.getSeconds())}`;
   const weekdays=['日','一','二','三','四','五','六'];
   document.getElementById('date-greg').textContent=`國曆 ${now.getFullYear()} 年 ${now.getMonth()+1} 月 ${now.getDate()} 日 · 週${weekdays[now.getDay()]}`;
   try{
     const l=toLunar(now);
     document.getElementById('date-lunar').textContent=`農曆 ${l.year}(${l.animal}) ${l.month}${l.day}`;
   }catch(e){document.getElementById('date-lunar').textContent='農曆';}
+
+  // ── 歲末倒數 ──
+  const yearEnd = new Date(now.getFullYear(), 11, 31, 23, 59, 59, 999);
+  const diffMs = yearEnd - now;
+  if(diffMs > 0){
+    const totalSec = Math.floor(diffMs / 1000);
+    const days = Math.floor(totalSec / 86400);
+    const hh = Math.floor((totalSec % 86400) / 3600);
+    const mm = Math.floor((totalSec % 3600) / 60);
+    const ss = totalSec % 60;
+    document.getElementById('countdown-year').textContent = now.getFullYear();
+    document.getElementById('countdown-days').textContent = days;
+    document.getElementById('hms-hour').textContent = pad(hh);
+    document.getElementById('hms-min').textContent = pad(mm);
+    document.getElementById('hms-sec').textContent = pad(ss);
+    // 越接近年底,警示越強
+    const cell = document.getElementById('countdown-cell');
+    if(days <= 30){
+      cell.classList.add('urgent');
+    }else{
+      cell.classList.remove('urgent');
+    }
+  }
 }
 setInterval(updateClock,1000); updateClock();
 
