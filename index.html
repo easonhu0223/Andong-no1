@@ -1,0 +1,1510 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>安東道場 宏化分壇 · 道務管理</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&family=Noto+Serif+TC:wght@300;400;500;600;700&family=ZCOOL+XiaoWei&family=Cormorant+Garamond:wght@300;400;500&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<style>
+  :root {
+    --paper:        #f4ead7;
+    --paper-deep:   #ebdfc4;
+    --ink:          #221a12;
+    --ink-soft:     #4a3c2c;
+    --vermillion:   #8a2a1f;
+    --vermillion-d: #6b1f17;
+    --gold:         #b08456;
+    --gold-light:   #d4a574;
+    --jade:         #4f7355;
+    --shadow:       rgba(40, 26, 12, 0.12);
+    --line:         rgba(74, 60, 44, 0.18);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html, body {
+    font-family: 'Noto Serif TC', 'Cormorant Garamond', serif;
+    color: var(--ink);
+    background: var(--paper);
+    min-height: 100vh;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  body {
+    background-color: var(--paper);
+    background-image:
+      radial-gradient(at 12% 8%, rgba(176, 132, 86, 0.10) 0px, transparent 50%),
+      radial-gradient(at 88% 92%, rgba(138, 42, 31, 0.06) 0px, transparent 55%),
+      url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='220' height='220'><filter id='n'><feTurbulence baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.16  0 0 0 0 0.11  0 0 0 0 0.06  0 0 0 0.05 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+    background-attachment: fixed;
+  }
+
+  /* ---------- HEADER ---------- */
+  .header {
+    position: relative;
+    text-align: center;
+    padding: 24px 12px 16px;
+    border-bottom: 1px solid var(--line);
+  }
+  .header::before, .header::after {
+    content: '卐';
+    position: absolute;
+    top: 28px;
+    color: var(--gold);
+    font-size: 22px;
+    opacity: 0.55;
+  }
+  .header::before { left: 28px; }
+  .header::after  { right: 28px; }
+  .title-wrap {
+    display: inline-block;
+    position: relative;
+    padding: 4px 24px;
+    max-width: 100%;
+  }
+  .title-wrap::before, .title-wrap::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    width: 18px;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--gold), transparent);
+  }
+  .title-wrap::before { left: 0; }
+  .title-wrap::after  { right: 0; }
+  .title {
+    font-family: 'Ma Shan Zheng', 'Noto Serif TC', serif;
+    font-size: clamp(22px, 6.4vw, 48px);
+    color: var(--vermillion);
+    letter-spacing: clamp(1px, 0.6vw, 5px);
+    line-height: 1.2;
+    text-shadow: 0 1px 0 rgba(255,255,255,0.4);
+    white-space: nowrap;
+  }
+  .subtitle {
+    font-family: 'ZCOOL XiaoWei', serif;
+    font-size: clamp(10px, 2.6vw, 14px);
+    color: var(--ink-soft);
+    margin-top: 4px;
+    letter-spacing: clamp(2px, 1vw, 6px);
+    white-space: nowrap;
+  }
+  .version-tag {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 11px;
+    color: var(--gold);
+    margin-top: 6px;
+    letter-spacing: 2px;
+    font-style: italic;
+    opacity: 0.85;
+  }
+  .version-tag::before { content: '— '; }
+  .version-tag::after  { content: ' —'; }
+  /* 角落浮水印,長按時可看到更新日期 */
+  .version-corner {
+    position: fixed;
+    bottom: 6px;
+    right: 8px;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 10px;
+    color: var(--ink-soft);
+    opacity: 0.45;
+    letter-spacing: 1px;
+    z-index: 5;
+    pointer-events: none;
+    user-select: none;
+  }
+
+  /* ---------- SECOND ROW ---------- */
+  .meta-bar {
+    display: grid;
+    grid-template-columns: 1.1fr 1fr 1.2fr;
+    gap: 10px;
+    padding: 14px 18px;
+    background: rgba(235, 223, 196, 0.45);
+    border-bottom: 1px solid var(--line);
+    align-items: center;
+  }
+  .meta-cell {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  .meta-cell label {
+    font-family: 'ZCOOL XiaoWei', serif;
+    font-size: 11px;
+    letter-spacing: 3px;
+    color: var(--ink-soft);
+  }
+  .meta-cell select,
+  .meta-cell input {
+    font-family: inherit;
+    font-size: 14px;
+    color: var(--ink);
+    background: rgba(255, 252, 245, 0.7);
+    border: 1px solid var(--line);
+    padding: 7px 10px;
+    border-radius: 2px;
+    outline: none;
+    transition: border-color 0.2s, background 0.2s;
+  }
+  .meta-cell select:focus,
+  .meta-cell input:focus {
+    border-color: var(--gold);
+    background: rgba(255, 252, 245, 0.95);
+  }
+  .datetime-cell {
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+  }
+  .clock {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 22px;
+    color: var(--ink);
+    font-weight: 500;
+    letter-spacing: 2px;
+  }
+  .date-greg {
+    font-size: 12px;
+    color: var(--ink-soft);
+    letter-spacing: 1px;
+  }
+  .date-lunar {
+    font-family: 'ZCOOL XiaoWei', serif;
+    font-size: 13px;
+    color: var(--vermillion);
+    letter-spacing: 2px;
+  }
+
+  /* ---------- TAB NAVIGATION ---------- */
+  .tabs {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    background: rgba(34, 26, 18, 0.92);
+    position: sticky;
+    top: 0;
+    z-index: 30;
+  }
+  .tab {
+    text-align: center;
+    padding: 14px 6px;
+    color: rgba(244, 234, 215, 0.65);
+    font-family: 'ZCOOL XiaoWei', serif;
+    font-size: 13px;
+    letter-spacing: 2px;
+    cursor: pointer;
+    border-right: 1px solid rgba(244, 234, 215, 0.08);
+    transition: all 0.25s;
+    position: relative;
+    user-select: none;
+  }
+  .tab:last-child { border-right: none; }
+  .tab .num {
+    display: block;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 11px;
+    color: var(--gold);
+    margin-bottom: 2px;
+    letter-spacing: 1px;
+    opacity: 0.7;
+  }
+  .tab:hover { color: var(--paper); background: rgba(176, 132, 86, 0.08); }
+  .tab.active {
+    color: var(--paper);
+    background: linear-gradient(180deg, rgba(138, 42, 31, 0.4), rgba(138, 42, 31, 0.15));
+  }
+  .tab.active::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 20%; right: 20%;
+    height: 2px;
+    background: var(--gold);
+  }
+
+  /* ---------- PANELS ---------- */
+  .panel {
+    display: none;
+    padding: 22px 18px 80px;
+    animation: fadeIn 0.35s ease;
+  }
+  .panel.active { display: block; }
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(6px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .panel-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-bottom: 18px;
+    padding-bottom: 12px;
+    border-bottom: 1px dashed var(--line);
+  }
+  .panel-title {
+    font-family: 'Ma Shan Zheng', serif;
+    font-size: 22px;
+    color: var(--vermillion);
+    letter-spacing: 3px;
+  }
+  .panel-sub {
+    font-size: 11px;
+    color: var(--ink-soft);
+    letter-spacing: 1.5px;
+    margin-top: 2px;
+  }
+
+  .actions {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  .btn {
+    font-family: 'ZCOOL XiaoWei', serif;
+    font-size: 13px;
+    padding: 7px 14px;
+    background: var(--ink);
+    color: var(--paper);
+    border: none;
+    border-radius: 2px;
+    cursor: pointer;
+    letter-spacing: 2px;
+    transition: all 0.2s;
+  }
+  .btn:hover { background: var(--vermillion); transform: translateY(-1px); }
+  .btn.outline {
+    background: transparent;
+    color: var(--ink);
+    border: 1px solid var(--ink);
+  }
+  .btn.outline:hover { background: var(--ink); color: var(--paper); }
+  .btn.gold { background: var(--gold); }
+  .btn.gold:hover { background: var(--gold-light); color: var(--ink); }
+
+  /* ---------- MEMBER CARDS ---------- */
+  .member-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 14px;
+  }
+  .member-card {
+    background: rgba(255, 252, 245, 0.7);
+    border: 1px solid var(--line);
+    border-left: 3px solid var(--gold);
+    padding: 14px;
+    border-radius: 2px;
+    transition: all 0.25s;
+    cursor: pointer;
+    position: relative;
+  }
+  .member-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px var(--shadow);
+    border-left-color: var(--vermillion);
+  }
+  .member-card.status-green { border-left-color: #5a8a4f; }
+  .member-card.status-yellow { border-left-color: #c4922f; background: rgba(255, 245, 220, 0.7); }
+  .member-card.status-red { border-left-color: #a13929; background: rgba(255, 230, 225, 0.5); }
+
+  .member-head {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 8px;
+  }
+  .avatar {
+    width: 46px; height: 46px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    font-size: 26px;
+    background: #cfe5c4;
+    border: 2px solid #5a8a4f;
+    transition: all 0.3s;
+  }
+  .avatar.yellow { background: #f5e5b8; border-color: #c4922f; }
+  .avatar.red { background: #f5c7c0; border-color: #a13929; }
+
+  .member-name {
+    font-family: 'ZCOOL XiaoWei', serif;
+    font-size: 18px;
+    color: var(--ink);
+    letter-spacing: 2px;
+  }
+  .member-meta {
+    font-size: 11px;
+    color: var(--ink-soft);
+    letter-spacing: 1px;
+  }
+  .member-body {
+    font-size: 13px;
+    color: var(--ink-soft);
+    line-height: 1.6;
+    border-top: 1px dashed var(--line);
+    padding-top: 8px;
+    max-height: 80px;
+    overflow: hidden;
+    position: relative;
+  }
+  .member-footer {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 10px;
+    font-size: 10px;
+    color: var(--ink-soft);
+    letter-spacing: 1px;
+  }
+  .status-tag {
+    padding: 2px 8px;
+    border-radius: 10px;
+    background: #cfe5c4;
+    color: #2d4d24;
+    font-family: 'ZCOOL XiaoWei', serif;
+    letter-spacing: 1px;
+  }
+  .status-tag.yellow { background: #f5e5b8; color: #6b4e15; }
+  .status-tag.red { background: #f5c7c0; color: #5c1c14; }
+
+  /* ---------- EMPTY STATE ---------- */
+  .empty {
+    text-align: center;
+    padding: 60px 20px;
+    color: var(--ink-soft);
+  }
+  .empty .lotus {
+    font-size: 48px;
+    opacity: 0.4;
+    margin-bottom: 12px;
+  }
+  .empty p {
+    font-family: 'ZCOOL XiaoWei', serif;
+    letter-spacing: 3px;
+    font-size: 14px;
+  }
+
+  /* ---------- MODAL ---------- */
+  .modal-bg {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(34, 26, 18, 0.55);
+    z-index: 100;
+    align-items: center;
+    justify-content: center;
+    padding: 16px;
+    backdrop-filter: blur(3px);
+  }
+  .modal-bg.active { display: flex; }
+  .modal {
+    background: var(--paper);
+    border: 1px solid var(--gold);
+    box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+    width: 100%;
+    max-width: 540px;
+    max-height: 90vh;
+    overflow-y: auto;
+    padding: 24px;
+    position: relative;
+  }
+  .modal::before, .modal::after {
+    content: '';
+    position: absolute;
+    width: 18px; height: 18px;
+    border: 2px solid var(--vermillion);
+  }
+  .modal::before { top: 6px; left: 6px; border-right: none; border-bottom: none; }
+  .modal::after { bottom: 6px; right: 6px; border-left: none; border-top: none; }
+
+  .modal h3 {
+    font-family: 'Ma Shan Zheng', serif;
+    color: var(--vermillion);
+    font-size: 20px;
+    margin-bottom: 16px;
+    letter-spacing: 3px;
+    text-align: center;
+    border-bottom: 1px dashed var(--line);
+    padding-bottom: 10px;
+  }
+  .form-row {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    margin-bottom: 12px;
+  }
+  .form-row label {
+    font-family: 'ZCOOL XiaoWei', serif;
+    font-size: 12px;
+    color: var(--ink-soft);
+    letter-spacing: 2px;
+  }
+  .form-row input,
+  .form-row textarea,
+  .form-row select {
+    font-family: inherit;
+    font-size: 14px;
+    padding: 8px 10px;
+    background: rgba(255, 252, 245, 0.8);
+    border: 1px solid var(--line);
+    border-radius: 2px;
+    color: var(--ink);
+    outline: none;
+  }
+  .form-row textarea { min-height: 80px; resize: vertical; }
+  .form-row input:focus,
+  .form-row textarea:focus,
+  .form-row select:focus { border-color: var(--gold); }
+
+  .form-actions {
+    display: flex;
+    gap: 8px;
+    justify-content: flex-end;
+    margin-top: 16px;
+    padding-top: 14px;
+    border-top: 1px dashed var(--line);
+  }
+
+  /* ---------- NOTES HISTORY ---------- */
+  .notes-history {
+    margin-top: 18px;
+    padding-top: 14px;
+    border-top: 1px dashed var(--line);
+  }
+  .notes-history h4 {
+    font-family: 'ZCOOL XiaoWei', serif;
+    font-size: 14px;
+    color: var(--vermillion);
+    margin-bottom: 10px;
+    letter-spacing: 2px;
+  }
+  .note-entry {
+    padding: 8px 12px;
+    border-left: 2px solid var(--gold);
+    background: rgba(255, 252, 245, 0.5);
+    margin-bottom: 6px;
+    font-size: 13px;
+    color: var(--ink-soft);
+    line-height: 1.6;
+  }
+  .note-date {
+    font-family: 'Cormorant Garamond', serif;
+    color: var(--vermillion);
+    font-size: 11px;
+    letter-spacing: 1px;
+    display: block;
+    margin-bottom: 2px;
+  }
+
+  /* ---------- CALENDAR / LIST GENERIC ---------- */
+  .item-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .item-row {
+    background: rgba(255, 252, 245, 0.6);
+    border: 1px solid var(--line);
+    border-left: 3px solid var(--jade);
+    padding: 12px 14px;
+    border-radius: 2px;
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    gap: 12px;
+    align-items: center;
+  }
+  .item-date {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 13px;
+    color: var(--vermillion);
+    letter-spacing: 1px;
+    text-align: center;
+    border-right: 1px solid var(--line);
+    padding-right: 12px;
+  }
+  .item-date strong {
+    display: block;
+    font-size: 20px;
+    color: var(--ink);
+  }
+  .item-title {
+    font-family: 'ZCOOL XiaoWei', serif;
+    font-size: 15px;
+    letter-spacing: 1px;
+    color: var(--ink);
+  }
+  .item-body {
+    font-size: 12px;
+    color: var(--ink-soft);
+    margin-top: 2px;
+    line-height: 1.5;
+  }
+  .item-action {
+    font-size: 12px;
+    color: var(--vermillion);
+    cursor: pointer;
+  }
+
+  /* ---------- PRACTICE TRACKER ---------- */
+  .practice-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 12px;
+    margin-bottom: 24px;
+  }
+  .practice-card {
+    background: rgba(255, 252, 245, 0.7);
+    border: 1px solid var(--line);
+    padding: 14px;
+    border-radius: 2px;
+    text-align: center;
+  }
+  .practice-card .icon {
+    font-size: 28px;
+    color: var(--gold);
+    margin-bottom: 6px;
+  }
+  .practice-card .label {
+    font-family: 'ZCOOL XiaoWei', serif;
+    letter-spacing: 2px;
+    color: var(--ink);
+    margin-bottom: 8px;
+  }
+  .check-row {
+    display: flex;
+    gap: 4px;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+  .check-day {
+    width: 18px; height: 18px;
+    border: 1px solid var(--line);
+    border-radius: 2px;
+    cursor: pointer;
+    background: rgba(255,255,255,0.5);
+    transition: all 0.2s;
+    font-size: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: transparent;
+  }
+  .check-day.done {
+    background: var(--vermillion);
+    color: var(--paper);
+    border-color: var(--vermillion);
+  }
+  .check-day:hover { border-color: var(--gold); }
+
+  /* ---------- AI CHAT ---------- */
+  .chat-wrap {
+    background: rgba(255, 252, 245, 0.5);
+    border: 1px solid var(--line);
+    padding: 16px;
+    border-radius: 2px;
+    min-height: 320px;
+    display: flex;
+    flex-direction: column;
+  }
+  .chat-messages {
+    flex: 1;
+    overflow-y: auto;
+    margin-bottom: 12px;
+    max-height: 50vh;
+  }
+  .msg {
+    margin-bottom: 12px;
+    padding: 10px 14px;
+    border-radius: 2px;
+    font-size: 14px;
+    line-height: 1.7;
+    max-width: 85%;
+  }
+  .msg.user {
+    background: var(--ink);
+    color: var(--paper);
+    margin-left: auto;
+    text-align: right;
+  }
+  .msg.ai {
+    background: rgba(176, 132, 86, 0.15);
+    border-left: 3px solid var(--gold);
+    color: var(--ink);
+  }
+  .chat-input {
+    display: flex;
+    gap: 8px;
+  }
+  .chat-input input {
+    flex: 1;
+    padding: 10px;
+    border: 1px solid var(--line);
+    background: rgba(255,255,255,0.6);
+    font-family: inherit;
+    font-size: 14px;
+  }
+
+  /* ---------- TOAST ---------- */
+  .toast {
+    position: fixed;
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%) translateY(40px);
+    background: var(--ink);
+    color: var(--paper);
+    padding: 12px 24px;
+    border-radius: 2px;
+    font-family: 'ZCOOL XiaoWei', serif;
+    letter-spacing: 2px;
+    opacity: 0;
+    transition: all 0.3s;
+    z-index: 200;
+    border: 1px solid var(--gold);
+  }
+  .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+  /* ---------- RESPONSIVE ---------- */
+
+  /* 桌機:加入最大寬度,避免在大螢幕上元素過寬而失去比例 */
+  @media (min-width: 1100px) {
+    .header, .meta-bar, .tabs, .panel {
+      max-width: 1280px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .panel { padding: 32px 40px 100px; }
+    .meta-bar { padding: 16px 40px; grid-template-columns: 1fr 1fr 1.2fr; }
+    .member-list { grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 18px; }
+    .practice-grid { grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); }
+    .title { font-size: 48px; letter-spacing: 6px; }
+    .subtitle { font-size: 14px; letter-spacing: 8px; }
+    .tab { font-size: 15px; padding: 16px 8px; letter-spacing: 4px; }
+    .tab .num { font-size: 12px; }
+  }
+
+  /* 平板:介於手機與桌機之間的中型版面 */
+  @media (min-width: 641px) and (max-width: 1099px) {
+    .panel { padding: 24px 28px 80px; }
+    .meta-bar { padding: 16px 28px; }
+    .member-list { grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); }
+    .tab { font-size: 14px; padding: 15px 8px; letter-spacing: 3px; }
+    .header::before, .header::after { font-size: 26px; }
+  }
+
+  /* 手機直式:確保抬頭一行不換行,版面緊湊 */
+  @media (max-width: 640px) {
+    .header { padding: 20px 8px 14px; }
+    .header::before, .header::after {
+      font-size: 16px;
+      top: 22px;
+      opacity: 0.4;
+    }
+    .header::before { left: 8px; }
+    .header::after  { right: 8px; }
+    .title-wrap { padding: 4px 18px; }
+    .title-wrap::before, .title-wrap::after { width: 12px; }
+    .meta-bar {
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      padding: 12px;
+    }
+    .datetime-cell { grid-column: 1 / -1; text-align: center; }
+    .clock { font-size: 20px; }
+    .tab {
+      font-size: 11px;
+      padding: 12px 4px;
+      letter-spacing: 1px;
+    }
+    .tab .num { display: none; }
+    .panel { padding: 18px 12px 80px; }
+    .panel-head { flex-direction: column; align-items: flex-start; gap: 10px; }
+    .panel-title { font-size: 20px; letter-spacing: 2px; }
+    .member-list { grid-template-columns: 1fr; gap: 10px; }
+    .practice-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+    .actions .btn { font-size: 12px; padding: 6px 10px; letter-spacing: 1px; }
+    .item-row { grid-template-columns: auto 1fr; }
+    .item-row .item-action { grid-column: 1 / -1; text-align: right; padding-top: 4px; }
+  }
+
+  /* 極窄螢幕:再縮一級 */
+  @media (max-width: 360px) {
+    .title { font-size: 20px; letter-spacing: 0.5px; }
+    .subtitle { font-size: 9px; letter-spacing: 2px; }
+    .header::before, .header::after { display: none; }
+    .tab { font-size: 10px; padding: 11px 2px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ============ HEADER ============ -->
+<header class="header">
+  <div class="title-wrap">
+    <div class="title">安東道場 宏化分壇</div>
+    <div class="subtitle">道 務 自 我 紀 錄 管 理</div>
+    <div class="version-tag" id="version-tag">v1.1.0</div>
+  </div>
+</header>
+
+<!-- ============ SECOND ROW ============ -->
+<div class="meta-bar">
+  <div class="meta-cell">
+    <label>分　區</label>
+    <select id="region-select">
+      <option value="化真區">化真區</option>
+      <option value="化善區">化善區</option>
+      <option value="化美區">化美區</option>
+      <option value="化定區">化定區</option>
+      <option value="__custom__">自行輸入…</option>
+    </select>
+    <input type="text" id="region-custom" placeholder="輸入分區名稱" style="display:none; margin-top:4px;">
+  </div>
+  <div class="meta-cell">
+    <label>姓　名</label>
+    <input type="text" id="user-name" placeholder="請輸入您的道名">
+  </div>
+  <div class="meta-cell datetime-cell">
+    <label>時　節</label>
+    <div class="clock" id="clock">--:--:--</div>
+    <div class="date-greg" id="date-greg">國曆</div>
+    <div class="date-lunar" id="date-lunar">農曆</div>
+  </div>
+</div>
+
+<!-- ============ TABS ============ -->
+<nav class="tabs">
+  <div class="tab active" data-tab="members"><span class="num">壹</span>成全道親名單</div>
+  <div class="tab" data-tab="calendar"><span class="num">貳</span>道場行事曆</div>
+  <div class="tab" data-tab="library"><span class="num">參</span>學習資料庫</div>
+  <div class="tab" data-tab="practice"><span class="num">肆</span>自我功課實踐</div>
+  <div class="tab" data-tab="ai"><span class="num">伍</span>線上 AI 問答</div>
+</nav>
+
+<!-- ============ PANEL: MEMBERS ============ -->
+<section class="panel active" id="panel-members">
+  <div class="panel-head">
+    <div>
+      <div class="panel-title">成全道親名單</div>
+      <div class="panel-sub">依分區管理 · 自動依更新日期顯示關懷狀態</div>
+    </div>
+    <div class="actions">
+      <button class="btn" onclick="openMemberModal()">＋ 新增道親</button>
+      <button class="btn outline" onclick="exportExcel('members')">匯出 Excel</button>
+      <label class="btn outline" style="cursor:pointer;">
+        匯入 Excel
+        <input type="file" id="import-file" accept=".xlsx,.xls,.csv" style="display:none;" onchange="importExcel(event)">
+      </label>
+    </div>
+  </div>
+
+  <div class="member-list" id="member-list"></div>
+  <div class="empty" id="member-empty" style="display:none;">
+    <div class="lotus">🪷</div>
+    <p>名單尚未建立 · 願以慈心點滴成全</p>
+  </div>
+</section>
+
+<!-- ============ PANEL: CALENDAR ============ -->
+<section class="panel" id="panel-calendar">
+  <div class="panel-head">
+    <div>
+      <div class="panel-title">道場行事曆</div>
+      <div class="panel-sub">法會 · 共修 · 課程 · 出班時程</div>
+    </div>
+    <div class="actions">
+      <button class="btn" onclick="openCalendarModal()">＋ 新增行事</button>
+      <button class="btn outline" onclick="exportExcel('calendar')">匯出 Excel</button>
+    </div>
+  </div>
+  <div class="item-list" id="calendar-list"></div>
+  <div class="empty" id="calendar-empty" style="display:none;">
+    <div class="lotus">📜</div>
+    <p>尚無行事 · 歡迎建立首條紀錄</p>
+  </div>
+</section>
+
+<!-- ============ PANEL: LIBRARY ============ -->
+<section class="panel" id="panel-library">
+  <div class="panel-head">
+    <div>
+      <div class="panel-title">學習資料庫</div>
+      <div class="panel-sub">經典 · 講義 · 心得 · 善書</div>
+    </div>
+    <div class="actions">
+      <button class="btn" onclick="openLibraryModal()">＋ 新增資料</button>
+      <button class="btn outline" onclick="exportExcel('library')">匯出 Excel</button>
+    </div>
+  </div>
+  <div class="item-list" id="library-list"></div>
+  <div class="empty" id="library-empty" style="display:none;">
+    <div class="lotus">📖</div>
+    <p>資料庫尚虛 · 願以法味共潤眾生</p>
+  </div>
+</section>
+
+<!-- ============ PANEL: PRACTICE ============ -->
+<section class="panel" id="panel-practice">
+  <div class="panel-head">
+    <div>
+      <div class="panel-title">自我要求功課實踐</div>
+      <div class="panel-sub">本月每日打卡 · 願行不退</div>
+    </div>
+    <div class="actions">
+      <button class="btn" onclick="openPracticeModal()">＋ 新增功課</button>
+      <button class="btn outline" onclick="exportExcel('practice')">匯出 Excel</button>
+    </div>
+  </div>
+  <div class="practice-grid" id="practice-grid"></div>
+  <div class="empty" id="practice-empty" style="display:none;">
+    <div class="lotus">🪷</div>
+    <p>尚未設立功課項目</p>
+  </div>
+</section>
+
+<!-- ============ PANEL: AI ============ -->
+<section class="panel" id="panel-ai">
+  <div class="panel-head">
+    <div>
+      <div class="panel-title">線上 AI 問與答</div>
+      <div class="panel-sub">道義疑惑 · 經典釋疑 · 心境對談</div>
+    </div>
+  </div>
+  <div class="chat-wrap">
+    <div class="chat-messages" id="chat-messages">
+      <div class="msg ai">阿彌陀佛,有何疑問可向我請示。修道路上若有困惑、經典難解、心境起伏,皆可在此交流。</div>
+    </div>
+    <div class="chat-input">
+      <input type="text" id="chat-input" placeholder="請輸入您的問題…" onkeydown="if(event.key==='Enter') sendChat()">
+      <button class="btn gold" onclick="sendChat()">請示</button>
+    </div>
+  </div>
+</section>
+
+<!-- ============ MEMBER MODAL ============ -->
+<div class="modal-bg" id="member-modal">
+  <div class="modal">
+    <h3 id="member-modal-title">新增道親</h3>
+    <input type="hidden" id="m-id">
+    <div class="form-row">
+      <label>姓　名</label>
+      <input type="text" id="m-name" required>
+    </div>
+    <div class="form-row">
+      <label>年　齡</label>
+      <input type="number" id="m-age" min="0">
+    </div>
+    <div class="form-row">
+      <label>關　係</label>
+      <input type="text" id="m-relation" placeholder="如:同事 / 親戚 / 朋友 / 鄰居">
+    </div>
+    <div class="form-row">
+      <label>認識管道</label>
+      <input type="text" id="m-channel" placeholder="如:朋友介紹 / 共修活動 / 因緣聚會">
+    </div>
+    <div class="form-row">
+      <label>所屬分區</label>
+      <select id="m-region">
+        <option value="化真區">化真區</option>
+        <option value="化善區">化善區</option>
+        <option value="化美區">化美區</option>
+        <option value="化定區">化定區</option>
+      </select>
+    </div>
+    <div class="form-row">
+      <label>新增今日關心紀錄</label>
+      <textarea id="m-note" placeholder="紀錄今日關心現狀、近況、對話內容…"></textarea>
+    </div>
+    <div class="notes-history" id="m-notes-history" style="display:none;">
+      <h4>歷次關心紀錄</h4>
+      <div id="m-notes-list"></div>
+    </div>
+    <div class="form-actions">
+      <button class="btn outline" onclick="closeMemberModal()">取消</button>
+      <button class="btn outline" id="m-delete-btn" onclick="deleteMember()" style="display:none; color:var(--vermillion); border-color:var(--vermillion);">刪除</button>
+      <button class="btn" onclick="saveMember()">儲存</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============ GENERIC MODAL ============ -->
+<div class="modal-bg" id="generic-modal">
+  <div class="modal">
+    <h3 id="g-title">新增</h3>
+    <input type="hidden" id="g-id">
+    <input type="hidden" id="g-type">
+    <div class="form-row">
+      <label id="g-l1">標題</label>
+      <input type="text" id="g-f1">
+    </div>
+    <div class="form-row" id="g-row-date">
+      <label>日　期</label>
+      <input type="date" id="g-date">
+    </div>
+    <div class="form-row">
+      <label id="g-l2">內容</label>
+      <textarea id="g-f2"></textarea>
+    </div>
+    <div class="form-actions">
+      <button class="btn outline" onclick="closeGenericModal()">取消</button>
+      <button class="btn outline" id="g-delete-btn" onclick="deleteGeneric()" style="display:none; color:var(--vermillion); border-color:var(--vermillion);">刪除</button>
+      <button class="btn" onclick="saveGeneric()">儲存</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+<div class="version-corner" id="version-corner">v1.1.0 · 2026-05-18</div>
+
+<script>
+/* =========================================================
+   APP VERSION  ─ 每次改版請更新此處 + 檔名
+   ========================================================= */
+const APP_VERSION   = 'v1.1.0';
+const APP_BUILD     = '2026-05-18';
+const APP_CODENAME  = '宣紙初版';
+document.title = `安東道場 宏化分壇 · ${APP_VERSION}`;
+document.addEventListener('DOMContentLoaded',()=>{
+  const t=document.getElementById('version-tag');
+  if(t) t.textContent = APP_VERSION;
+  const c=document.getElementById('version-corner');
+  if(c) c.textContent = `${APP_VERSION} · ${APP_BUILD} · ${APP_CODENAME}`;
+});
+
+/* =========================================================
+   LUNAR CALENDAR CONVERSION (公曆 → 農曆)
+   ========================================================= */
+const lunarInfo = [
+  0x04bd8,0x04ae0,0x0a570,0x054d5,0x0d260,0x0d950,0x16554,0x056a0,0x09ad0,0x055d2,
+  0x04ae0,0x0a5b6,0x0a4d0,0x0d250,0x1d255,0x0b540,0x0d6a0,0x0ada2,0x095b0,0x14977,
+  0x04970,0x0a4b0,0x0b4b5,0x06a50,0x06d40,0x1ab54,0x02b60,0x09570,0x052f2,0x04970,
+  0x06566,0x0d4a0,0x0ea50,0x06e95,0x05ad0,0x02b60,0x186e3,0x092e0,0x1c8d7,0x0c950,
+  0x0d4a0,0x1d8a6,0x0b550,0x056a0,0x1a5b4,0x025d0,0x092d0,0x0d2b2,0x0a950,0x0b557,
+  0x06ca0,0x0b550,0x15355,0x04da0,0x0a5b0,0x14573,0x052b0,0x0a9a8,0x0e950,0x06aa0,
+  0x0aea6,0x0ab50,0x04b60,0x0aae4,0x0a570,0x05260,0x0f263,0x0d950,0x05b57,0x056a0,
+  0x096d0,0x04dd5,0x04ad0,0x0a4d0,0x0d4d4,0x0d250,0x0d558,0x0b540,0x0b6a0,0x195a6,
+  0x095b0,0x049b0,0x0a974,0x0a4b0,0x0b27a,0x06a50,0x06d40,0x0af46,0x0ab60,0x09570,
+  0x04af5,0x04970,0x064b0,0x074a3,0x0ea50,0x06b58,0x055c0,0x0ab60,0x096d5,0x092e0,
+  0x0c960,0x0d954,0x0d4a0,0x0da50,0x07552,0x056a0,0x0abb7,0x025d0,0x092d0,0x0cab5,
+  0x0a950,0x0b4a0,0x0baa4,0x0ad50,0x055d9,0x04ba0,0x0a5b0,0x15176,0x052b0,0x0a930,
+  0x07954,0x06aa0,0x0ad50,0x05b52,0x04b60,0x0a6e6,0x0a4e0,0x0d260,0x0ea65,0x0d530
+];
+const ganzhi = {
+  gan:['甲','乙','丙','丁','戊','己','庚','辛','壬','癸'],
+  zhi:['子','丑','寅','卯','辰','巳','午','未','申','酉','戌','亥'],
+  animals:['鼠','牛','虎','兔','龍','蛇','馬','羊','猴','雞','狗','豬'],
+  months:['正','二','三','四','五','六','七','八','九','十','冬','臘'],
+  days1:['初','十','廿','卅'],
+  days2:['一','二','三','四','五','六','七','八','九','十']
+};
+function lYearDays(y){let s=348;for(let i=0x8000;i>0x8;i>>=1)s+=(lunarInfo[y-1900]&i)?1:0;return s+leapDays(y);}
+function leapDays(y){if(leapMonth(y))return(lunarInfo[y-1900]&0x10000)?30:29;return 0;}
+function leapMonth(y){return lunarInfo[y-1900]&0xf;}
+function monthDays(y,m){return(lunarInfo[y-1900]&(0x10000>>m))?30:29;}
+function toLunar(date){
+  let offset=Math.floor((date-new Date(1900,0,31))/86400000);
+  let y=1900,d=0;
+  for(;y<2100&&offset>0;y++){d=lYearDays(y);offset-=d;}
+  if(offset<0){offset+=d;y--;}
+  let leap=leapMonth(y),isLeap=false,m=1;
+  for(;m<13&&offset>0;m++){
+    if(leap>0&&m===leap+1&&!isLeap){--m;isLeap=true;d=leapDays(y);}else{d=monthDays(y,m);}
+    if(isLeap&&m===leap+1)isLeap=false;
+    offset-=d;
+  }
+  if(offset===0&&leap>0&&m===leap+1){if(isLeap)isLeap=false;else{isLeap=true;--m;}}
+  if(offset<0){offset+=d;--m;}
+  let day=offset+1;
+  let gz=(y-4);
+  let yearGZ=ganzhi.gan[gz%10]+ganzhi.zhi[gz%12]+'年';
+  let animal=ganzhi.animals[gz%12];
+  let monthStr=(isLeap?'閏':'')+ganzhi.months[m-1]+'月';
+  let dayStr;
+  if(day===10)dayStr='初十';
+  else if(day===20)dayStr='二十';
+  else if(day===30)dayStr='三十';
+  else dayStr=ganzhi.days1[Math.floor((day-1)/10)]+ganzhi.days2[(day-1)%10];
+  return {year:yearGZ, animal, month:monthStr, day:dayStr};
+}
+
+/* =========================================================
+   CLOCK
+   ========================================================= */
+function updateClock(){
+  const now=new Date();
+  const pad=n=>String(n).padStart(2,'0');
+  document.getElementById('clock').textContent=`${pad(now.getHours())}:${pad(now.getMinutes())}:${pad(now.getSeconds())}`;
+  const weekdays=['日','一','二','三','四','五','六'];
+  document.getElementById('date-greg').textContent=`國曆 ${now.getFullYear()} 年 ${now.getMonth()+1} 月 ${now.getDate()} 日 · 週${weekdays[now.getDay()]}`;
+  try{
+    const l=toLunar(now);
+    document.getElementById('date-lunar').textContent=`農曆 ${l.year}(${l.animal}) ${l.month}${l.day}`;
+  }catch(e){document.getElementById('date-lunar').textContent='農曆';}
+}
+setInterval(updateClock,1000); updateClock();
+
+/* =========================================================
+   STORAGE LAYER (localStorage · GitHub Pages 可用)
+   要切換到 Firebase 時,只需替換以下四個函式即可。
+   - Keys: members:{id}, calendar:{id}, library:{id}, practice:{id}, settings
+   ========================================================= */
+const NS = 'andong_dojo::'; // 命名空間,避免與其他網站衝突
+const Store = {
+  async list(prefix){
+    const items=[];
+    const fullPrefix=NS+prefix;
+    for(let i=0;i<localStorage.length;i++){
+      const k=localStorage.key(i);
+      if(k&&k.startsWith(fullPrefix)){
+        try{ items.push(JSON.parse(localStorage.getItem(k))); }catch(e){}
+      }
+    }
+    return items;
+  },
+  async save(key, obj){
+    try{ localStorage.setItem(NS+key, JSON.stringify(obj)); return true;}
+    catch(e){console.error(e); return false;}
+  },
+  async get(key){
+    const v=localStorage.getItem(NS+key);
+    if(!v) return null;
+    try{ return JSON.parse(v); }catch(e){return null;}
+  },
+  async remove(key){
+    localStorage.removeItem(NS+key); return true;
+  }
+};
+
+const uid=()=>'id_'+Date.now().toString(36)+Math.random().toString(36).slice(2,7);
+
+/* =========================================================
+   SETTINGS (region + user name)
+   ========================================================= */
+async function loadSettings(){
+  const s=await Store.get('settings');
+  if(s){
+    document.getElementById('region-select').value=
+      ['化真區','化善區','化美區','化定區'].includes(s.region)?s.region:'__custom__';
+    if(!['化真區','化善區','化美區','化定區'].includes(s.region)){
+      document.getElementById('region-custom').style.display='block';
+      document.getElementById('region-custom').value=s.region||'';
+    }
+    document.getElementById('user-name').value=s.name||'';
+  }
+}
+async function saveSettings(){
+  let region=document.getElementById('region-select').value;
+  if(region==='__custom__') region=document.getElementById('region-custom').value||'自訂分區';
+  await Store.save('settings',{region, name:document.getElementById('user-name').value});
+}
+document.getElementById('region-select').addEventListener('change',e=>{
+  document.getElementById('region-custom').style.display=e.target.value==='__custom__'?'block':'none';
+  saveSettings();
+});
+document.getElementById('region-custom').addEventListener('input',saveSettings);
+document.getElementById('user-name').addEventListener('input',saveSettings);
+
+/* =========================================================
+   TAB SWITCHING
+   ========================================================= */
+document.querySelectorAll('.tab').forEach(t=>{
+  t.addEventListener('click',()=>{
+    document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));
+    document.querySelectorAll('.panel').forEach(x=>x.classList.remove('active'));
+    t.classList.add('active');
+    document.getElementById('panel-'+t.dataset.tab).classList.add('active');
+    if(t.dataset.tab==='members') renderMembers();
+    if(t.dataset.tab==='calendar') renderList('calendar');
+    if(t.dataset.tab==='library') renderList('library');
+    if(t.dataset.tab==='practice') renderPractice();
+  });
+});
+
+/* =========================================================
+   STATUS (avatar color based on last update)
+   ========================================================= */
+function getStatus(updatedAt){
+  const days=(Date.now()-new Date(updatedAt).getTime())/(86400000);
+  if(days<=14) return {key:'green', emoji:'😊', label:'近期關懷', tag:'兩週內'};
+  if(days<=60) return {key:'yellow', emoji:'😟', label:'宜再聯繫', tag:'逾三週'};
+  return {key:'red', emoji:'😢', label:'久未聯繫', tag:'逾兩月'};
+}
+
+/* =========================================================
+   MEMBERS
+   ========================================================= */
+async function renderMembers(){
+  const items=await Store.list('members:');
+  items.sort((a,b)=>new Date(b.updatedAt)-new Date(a.updatedAt));
+  const list=document.getElementById('member-list');
+  const empty=document.getElementById('member-empty');
+  list.innerHTML='';
+  if(items.length===0){empty.style.display='block'; return;}
+  empty.style.display='none';
+  items.forEach(m=>{
+    const st=getStatus(m.updatedAt);
+    const lastNote=(m.notes&&m.notes.length)?m.notes[m.notes.length-1]:null;
+    const card=document.createElement('div');
+    card.className='member-card status-'+st.key;
+    card.innerHTML=`
+      <div class="member-head">
+        <div class="avatar ${st.key==='green'?'':st.key}">${st.emoji}</div>
+        <div>
+          <div class="member-name">${escapeHtml(m.name)} <span class="status-tag ${st.key==='green'?'':st.key}">${st.tag}</span></div>
+          <div class="member-meta">${m.age?m.age+'歲 · ':''}${escapeHtml(m.relation||'-')} · ${escapeHtml(m.region||'')}</div>
+        </div>
+      </div>
+      <div class="member-body">${lastNote?escapeHtml(lastNote.content):'<em style="opacity:.5">尚無關心紀錄</em>'}</div>
+      <div class="member-footer">
+        <span>建檔 ${m.createdAt.slice(0,10)}</span>
+        <span>更新 ${m.updatedAt.slice(0,10)}</span>
+      </div>`;
+    card.onclick=()=>openMemberModal(m.id);
+    list.appendChild(card);
+  });
+}
+
+async function openMemberModal(id){
+  const modal=document.getElementById('member-modal');
+  document.getElementById('m-id').value=id||'';
+  document.getElementById('m-note').value='';
+  if(id){
+    const m=await Store.get('members:'+id);
+    if(m){
+      document.getElementById('member-modal-title').textContent='編輯道親 · '+m.name;
+      document.getElementById('m-name').value=m.name||'';
+      document.getElementById('m-age').value=m.age||'';
+      document.getElementById('m-relation').value=m.relation||'';
+      document.getElementById('m-channel').value=m.channel||'';
+      document.getElementById('m-region').value=m.region||'化真區';
+      document.getElementById('m-delete-btn').style.display='inline-block';
+      const history=document.getElementById('m-notes-history');
+      const hl=document.getElementById('m-notes-list');
+      if(m.notes&&m.notes.length){
+        history.style.display='block';
+        hl.innerHTML=m.notes.slice().reverse().map(n=>
+          `<div class="note-entry"><span class="note-date">${n.date}</span>${escapeHtml(n.content)}</div>`
+        ).join('');
+      }else{history.style.display='none';}
+    }
+  }else{
+    document.getElementById('member-modal-title').textContent='新增道親';
+    ['m-name','m-age','m-relation','m-channel'].forEach(k=>document.getElementById(k).value='');
+    document.getElementById('m-region').value='化真區';
+    document.getElementById('m-delete-btn').style.display='none';
+    document.getElementById('m-notes-history').style.display='none';
+  }
+  modal.classList.add('active');
+}
+function closeMemberModal(){document.getElementById('member-modal').classList.remove('active');}
+
+async function saveMember(){
+  const name=document.getElementById('m-name').value.trim();
+  if(!name){toast('請輸入姓名'); return;}
+  let id=document.getElementById('m-id').value;
+  const now=new Date().toISOString();
+  let m;
+  if(id){
+    m=await Store.get('members:'+id)||{};
+  }else{
+    id=uid();
+    m={id, createdAt:now, notes:[]};
+  }
+  m.name=name;
+  m.age=parseInt(document.getElementById('m-age').value)||null;
+  m.relation=document.getElementById('m-relation').value;
+  m.channel=document.getElementById('m-channel').value;
+  m.region=document.getElementById('m-region').value;
+  const note=document.getElementById('m-note').value.trim();
+  if(note){
+    m.notes=m.notes||[];
+    m.notes.push({date:new Date().toISOString().slice(0,10), content:note});
+    m.updatedAt=now;
+  }else{
+    m.updatedAt=m.updatedAt||now;
+  }
+  await Store.save('members:'+id, m);
+  closeMemberModal();
+  toast('已儲存');
+  renderMembers();
+}
+
+async function deleteMember(){
+  const id=document.getElementById('m-id').value;
+  if(!id) return;
+  if(!confirm('確定刪除此道親紀錄?此動作無法復原。')) return;
+  await Store.remove('members:'+id);
+  closeMemberModal();
+  toast('已刪除');
+  renderMembers();
+}
+
+/* =========================================================
+   GENERIC LIST: calendar / library
+   ========================================================= */
+const labels={
+  calendar:{title:'新增行事', l1:'行事名稱', l2:'詳細內容', hasDate:true, emptyId:'calendar-empty', listId:'calendar-list'},
+  library: {title:'新增資料', l1:'資料標題', l2:'內容 / 連結', hasDate:false, emptyId:'library-empty',  listId:'library-list'}
+};
+async function renderList(type){
+  const items=await Store.list(type+':');
+  if(type==='calendar') items.sort((a,b)=>(a.date||'').localeCompare(b.date||''));
+  else items.sort((a,b)=>new Date(b.updatedAt)-new Date(a.updatedAt));
+  const list=document.getElementById(labels[type].listId);
+  const empty=document.getElementById(labels[type].emptyId);
+  list.innerHTML='';
+  if(items.length===0){empty.style.display='block'; return;}
+  empty.style.display='none';
+  items.forEach(it=>{
+    const row=document.createElement('div');
+    row.className='item-row';
+    let dateBlock='';
+    if(type==='calendar'&&it.date){
+      const d=new Date(it.date);
+      dateBlock=`<div class="item-date">${d.getMonth()+1}月<strong>${d.getDate()}</strong>${['日','一','二','三','四','五','六'][d.getDay()]}</div>`;
+    }else{
+      dateBlock=`<div class="item-date" style="font-size:11px;">${(it.updatedAt||'').slice(0,10)}</div>`;
+    }
+    row.innerHTML=`
+      ${dateBlock}
+      <div>
+        <div class="item-title">${escapeHtml(it.title||'(未命名)')}</div>
+        <div class="item-body">${escapeHtml(it.content||'')}</div>
+      </div>
+      <div class="item-action">編輯 ›</div>`;
+    row.onclick=()=>openGenericModal(type, it.id);
+    list.appendChild(row);
+  });
+}
+function openCalendarModal(){openGenericModal('calendar');}
+function openLibraryModal(){openGenericModal('library');}
+
+async function openGenericModal(type, id){
+  document.getElementById('g-type').value=type;
+  document.getElementById('g-id').value=id||'';
+  document.getElementById('g-title').textContent=labels[type].title;
+  document.getElementById('g-l1').textContent=labels[type].l1;
+  document.getElementById('g-l2').textContent=labels[type].l2;
+  document.getElementById('g-row-date').style.display=labels[type].hasDate?'flex':'none';
+  if(id){
+    const it=await Store.get(type+':'+id);
+    if(it){
+      document.getElementById('g-f1').value=it.title||'';
+      document.getElementById('g-f2').value=it.content||'';
+      document.getElementById('g-date').value=it.date||'';
+      document.getElementById('g-delete-btn').style.display='inline-block';
+    }
+  }else{
+    document.getElementById('g-f1').value='';
+    document.getElementById('g-f2').value='';
+    document.getElementById('g-date').value=new Date().toISOString().slice(0,10);
+    document.getElementById('g-delete-btn').style.display='none';
+  }
+  document.getElementById('generic-modal').classList.add('active');
+}
+function closeGenericModal(){document.getElementById('generic-modal').classList.remove('active');}
+
+async function saveGeneric(){
+  const type=document.getElementById('g-type').value;
+  let id=document.getElementById('g-id').value;
+  const now=new Date().toISOString();
+  let it;
+  if(id) it=await Store.get(type+':'+id)||{};
+  else { id=uid(); it={id, createdAt:now}; }
+  it.title=document.getElementById('g-f1').value;
+  it.content=document.getElementById('g-f2').value;
+  if(labels[type].hasDate) it.date=document.getElementById('g-date').value;
+  it.updatedAt=now;
+  await Store.save(type+':'+id, it);
+  closeGenericModal();
+  toast('已儲存');
+  renderList(type);
+}
+async function deleteGeneric(){
+  const type=document.getElementById('g-type').value;
+  const id=document.getElementById('g-id').value;
+  if(!confirm('確定刪除?')) return;
+  await Store.remove(type+':'+id);
+  closeGenericModal();
+  toast('已刪除');
+  renderList(type);
+}
+
+/* =========================================================
+   PRACTICE (monthly check-in tracker)
+   ========================================================= */
+async function renderPractice(){
+  const items=await Store.list('practice:');
+  const grid=document.getElementById('practice-grid');
+  const empty=document.getElementById('practice-empty');
+  grid.innerHTML='';
+  if(items.length===0){empty.style.display='block'; return;}
+  empty.style.display='none';
+  const now=new Date();
+  const ym=now.getFullYear()+'-'+String(now.getMonth()+1).padStart(2,'0');
+  const daysInMonth=new Date(now.getFullYear(), now.getMonth()+1, 0).getDate();
+  items.forEach(p=>{
+    p.checks=p.checks||{};
+    const monthChecks=p.checks[ym]||{};
+    let checkBoxes='';
+    for(let d=1; d<=daysInMonth; d++){
+      const done=!!monthChecks[d];
+      checkBoxes+=`<div class="check-day ${done?'done':''}" data-id="${p.id}" data-day="${d}">${d}</div>`;
+    }
+    const card=document.createElement('div');
+    card.className='practice-card';
+    card.innerHTML=`
+      <div class="icon">${p.icon||'🪷'}</div>
+      <div class="label" onclick="editPractice('${p.id}')" style="cursor:pointer;">${escapeHtml(p.title)}</div>
+      <div class="check-row">${checkBoxes}</div>
+      <div style="font-size:11px; color:var(--ink-soft); margin-top:6px;">本月完成 ${Object.values(monthChecks).filter(v=>v).length} 日</div>`;
+    grid.appendChild(card);
+  });
+  grid.querySelectorAll('.check-day').forEach(el=>{
+    el.onclick=async()=>{
+      const id=el.dataset.id, day=el.dataset.day;
+      const p=await Store.get('practice:'+id);
+      p.checks=p.checks||{};
+      p.checks[ym]=p.checks[ym]||{};
+      p.checks[ym][day]=!p.checks[ym][day];
+      p.updatedAt=new Date().toISOString();
+      await Store.save('practice:'+id, p);
+      el.classList.toggle('done');
+    };
+  });
+}
+function openPracticeModal(){
+  const title=prompt('請輸入功課名稱(如:早課誦經 / 行善一件 / 靜坐15分鐘)');
+  if(!title) return;
+  const icon=prompt('請輸入一個 emoji 作為圖示(可留空)','🪷')||'🪷';
+  const id=uid();
+  Store.save('practice:'+id, {id, title, icon, checks:{}, createdAt:new Date().toISOString(), updatedAt:new Date().toISOString()})
+    .then(()=>{toast('已新增'); renderPractice();});
+}
+async function editPractice(id){
+  const p=await Store.get('practice:'+id);
+  if(!p) return;
+  const t=prompt('編輯功課名稱(輸入 DELETE 可刪除)',p.title);
+  if(t===null) return;
+  if(t==='DELETE'){await Store.remove('practice:'+id); toast('已刪除'); renderPractice(); return;}
+  p.title=t;
+  await Store.save('practice:'+id, p);
+  renderPractice();
+}
+
+/* =========================================================
+   AI CHAT (offline supportive responses)
+   ========================================================= */
+const aiResponses=[
+  '修行如逆水行舟,不進則退。願您持之以恆,點滴成就。',
+  '心若清淨,處處皆是道場。試著從當下這一刻的呼吸開始安住。',
+  '六度萬行,以布施為首。今日可從一個微笑、一句愛語開始。',
+  '經云：「應無所住而生其心」。煩惱起時,觀察而不執取,自然消融。',
+  '成全道親之要,在於耐心與真誠。您願意紀錄關懷,本身即是難得的願行。',
+  '若有疑惑,建議與道場前輩或點傳師當面請示,線上對談僅供參考。',
+  '功課貴在日日不斷,而非一日千行。願您寬以待己、嚴以律行。'
+];
+function sendChat(){
+  const inp=document.getElementById('chat-input');
+  const q=inp.value.trim();
+  if(!q) return;
+  const m=document.getElementById('chat-messages');
+  const u=document.createElement('div'); u.className='msg user'; u.textContent=q; m.appendChild(u);
+  inp.value='';
+  m.scrollTop=m.scrollHeight;
+  setTimeout(()=>{
+    const a=document.createElement('div'); a.className='msg ai';
+    a.textContent=aiResponses[Math.floor(Math.random()*aiResponses.length)];
+    m.appendChild(a);
+    m.scrollTop=m.scrollHeight;
+  }, 700);
+}
+
+/* =========================================================
+   EXCEL IMPORT / EXPORT
+   ========================================================= */
+async function exportExcel(type){
+  const items=await Store.list(type+':');
+  if(items.length===0){toast('尚無資料可匯出'); return;}
+  let rows;
+  if(type==='members'){
+    rows=items.map(m=>({
+      ID:m.id, 姓名:m.name, 年齡:m.age||'', 關係:m.relation||'',
+      認識管道:m.channel||'', 分區:m.region||'',
+      最新關心紀錄:(m.notes&&m.notes.length)?m.notes[m.notes.length-1].content:'',
+      所有關心紀錄:(m.notes||[]).map(n=>`[${n.date}] ${n.content}`).join(' | '),
+      建檔日期:m.createdAt, 更新日期:m.updatedAt
+    }));
+  }else if(type==='calendar'){
+    rows=items.map(it=>({ID:it.id, 日期:it.date||'', 行事名稱:it.title||'', 內容:it.content||'', 建檔:it.createdAt, 更新:it.updatedAt}));
+  }else if(type==='library'){
+    rows=items.map(it=>({ID:it.id, 標題:it.title||'', 內容:it.content||'', 建檔:it.createdAt, 更新:it.updatedAt}));
+  }else if(type==='practice'){
+    rows=items.map(p=>({ID:p.id, 功課:p.title, 圖示:p.icon||'', 紀錄:JSON.stringify(p.checks||{}), 建檔:p.createdAt, 更新:p.updatedAt}));
+  }
+  const ws=XLSX.utils.json_to_sheet(rows);
+  const wb=XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb, ws, type);
+  const stamp=new Date().toISOString().slice(0,10);
+  XLSX.writeFile(wb, `安東道場_${type}_${stamp}.xlsx`);
+  toast('已匯出 Excel');
+}
+
+function importExcel(e){
+  const f=e.target.files[0]; if(!f) return;
+  const r=new FileReader();
+  r.onload=async ev=>{
+    const wb=XLSX.read(ev.target.result, {type:'array'});
+    const ws=wb.Sheets[wb.SheetNames[0]];
+    const rows=XLSX.utils.sheet_to_json(ws);
+    let count=0;
+    for(const row of rows){
+      if(!row['姓名']) continue;
+      const id=row.ID||uid();
+      const now=new Date().toISOString();
+      const existing=await Store.get('members:'+id);
+      const notes=existing?existing.notes||[]:[];
+      if(row['所有關心紀錄']){
+        const entries=String(row['所有關心紀錄']).split('|');
+        entries.forEach(en=>{
+          const match=en.trim().match(/^\[(.+?)\]\s*(.+)$/);
+          if(match) notes.push({date:match[1], content:match[2]});
+        });
+      }
+      await Store.save('members:'+id, {
+        id, name:row['姓名'], age:parseInt(row['年齡'])||null,
+        relation:row['關係']||'', channel:row['認識管道']||'',
+        region:row['分區']||'化真區', notes,
+        createdAt:row['建檔日期']||now, updatedAt:row['更新日期']||now
+      });
+      count++;
+    }
+    toast(`已匯入 ${count} 筆`);
+    renderMembers();
+  };
+  r.readAsArrayBuffer(f);
+  e.target.value='';
+}
+
+/* =========================================================
+   HELPERS
+   ========================================================= */
+function escapeHtml(s){return String(s||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+function toast(msg){
+  const t=document.getElementById('toast');
+  t.textContent=msg; t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),2200);
+}
+
+/* =========================================================
+   INIT
+   ========================================================= */
+(async function init(){
+  await loadSettings();
+  await renderMembers();
+})();
+</script>
+</body>
+</html>
