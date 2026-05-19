@@ -2314,8 +2314,37 @@
   @media (min-width: 641px) and (max-width: 1099px) {
     .panel { padding: 24px 28px 120px; }
     .meta-bar { padding: 16px 28px; }
-    .member-list { grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); }
+    .member-list { grid-template-columns: repeat(auto-fill, minmax(380px, 1fr)); }
     .header::before, .header::after { font-size: 26px; }
+
+    /* ─── 平板版字級放大 35% ─── */
+    .panel-title { font-size: 30px; letter-spacing: 4px; }
+    .panel-vow-text { font-size: 19px; letter-spacing: 4px; }
+    .panel-sub { font-size: 15px; letter-spacing: 2px; }
+
+    /* 道親卡片放大 */
+    .member-card { padding: 18px 20px; }
+    .avatar { width: 60px; height: 60px; font-size: 34px; }
+    .member-head { gap: 16px; margin-bottom: 10px; }
+    .member-name { font-size: 24px; letter-spacing: 3px; }
+    .member-meta { font-size: 15px; letter-spacing: 1.5px; }
+    .status-tag { font-size: 15px; padding: 5px 14px; border-radius: 14px; }
+    .status-bar { margin: 10px 0 8px; }
+    .member-progress { font-size: 16px; padding: 7px 14px; letter-spacing: 1.5px; }
+    .member-body { font-size: 17px; line-height: 1.7; padding-top: 10px; max-height: 110px; }
+    .member-footer { font-size: 13px; letter-spacing: 1.5px; margin-top: 12px; }
+
+    /* 行事曆/學習資料/功課等列表也放大 */
+    .item-row { padding: 16px 18px; gap: 16px; }
+    .item-title { font-size: 20px; letter-spacing: 1.5px; }
+    .item-body { font-size: 15px; line-height: 1.7; }
+    .item-date { font-size: 16px; }
+    .item-date strong { font-size: 26px; }
+    .practice-card .label { font-size: 18px; }
+    .practice-card .icon { font-size: 34px; }
+
+    /* 表單元素也適度放大 */
+    .btn { font-size: 16px; padding: 9px 18px; letter-spacing: 2.5px; }
   }
 
   /* 手機直式:確保抬頭一行不換行,版面緊湊 */
@@ -2392,7 +2421,7 @@
   <div class="title-wrap">
     <div class="title">安東道場 宏化分壇</div>
     <div class="subtitle">道 務 自 我 紀 錄 管 理</div>
-    <div class="version-tag" id="version-tag">v1.14.1</div>
+    <div class="version-tag" id="version-tag">v1.14.2</div>
   </div>
 </header>
 
@@ -2720,6 +2749,9 @@
       <label>現狀進度</label>
       <select id="m-progress">
         <option value="">— 請選擇 —</option>
+        <option value="未求道">未求道</option>
+        <option value="已求道">已求道</option>
+        <option value="求道一段時間未接近">求道一段時間未接近</option>
         <option value="剛求道">剛求道</option>
         <option value="已參加明道班">已參加明道班</option>
         <option value="已參加關懷小組">已參加關懷小組</option>
@@ -2928,15 +2960,15 @@
 </div>
 
 <div class="toast" id="toast"></div>
-<div class="version-corner" id="version-corner">v1.14.1 · 2026-05-19</div>
+<div class="version-corner" id="version-corner">v1.14.2 · 2026-05-19</div>
 
 <script>
 /* =========================================================
    APP VERSION  ─ 每次改版請更新此處 + 檔名
    ========================================================= */
-const APP_VERSION   = 'v1.14.1';
+const APP_VERSION   = 'v1.14.2';
 const APP_BUILD     = '2026-05-19';
-const APP_CODENAME  = '進度關懷';
+const APP_CODENAME  = '平板放大';
 document.title = `宏化分壇 渡人管理 · ${APP_VERSION}`;
 
 /* =========================================================
