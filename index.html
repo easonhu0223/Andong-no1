@@ -691,19 +691,19 @@
     border-top: 1px solid var(--gold);
     box-shadow: 0 -6px 24px rgba(0,0,0,0.18);
     padding-bottom: env(safe-area-inset-bottom, 0);
-    /* 隱藏原生捲軸,改用自製指示器 */
     scrollbar-width: none;
   }
   .tabs::-webkit-scrollbar { display: none; }
 
+  /* 自適模式:字級透過 --tab-fs 動態決定 */
   .tab {
     flex: 0 0 auto;
-    min-width: 90px;
+    min-width: 82px;
     text-align: center;
-    padding: 10px 14px;
+    padding: calc(var(--tab-fs, 15px) * 0.65) calc(var(--tab-fs, 15px) * 0.9);
     color: rgba(252, 244, 228, 0.88);
     font-family: 'ZCOOL XiaoWei', serif;
-    font-size: 16px;
+    font-size: var(--tab-fs, 15px);
     letter-spacing: 2px;
     cursor: pointer;
     border-right: 1px solid rgba(244, 234, 215, 0.10);
@@ -717,7 +717,7 @@
   .tab .num {
     display: block;
     font-family: 'Cormorant Garamond', serif;
-    font-size: 11px;
+    font-size: calc(var(--tab-fs, 15px) * 0.65);
     color: var(--gold-light);
     margin-bottom: 3px;
     letter-spacing: 1.5px;
@@ -736,6 +736,13 @@
     height: 2.5px;
     background: var(--gold);
     border-radius: 0 0 2px 2px;
+  }
+
+  /* 「填滿模式」:畫面寬足以容納完整 6 格時,JS 加上此 class */
+  .tabs.fit-mode { overflow-x: hidden; }
+  .tabs.fit-mode .tab {
+    flex: 1 1 0;
+    min-width: 0;
   }
 
   /* 左右淡出陰影,暗示可滑動 */
@@ -2101,15 +2108,12 @@
     .tabs {
       justify-content: center;
     }
-    .tab { flex: 0 0 auto; min-width: 160px; }
     .panel { padding: 32px 40px 140px; }
     .meta-bar { padding: 16px 40px; grid-template-columns: 1fr 1fr; }
     .member-list { grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 18px; }
     .practice-grid { grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); }
     .title { font-size: 48px; letter-spacing: 6px; }
     .subtitle { font-size: 14px; letter-spacing: 8px; }
-    .tab { font-size: 18px; padding: 12px 16px; letter-spacing: 3px; min-width: 120px; }
-    .tab .num { font-size: 12px; }
     /* 桌機上不顯示小圓點(因為 6 個一次就能看完) */
     .tabs-indicator { display: none; }
     .tabs-wrap::before, .tabs-wrap::after { display: none; }
@@ -2120,7 +2124,6 @@
     .panel { padding: 24px 28px 120px; }
     .meta-bar { padding: 16px 28px; }
     .member-list { grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); }
-    .tab { font-size: 16px; padding: 11px 16px; letter-spacing: 2px; min-width: 110px; }
     .header::before, .header::after { font-size: 26px; }
   }
 
@@ -2180,8 +2183,6 @@
     .item-row { grid-template-columns: auto 1fr; }
     .item-row .item-action { grid-column: 1 / -1; text-align: right; padding-top: 4px; }
     .version-corner { bottom: 100px; font-size: 9px; }
-    .tab { font-size: 15px; padding: 10px 14px; letter-spacing: 1.5px; min-width: 82px; }
-    .tab .num { font-size: 10px; }
   }
 
   /* 極窄螢幕:再縮一級 */
@@ -2189,7 +2190,6 @@
     .title { font-size: 20px; letter-spacing: 0.5px; }
     .subtitle { font-size: 9px; letter-spacing: 2px; }
     .header::before, .header::after { display: none; }
-    .tab { font-size: 14px; padding: 9px 10px; min-width: 76px; }
   }
 </style>
 </head>
@@ -2200,7 +2200,7 @@
   <div class="title-wrap">
     <div class="title">安東道場 宏化分壇</div>
     <div class="subtitle">道 務 自 我 紀 錄 管 理</div>
-    <div class="version-tag" id="version-tag">v1.13.2</div>
+    <div class="version-tag" id="version-tag">v1.13.3</div>
   </div>
 </header>
 
@@ -2697,15 +2697,15 @@
 </div>
 
 <div class="toast" id="toast"></div>
-<div class="version-corner" id="version-corner">v1.13.2 · 2026-05-19</div>
+<div class="version-corner" id="version-corner">v1.13.3 · 2026-05-19</div>
 
 <script>
 /* =========================================================
    APP VERSION  ─ 每次改版請更新此處 + 檔名
    ========================================================= */
-const APP_VERSION   = 'v1.13.2';
+const APP_VERSION   = 'v1.13.3';
 const APP_BUILD     = '2026-05-19';
-const APP_CODENAME  = '介面微調';
+const APP_CODENAME  = '自適底欄';
 document.title = `宏化分壇 渡人管理 · ${APP_VERSION}`;
 
 /* =========================================================
@@ -3106,6 +3106,54 @@ document.getElementById('m-relation').addEventListener('change', e=>{
     custom.style.display = 'none';
   }
 });
+
+/* =========================================================
+   底部六大選項 — 自動匹配可視寬度
+   - 若 6 格能完整塞下:平均分配,字級隨欄寬等比放大(最大封頂)
+   - 若塞不下:回到橫向可滑模式,字級維持手機可用大小
+   ========================================================= */
+function fitTabs(){
+  const tabs = document.getElementById('tabs');
+  const wrap = document.getElementById('tabs-wrap');
+  if(!tabs) return;
+  const viewW = wrap ? wrap.clientWidth : tabs.clientWidth;
+  const tabEls = tabs.querySelectorAll('.tab');
+  const n = tabEls.length || 6;
+
+  // 1) 量「最大字級下若 6 格平均分配,每格的寬度」
+  //    每格寬 = 視寬 / n;欄寬越大,字級越大(以欄寬的比例設定字級)
+  //    字級對應:約 18% of perCell,介於 13~24px 之間
+  const perCell = viewW / n;
+  let candidateFs = perCell * 0.18;
+  // 上下限封頂
+  candidateFs = Math.max(13, Math.min(24, candidateFs));
+
+  // 2) 試算「此字級下,每個 tab 的實際所需寬度」
+  //    暫時設定字級,然後讀取 scrollWidth 看是否塞得下
+  tabs.classList.add('fit-mode');
+  tabs.style.setProperty('--tab-fs', candidateFs + 'px');
+
+  // 等下一幀讓瀏覽器重排
+  requestAnimationFrame(()=>{
+    // 在 fit-mode 下,如果內容仍然會溢出(scrollWidth > clientWidth),
+    // 則切換回滾動模式
+    const overflow = tabs.scrollWidth > tabs.clientWidth + 2;
+    if(overflow){
+      // 改回滾動模式,字級維持手機尺寸
+      tabs.classList.remove('fit-mode');
+      const mobileFs = Math.max(13, Math.min(16, viewW / 30));
+      tabs.style.setProperty('--tab-fs', mobileFs + 'px');
+    }
+    syncTabsIndicator();
+  });
+}
+window.addEventListener('load', fitTabs);
+window.addEventListener('resize', ()=>{
+  if(fitTabs._t) clearTimeout(fitTabs._t);
+  fitTabs._t = setTimeout(fitTabs, 150);
+});
+// 初始呼叫(防止某些瀏覽器 load 延遲)
+setTimeout(fitTabs, 50);
 
 /* =========================================================
    TAB SWITCHING + 滑動同步
