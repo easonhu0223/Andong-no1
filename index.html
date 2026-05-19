@@ -830,7 +830,9 @@
     margin-bottom: 18px;
     padding-bottom: 12px;
     border-bottom: 1px dashed var(--line);
+    gap: 12px;
   }
+  .panel-head .actions { flex-shrink: 0; }
   .panel-title {
     font-family: 'Ma Shan Zheng', serif;
     font-size: 22px;
@@ -842,6 +844,66 @@
     color: var(--ink-soft);
     letter-spacing: 1.5px;
     margin-top: 2px;
+  }
+  .panel-title-wrap {
+    flex: 1;
+    min-width: 0;
+    text-align: center;
+  }
+  .panel-title-wrap .panel-title {
+    display: inline-block;
+  }
+  .panel-title-wrap .panel-sub {
+    text-align: center;
+  }
+
+  /* 願文副題 — 為了各區初階敦化班努力 */
+  .panel-vow {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    margin: 8px 0 4px;
+    padding: 6px 16px;
+    background:
+      linear-gradient(90deg,
+        transparent 0%,
+        rgba(176, 132, 86, 0.08) 15%,
+        rgba(176, 132, 86, 0.15) 50%,
+        rgba(176, 132, 86, 0.08) 85%,
+        transparent 100%
+      );
+    border-top: 1px solid rgba(176, 132, 86, 0.3);
+    border-bottom: 1px solid rgba(176, 132, 86, 0.3);
+    position: relative;
+  }
+  .panel-vow::before,
+  .panel-vow::after {
+    content: '';
+    position: absolute;
+    left: 0; right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--gold), transparent);
+    opacity: 0.4;
+  }
+  .panel-vow::before { top: 2px; }
+  .panel-vow::after  { bottom: 2px; }
+  .panel-vow-dot {
+    color: var(--gold);
+    font-size: 9px;
+    opacity: 0.7;
+    transform: translateY(-1px);
+  }
+  .panel-vow-text {
+    font-family: 'Ma Shan Zheng', 'Noto Serif TC', serif;
+    font-size: 14px;
+    color: var(--vermillion);
+    letter-spacing: 3px;
+    text-shadow: 0 1px 0 rgba(255, 255, 255, 0.4);
+    line-height: 1.4;
+  }
+  @media (max-width: 480px) {
+    .panel-vow { padding: 5px 10px; gap: 6px; }
+    .panel-vow-text { font-size: 12px; letter-spacing: 1.5px; }
   }
 
   .actions {
@@ -1735,6 +1797,26 @@
     overflow: hidden;
     position: relative;
   }
+  .status-bar {
+    margin: 8px 0 6px;
+    text-align: center;
+  }
+  .member-progress {
+    margin-bottom: 8px;
+    padding: 5px 10px;
+    font-family: 'ZCOOL XiaoWei', serif;
+    font-size: 12px;
+    color: var(--vermillion-d);
+    letter-spacing: 1px;
+    background: linear-gradient(90deg,
+      rgba(176, 132, 86, 0.10),
+      rgba(176, 132, 86, 0.18),
+      rgba(176, 132, 86, 0.10));
+    border-left: 2px solid var(--gold);
+    border-right: 2px solid var(--gold);
+    border-radius: 2px;
+    text-align: center;
+  }
   .member-footer {
     display: flex;
     justify-content: space-between;
@@ -1744,15 +1826,39 @@
     letter-spacing: 1px;
   }
   .status-tag {
-    padding: 2px 8px;
-    border-radius: 10px;
+    padding: 3px 10px;
+    border-radius: 12px;
     background: #cfe5c4;
     color: #2d4d24;
     font-family: 'ZCOOL XiaoWei', serif;
     letter-spacing: 1px;
+    font-size: 11px;
+    white-space: nowrap;
+    border: 1px solid rgba(45, 77, 36, 0.18);
   }
-  .status-tag.yellow { background: #f5e5b8; color: #6b4e15; }
-  .status-tag.red { background: #f5c7c0; color: #5c1c14; }
+  .status-tag.yellow {
+    background: #f5e5b8;
+    color: #6b4e15;
+    border-color: rgba(107, 78, 21, 0.25);
+  }
+  .status-tag.red {
+    background: #fde4df;
+    color: #8a2a1f;
+    border-color: rgba(138, 42, 31, 0.35);
+    font-weight: 500;
+    animation: status-red-blink 1.4s ease-in-out infinite;
+  }
+  @keyframes status-red-blink {
+    0%, 100% {
+      background: #fde4df;
+      box-shadow: 0 0 0 0 rgba(138, 42, 31, 0.0);
+    }
+    50% {
+      background: #f8c8c0;
+      box-shadow: 0 0 0 3px rgba(138, 42, 31, 0.18),
+                  0 0 10px rgba(138, 42, 31, 0.35);
+    }
+  }
 
   /* ---------- EMPTY STATE ---------- */
   .empty {
@@ -1842,6 +1948,91 @@
   .form-row input:focus,
   .form-row textarea:focus,
   .form-row select:focus { border-color: var(--gold); }
+
+  /* 性別選擇 — 乾道/坤道 質感切換 */
+  .gender-toggle {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-top: 2px;
+  }
+  .gender-opt {
+    position: relative;
+    cursor: pointer;
+    user-select: none;
+  }
+  .gender-opt input[type="radio"] {
+    position: absolute;
+    opacity: 0;
+    width: 0; height: 0;
+  }
+  .gender-label {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 10px 14px;
+    background: linear-gradient(180deg, rgba(255, 252, 245, 0.85), rgba(248, 240, 220, 0.7));
+    border: 1.5px solid rgba(176, 132, 86, 0.35);
+    border-radius: 3px;
+    transition: all 0.25s;
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.6),
+      0 1px 2px rgba(80, 50, 20, 0.05);
+  }
+  .gender-symbol {
+    font-size: 22px;
+    line-height: 1;
+    color: var(--ink-soft);
+    transition: all 0.25s;
+    letter-spacing: 0;
+  }
+  .gender-text {
+    font-family: 'ZCOOL XiaoWei', serif;
+    font-size: 15px;
+    color: var(--ink);
+    letter-spacing: 2px;
+  }
+  .gender-text small {
+    font-family: 'Noto Serif TC', serif;
+    font-size: 11px;
+    color: var(--ink-soft);
+    letter-spacing: 0;
+    margin-left: 2px;
+  }
+  .gender-opt:hover .gender-label {
+    border-color: var(--gold);
+    background: linear-gradient(180deg, #fffcf3, #fdf7e3);
+  }
+  /* 選中:乾道 朱砂 */
+  .gender-qian input:checked ~ .gender-label {
+    border-color: var(--vermillion);
+    background: linear-gradient(180deg, rgba(255, 235, 230, 0.9), rgba(255, 220, 215, 0.75));
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.7),
+      0 0 0 2px rgba(138, 42, 31, 0.18),
+      0 2px 6px rgba(138, 42, 31, 0.12);
+  }
+  .gender-qian input:checked ~ .gender-label .gender-symbol {
+    color: var(--vermillion);
+    text-shadow: 0 0 8px rgba(138, 42, 31, 0.4);
+  }
+  .gender-qian input:checked ~ .gender-label .gender-text { color: var(--vermillion); font-weight: 500; }
+
+  /* 選中:坤道 金棕 */
+  .gender-kun input:checked ~ .gender-label {
+    border-color: var(--gold);
+    background: linear-gradient(180deg, rgba(255, 245, 220, 0.9), rgba(248, 232, 195, 0.75));
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.7),
+      0 0 0 2px rgba(176, 132, 86, 0.25),
+      0 2px 6px rgba(176, 132, 86, 0.15);
+  }
+  .gender-kun input:checked ~ .gender-label .gender-symbol {
+    color: var(--gold);
+    text-shadow: 0 0 8px rgba(212, 165, 116, 0.45);
+  }
+  .gender-kun input:checked ~ .gender-label .gender-text { color: #8a6539; font-weight: 500; }
 
   .form-actions {
     display: flex;
@@ -2175,7 +2366,8 @@
     }
     .tab .num { display: none; }
     .panel { padding: 18px 12px 100px; }
-    .panel-head { flex-direction: column; align-items: flex-start; gap: 10px; }
+    .panel-head { flex-direction: column; align-items: center; gap: 10px; }
+    .panel-head .actions { width: 100%; justify-content: center; }
     .panel-title { font-size: 20px; letter-spacing: 2px; }
     .member-list { grid-template-columns: 1fr; gap: 10px; }
     .practice-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
@@ -2200,7 +2392,7 @@
   <div class="title-wrap">
     <div class="title">安東道場 宏化分壇</div>
     <div class="subtitle">道 務 自 我 紀 錄 管 理</div>
-    <div class="version-tag" id="version-tag">v1.13.3</div>
+    <div class="version-tag" id="version-tag">v1.14.1</div>
   </div>
 </header>
 
@@ -2310,8 +2502,13 @@
 <!-- ============ PANEL: MEMBERS ============ -->
 <section class="panel active" id="panel-members">
   <div class="panel-head">
-    <div>
+    <div class="panel-title-wrap">
       <div class="panel-title">成全道親名單</div>
+      <div class="panel-vow">
+        <span class="panel-vow-dot">❖</span>
+        <span class="panel-vow-text">為 了 各 區 初 階 敦 化 班 努 力</span>
+        <span class="panel-vow-dot">❖</span>
+      </div>
       <div class="panel-sub">依分區管理 · 自動依更新日期顯示關懷狀態</div>
     </div>
     <div class="actions">
@@ -2480,6 +2677,25 @@
       <input type="text" id="m-name" required>
     </div>
     <div class="form-row">
+      <label>性　別</label>
+      <div class="gender-toggle">
+        <label class="gender-opt gender-qian">
+          <input type="radio" name="m-gender" value="乾道">
+          <span class="gender-label">
+            <span class="gender-symbol">☰</span>
+            <span class="gender-text">男　<small>(乾道)</small></span>
+          </span>
+        </label>
+        <label class="gender-opt gender-kun">
+          <input type="radio" name="m-gender" value="坤道">
+          <span class="gender-label">
+            <span class="gender-symbol">☷</span>
+            <span class="gender-text">女　<small>(坤道)</small></span>
+          </span>
+        </label>
+      </div>
+    </div>
+    <div class="form-row">
       <label>年　齡</label>
       <input type="number" id="m-age" min="0">
     </div>
@@ -2499,6 +2715,21 @@
     <div class="form-row">
       <label>認識管道</label>
       <input type="text" id="m-channel" placeholder="如:朋友介紹 / 共修活動 / 因緣聚會">
+    </div>
+    <div class="form-row">
+      <label>現狀進度</label>
+      <select id="m-progress">
+        <option value="">— 請選擇 —</option>
+        <option value="剛求道">剛求道</option>
+        <option value="已參加明道班">已參加明道班</option>
+        <option value="已參加關懷小組">已參加關懷小組</option>
+        <option value="固定來初一十五班">固定來初一十五班</option>
+        <option value="已參加分壇初階敦化班">已參加分壇初階敦化班</option>
+        <option value="已參加總壇敦化班">已參加總壇敦化班</option>
+        <option value="已參加人才班">已參加人才班</option>
+        <option value="已參加明德班">已參加明德班</option>
+        <option value="已參加長青班">已參加長青班</option>
+      </select>
     </div>
     <div class="form-row">
       <label>新增今日關心紀錄</label>
@@ -2697,15 +2928,15 @@
 </div>
 
 <div class="toast" id="toast"></div>
-<div class="version-corner" id="version-corner">v1.13.3 · 2026-05-19</div>
+<div class="version-corner" id="version-corner">v1.14.1 · 2026-05-19</div>
 
 <script>
 /* =========================================================
    APP VERSION  ─ 每次改版請更新此處 + 檔名
    ========================================================= */
-const APP_VERSION   = 'v1.13.3';
+const APP_VERSION   = 'v1.14.1';
 const APP_BUILD     = '2026-05-19';
-const APP_CODENAME  = '自適底欄';
+const APP_CODENAME  = '進度關懷';
 document.title = `宏化分壇 渡人管理 · ${APP_VERSION}`;
 
 /* =========================================================
@@ -3214,9 +3445,9 @@ window.addEventListener('resize', syncTabsIndicator);
    ========================================================= */
 function getStatus(updatedAt){
   const days=(Date.now()-new Date(updatedAt).getTime())/(86400000);
-  if(days<=14) return {key:'green', emoji:'😊', label:'近期關懷', tag:'兩週內'};
-  if(days<=60) return {key:'yellow', emoji:'😟', label:'宜再聯繫', tag:'逾三週'};
-  return {key:'red', emoji:'😢', label:'久未聯繫', tag:'逾兩月'};
+  if(days<=14) return {key:'green',  emoji:'😀', label:'兩週內', tag:'感謝前賢跟我聯絡 😀'};
+  if(days<=60) return {key:'yellow', emoji:'😟', label:'逾三週', tag:'很久沒有關心我了'};
+  return                {key:'red',    emoji:'😢', label:'逾兩月', tag:'拜託快救救我'};
 }
 
 /* =========================================================
@@ -3238,11 +3469,15 @@ async function renderMembers(){
     card.innerHTML=`
       <div class="member-head">
         <div class="avatar ${st.key==='green'?'':st.key}">${st.emoji}</div>
-        <div>
-          <div class="member-name">${escapeHtml(m.name)} <span class="status-tag ${st.key==='green'?'':st.key}">${st.tag}</span></div>
-          <div class="member-meta">${m.age?m.age+'歲 · ':''}${escapeHtml(m.relation||'-')} · ${escapeHtml(m.region||'')}</div>
+        <div style="flex:1; min-width:0;">
+          <div class="member-name">${escapeHtml(m.name)}</div>
+          <div class="member-meta">${m.gender?escapeHtml(m.gender)+' · ':''}${m.age?m.age+'歲 · ':''}${escapeHtml(m.relation||'-')} · ${escapeHtml(m.region||'')}</div>
         </div>
       </div>
+      <div class="status-bar">
+        <span class="status-tag ${st.key==='green'?'':st.key}">${st.tag}</span>
+      </div>
+      ${m.progress?`<div class="member-progress">📍 ${escapeHtml(m.progress)}</div>`:''}
       <div class="member-body">${lastNote?escapeHtml(lastNote.content):'<em style="opacity:.5">尚無關心紀錄</em>'}</div>
       <div class="member-footer">
         <span>建檔 ${m.createdAt.slice(0,10)}</span>
@@ -3260,12 +3495,19 @@ async function openMemberModal(id){
   document.getElementById('m-note').value='';
   document.getElementById('m-relation-custom').style.display='none';
   document.getElementById('m-relation-custom').value='';
+  // 清除性別選擇
+  document.querySelectorAll('input[name="m-gender"]').forEach(r=>r.checked=false);
   if(id){
     const m=await Store.get('members:'+id);
     if(m){
       document.getElementById('member-modal-title').textContent='編輯道親 · '+m.name;
       document.getElementById('m-name').value=m.name||'';
       document.getElementById('m-age').value=m.age||'';
+      // 性別
+      if(m.gender){
+        const r = document.querySelector(`input[name="m-gender"][value="${m.gender}"]`);
+        if(r) r.checked = true;
+      }
       // 關係:若是預設選項則選下拉,否則用自行輸入
       const rel = m.relation || '';
       if(RELATION_OPTIONS.includes(rel) || rel===''){
@@ -3276,6 +3518,7 @@ async function openMemberModal(id){
         document.getElementById('m-relation-custom').value=rel;
       }
       document.getElementById('m-channel').value=m.channel||'';
+      document.getElementById('m-progress').value=m.progress||'';
       document.getElementById('m-delete-btn').style.display='inline-block';
       const history=document.getElementById('m-notes-history');
       const hl=document.getElementById('m-notes-list');
@@ -3290,6 +3533,7 @@ async function openMemberModal(id){
     document.getElementById('member-modal-title').textContent='新增道親';
     ['m-name','m-age','m-channel'].forEach(k=>document.getElementById(k).value='');
     document.getElementById('m-relation').value='';
+    document.getElementById('m-progress').value='';
     document.getElementById('m-delete-btn').style.display='none';
     document.getElementById('m-notes-history').style.display='none';
   }
@@ -3311,6 +3555,9 @@ async function saveMember(){
   }
   m.name=name;
   m.age=parseInt(document.getElementById('m-age').value)||null;
+  // 性別:讀取被選取的 radio
+  const genderRadio = document.querySelector('input[name="m-gender"]:checked');
+  m.gender = genderRadio ? genderRadio.value : '';
   // 關係:若選自行輸入,讀取自訂欄位
   let rel = document.getElementById('m-relation').value;
   if(rel === '__custom__'){
@@ -3318,6 +3565,7 @@ async function saveMember(){
   }
   m.relation = rel;
   m.channel=document.getElementById('m-channel').value;
+  m.progress=document.getElementById('m-progress').value;
   // 分區:沿用主頁面當前選擇(讓所有新建道親自動帶入)
   if(!m.region){
     const s = await Store.get('settings');
@@ -3851,8 +4099,8 @@ async function exportExcel(type){
   let rows;
   if(type==='members'){
     rows=items.map(m=>({
-      ID:m.id, 姓名:m.name, 年齡:m.age||'', 關係:m.relation||'',
-      認識管道:m.channel||'', 分區:m.region||'',
+      ID:m.id, 姓名:m.name, 性別:m.gender||'', 年齡:m.age||'', 關係:m.relation||'',
+      認識管道:m.channel||'', 現狀進度:m.progress||'', 分區:m.region||'',
       最新關心紀錄:(m.notes&&m.notes.length)?m.notes[m.notes.length-1].content:'',
       所有關心紀錄:(m.notes||[]).map(n=>`[${n.date}] ${n.content}`).join(' | '),
       建檔日期:m.createdAt, 更新日期:m.updatedAt
@@ -3894,8 +4142,9 @@ function importExcel(e){
         });
       }
       await Store.save('members:'+id, {
-        id, name:row['姓名'], age:parseInt(row['年齡'])||null,
+        id, name:row['姓名'], gender:row['性別']||'', age:parseInt(row['年齡'])||null,
         relation:row['關係']||'', channel:row['認識管道']||'',
+        progress:row['現狀進度']||'',
         region:row['分區']||'化真區', notes,
         createdAt:row['建檔日期']||now, updatedAt:row['更新日期']||now
       });
@@ -3935,8 +4184,8 @@ async function exportAllExcel(){
 
   // 道親名單
   const mRows = members.map(m=>({
-    ID:m.id, 姓名:m.name, 年齡:m.age||'', 關係:m.relation||'',
-    認識管道:m.channel||'', 分區:m.region||'',
+    ID:m.id, 姓名:m.name, 性別:m.gender||'', 年齡:m.age||'', 關係:m.relation||'',
+    認識管道:m.channel||'', 現狀進度:m.progress||'', 分區:m.region||'',
     最新關心紀錄:(m.notes&&m.notes.length)?m.notes[m.notes.length-1].content:'',
     所有關心紀錄:(m.notes||[]).map(n=>`[${n.date}] ${n.content}`).join(' | '),
     建檔日期:m.createdAt, 更新日期:m.updatedAt
@@ -3994,7 +4243,7 @@ function importAllExcel(e){
             });
           }
           await Store.save('members:'+id, {
-            id, name:row['姓名'], age:parseInt(row['年齡'])||null,
+            id, name:row['姓名'], gender:row['性別']||'', age:parseInt(row['年齡'])||null,
             relation:row['關係']||'', channel:row['認識管道']||'',
             region:row['分區']||'化真區', notes,
             createdAt:row['建檔日期']||now, updatedAt:row['更新日期']||now
