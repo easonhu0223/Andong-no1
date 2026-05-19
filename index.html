@@ -135,43 +135,199 @@
     text-overflow: ellipsis;
   }
 
-  /* ---------- SECOND ROW ---------- */
+  /* ---------- SECOND ROW (左右 50/50) ---------- */
   .meta-bar {
     display: grid;
-    grid-template-columns: 1fr 1fr 2.6fr;
-    gap: 10px;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
     padding: 14px 18px;
     background: rgba(235, 223, 196, 0.45);
     border-bottom: 1px solid var(--line);
     align-items: stretch;
   }
-  .meta-cell {
+  /* 左半:上方分區+姓名,下方仙佛慈語匾額 */
+  .meta-left {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    min-height: 100%;
+  }
+  .meta-row-top {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    flex-shrink: 0;
+  }
+  .meta-field {
     display: flex;
     flex-direction: column;
     gap: 4px;
   }
-  .meta-cell label {
+  .meta-field label {
     font-family: 'ZCOOL XiaoWei', serif;
     font-size: 11px;
     letter-spacing: 3px;
     color: var(--ink-soft);
+    padding-left: 2px;
   }
-  .meta-cell select,
-  .meta-cell input {
-    font-family: inherit;
+
+  /* 有質感的輸入框 — 仿古卷軸樣式 */
+  .field-wrap {
+    position: relative;
+  }
+  .ornate-input {
+    width: 100%;
+    font-family: 'Noto Serif TC', serif;
     font-size: 14px;
     color: var(--ink);
-    background: rgba(255, 252, 245, 0.7);
-    border: 1px solid var(--line);
-    padding: 7px 10px;
+    background:
+      linear-gradient(180deg, rgba(255, 252, 245, 0.95), rgba(248, 240, 220, 0.85));
+    border: 1px solid rgba(176, 132, 86, 0.45);
+    padding: 8px 30px 8px 14px;
     border-radius: 2px;
     outline: none;
-    transition: border-color 0.2s, background 0.2s;
+    letter-spacing: 1px;
+    transition: all 0.25s;
+    appearance: none;
+    -webkit-appearance: none;
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.6),
+      inset 0 -1px 0 rgba(176, 132, 86, 0.15),
+      0 1px 2px rgba(80, 50, 20, 0.05);
+    cursor: pointer;
   }
-  .meta-cell select:focus,
-  .meta-cell input:focus {
+  .ornate-input:focus {
     border-color: var(--gold);
-    background: rgba(255, 252, 245, 0.95);
+    background: linear-gradient(180deg, #fffcf3, #fdf7e3);
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.7),
+      0 0 0 2px rgba(176, 132, 86, 0.18),
+      0 2px 6px rgba(80, 50, 20, 0.08);
+  }
+  /* select 自訂下拉箭頭(金色) */
+  select.ornate-input {
+    background-image:
+      linear-gradient(180deg, rgba(255, 252, 245, 0.95), rgba(248, 240, 220, 0.85)),
+      url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'><path d='M1 1l5 5 5-5' fill='none' stroke='%23b08456' stroke-width='1.5'/></svg>");
+    background-repeat: no-repeat, no-repeat;
+    background-position: 0 0, right 10px center;
+    background-size: 100% 100%, 12px 8px;
+  }
+  input.ornate-input::placeholder {
+    color: rgba(74, 60, 44, 0.45);
+    font-family: 'ZCOOL XiaoWei', serif;
+    letter-spacing: 2px;
+    font-size: 13px;
+  }
+  /* 輸入框右側朱砂小印 */
+  .field-wrap::after {
+    content: '◈';
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--vermillion);
+    opacity: 0.35;
+    font-size: 11px;
+    pointer-events: none;
+  }
+  .field-wrap:has(select)::after { display: none; }
+
+  /* ---------- 內嵌仙佛慈語匾額(壓縮版,塞進左下半) ---------- */
+  .plaque-inline {
+    position: relative;
+    flex: 1;
+    min-height: 0;
+    margin-top: 4px;
+    padding: 10px 18px 8px;
+    text-align: center;
+    background:
+      radial-gradient(at 50% 0%, rgba(176, 132, 86, 0.22) 0px, transparent 60%),
+      radial-gradient(at 50% 100%, rgba(138, 42, 31, 0.10) 0px, transparent 70%),
+      url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='400' height='40'><filter id='w'><feTurbulence type='fractalNoise' baseFrequency='0.02 0.6' numOctaves='2' seed='2'/><feColorMatrix values='0 0 0 0 0.2  0 0 0 0 0.13  0 0 0 0 0.08  0 0 0 0.18 0'/></filter><rect width='100%25' height='100%25' filter='url(%23w)'/></svg>"),
+      linear-gradient(180deg, #4a2e1e 0%, #3a2418 50%, #2e1c12 100%);
+    border-top: 2px solid var(--gold);
+    border-bottom: 2px solid var(--gold);
+    border-left: 1px solid rgba(176, 132, 86, 0.5);
+    border-right: 1px solid rgba(176, 132, 86, 0.5);
+    border-radius: 2px;
+    box-shadow:
+      inset 0 0 0 1px rgba(212, 165, 116, 0.25),
+      inset 0 0 24px rgba(0, 0, 0, 0.35),
+      0 4px 12px rgba(40, 26, 12, 0.15);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  .plaque-ear {
+    position: absolute;
+    top: -6px;
+    width: 9px; height: 11px;
+    background: linear-gradient(180deg, var(--gold-light), var(--gold) 50%, #8a6539);
+    border-radius: 5px 5px 2px 2px;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.4);
+  }
+  .plaque-ear-l { left: 16px; }
+  .plaque-ear-r { right: 16px; }
+  .plaque-ear::before {
+    content: '';
+    position: absolute;
+    top: -3px; left: 50%;
+    transform: translateX(-50%);
+    width: 6px; height: 4px;
+    border: 1.2px solid var(--gold);
+    border-bottom: none;
+    border-radius: 3px 3px 0 0;
+    background: transparent;
+  }
+  .plaque-title {
+    font-family: 'Ma Shan Zheng', 'Noto Serif TC', serif;
+    font-size: 14px;
+    color: var(--gold-light);
+    letter-spacing: 5px;
+    text-indent: 5px;
+    line-height: 1.2;
+    text-shadow:
+      0 1px 0 #000,
+      0 0 6px rgba(212, 165, 116, 0.55);
+  }
+  .plaque-sub {
+    font-family: 'ZCOOL XiaoWei', serif;
+    font-size: 9px;
+    color: rgba(212, 165, 116, 0.85);
+    letter-spacing: 2px;
+    text-indent: 2px;
+    margin-top: 3px;
+    text-shadow: 0 1px 0 #000;
+  }
+  .plaque-line {
+    width: 50%;
+    height: 1px;
+    margin: 5px auto;
+    background: linear-gradient(90deg, transparent, var(--gold), transparent);
+    opacity: 0.7;
+  }
+  .plaque-quote {
+    font-family: 'Ma Shan Zheng', 'Noto Serif TC', serif;
+    font-size: clamp(13px, 1.6vw, 16px);
+    color: #f5e3c3;
+    letter-spacing: 2px;
+    line-height: 1.65;
+    padding: 2px 4px;
+    text-shadow:
+      0 1px 0 #000,
+      0 0 12px rgba(212, 165, 116, 0.45);
+    /* 避免過長破版,超出長度時自動縮字 */
+    overflow-wrap: break-word;
+    word-break: break-word;
+  }
+  .plaque-attr {
+    font-family: 'ZCOOL XiaoWei', serif;
+    font-size: 9px;
+    color: rgba(212, 165, 116, 0.7);
+    letter-spacing: 2px;
+    margin-top: 3px;
+    text-shadow: 0 1px 0 #000;
   }
 
   /* ---------- 歲末倒數警鐘 (large unified panel) ---------- */
@@ -1894,7 +2050,7 @@
     }
     .tab { flex: 0 0 auto; min-width: 160px; }
     .panel { padding: 32px 40px 170px; }
-    .meta-bar { padding: 16px 40px; grid-template-columns: 1fr 1fr 2.6fr; }
+    .meta-bar { padding: 16px 40px; grid-template-columns: 1fr 1fr; }
     .member-list { grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 18px; }
     .practice-grid { grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); }
     .title { font-size: 48px; letter-spacing: 6px; }
@@ -1929,13 +2085,33 @@
     .title-wrap::before, .title-wrap::after { width: 12px; }
     .meta-bar {
       grid-template-columns: 1fr 1fr;
-      gap: 8px;
+      gap: 10px;
       padding: 12px;
     }
-    .countdown-cell { grid-column: 1 / -1; padding: 10px 12px 8px; }
-    .countdown-days-num { font-size: clamp(56px, 16vw, 80px); }
-    .countdown-days-unit { font-size: clamp(28px, 7vw, 36px); }
-    .countdown-remaining { font-size: clamp(16px, 4vw, 22px); }
+    .meta-row-top { gap: 6px; }
+    .ornate-input { font-size: 13px; padding: 6px 24px 6px 10px; }
+    .plaque-inline { padding: 8px 14px 6px; }
+    .plaque-title { font-size: 12px; letter-spacing: 3px; text-indent: 3px; }
+    .plaque-sub { font-size: 8px; }
+    .plaque-line { margin: 4px auto; }
+    .plaque-quote { font-size: 12px; letter-spacing: 1.5px; line-height: 1.5; }
+    .plaque-attr { font-size: 8px; }
+
+    /* 縮小時節欄內部字級,接近平板比例 */
+    .countdown-cell { padding: 6px 10px 4px; }
+    .countdown-label { gap: 8px; margin-bottom: 0; }
+    .countdown-year { font-size: 10px; padding-right: 8px; }
+    .countdown-label-text { font-size: 11px; letter-spacing: 4px; text-indent: 4px; }
+    .countdown-remaining { font-size: 14px; letter-spacing: 1.5px; }
+    .countdown-days { gap: 6px; margin: 1px 0 1px; }
+    .countdown-days-num { font-size: 40px; }
+    .countdown-days-unit { font-size: 20px; }
+    .countdown-hms { margin: 1px 0 2px; }
+    .hms-num { font-size: 13px; min-width: 1.7ch; }
+    .hms-unit { font-size: 11px; margin: 0 4px 0 1px; }
+    .countdown-dates { padding-top: 2px; margin-top: 1px; }
+    .date-greg { font-size: 10px; letter-spacing: 0; line-height: 1.3; }
+    .date-lunar { font-size: 11px; letter-spacing: 1px; line-height: 1.3; }
     .tab {
       font-size: 10px;
       padding: 10px 2px;
@@ -1971,48 +2147,69 @@
   <div class="title-wrap">
     <div class="title">安東道場 宏化分壇</div>
     <div class="subtitle">道 務 自 我 紀 錄 管 理</div>
-    <div class="version-tag" id="version-tag">v1.11.0</div>
+    <div class="version-tag" id="version-tag">v1.13.0</div>
   </div>
 </header>
 
 <!-- ============ SECOND ROW ============ -->
 <div class="meta-bar">
-  <div class="meta-cell">
-    <label>分　區</label>
-    <select id="region-select">
-      <option value="化真區">化真區</option>
-      <option value="化善區">化善區</option>
-      <option value="化美區">化美區</option>
-      <option value="化定區">化定區</option>
-      <option value="__custom__">自行輸入…</option>
-    </select>
-    <input type="text" id="region-custom" placeholder="輸入分區名稱" style="display:none; margin-top:4px;">
+  <!-- 左半:分區、姓名、仙佛慈語匾額 -->
+  <div class="meta-left">
+    <div class="meta-row-top">
+      <div class="meta-field">
+        <label>分　區</label>
+        <div class="field-wrap">
+          <select id="region-select" class="ornate-input">
+            <option value="化真區">化真區</option>
+            <option value="化善區">化善區</option>
+            <option value="化美區">化美區</option>
+            <option value="化定區">化定區</option>
+            <option value="化志區">化志區</option>
+            <option value="化慧區">化慧區</option>
+            <option value="化孝區">化孝區</option>
+            <option value="化仁區">化仁區</option>
+            <option value="化力區">化力區</option>
+            <option value="__custom__">自行輸入…</option>
+          </select>
+          <input type="text" id="region-custom" class="ornate-input" placeholder="輸入分區名稱" style="display:none; margin-top:4px;">
+        </div>
+      </div>
+      <div class="meta-field">
+        <label>姓　名</label>
+        <div class="field-wrap">
+          <input type="text" id="user-name" class="ornate-input" placeholder="請輸入您的道名">
+        </div>
+      </div>
+    </div>
+
+    <!-- 仙佛慈語小匾額 -->
+    <div class="plaque-inline">
+      <div class="plaque-ear plaque-ear-l"></div>
+      <div class="plaque-ear plaque-ear-r"></div>
+      <div class="plaque-title">仙 佛 慈 語</div>
+      <div class="plaque-sub">每 日 一 句 提 醒 後 學</div>
+      <div class="plaque-line"></div>
+      <div class="plaque-quote" id="plaque-quote">願 後 學 日 日 安 頓 自 身</div>
+      <div class="plaque-attr" id="plaque-attr">— 每 日 自 省 —</div>
+    </div>
   </div>
-  <div class="meta-cell">
-    <label>姓　名</label>
-    <input type="text" id="user-name" placeholder="請輸入您的道名">
-  </div>
+
+  <!-- 右半 50%:倒數警鐘 -->
   <div class="meta-cell countdown-cell" id="countdown-cell">
     <div class="countdown-label">
       <span class="countdown-year" id="countdown-year">2026</span>
       <span class="countdown-label-text">歲 末 倒 數</span>
     </div>
-
-    <!-- 日數:最大,前綴「剩餘」 -->
     <div class="countdown-days">
       <span class="countdown-remaining">剩 餘</span>
       <span class="countdown-days-num" id="countdown-days">---</span>
       <span class="countdown-days-unit">日</span>
     </div>
-
-    <!-- 時 分 秒:只有秒數閃 -->
     <div class="countdown-hms" id="countdown-hms">
       <span class="hms-num" id="hms-hour">--</span><span class="hms-unit">時</span>
       <span class="hms-num" id="hms-min">--</span><span class="hms-unit">分</span>
       <span class="hms-num hms-sec" id="hms-sec">--</span><span class="hms-unit">秒</span>
     </div>
-
-    <!-- 國曆農曆 -->
     <div class="countdown-dates">
       <div class="date-greg" id="date-greg">國曆</div>
       <div class="date-lunar" id="date-lunar">農曆</div>
@@ -2242,6 +2439,11 @@
         <option value="化善區">化善區</option>
         <option value="化美區">化美區</option>
         <option value="化定區">化定區</option>
+        <option value="化志區">化志區</option>
+        <option value="化慧區">化慧區</option>
+        <option value="化孝區">化孝區</option>
+        <option value="化仁區">化仁區</option>
+        <option value="化力區">化力區</option>
       </select>
     </div>
     <div class="form-row">
@@ -2441,15 +2643,15 @@
 </div>
 
 <div class="toast" id="toast"></div>
-<div class="version-corner" id="version-corner">v1.11.0 · 2026-05-18</div>
+<div class="version-corner" id="version-corner">v1.13.0 · 2026-05-19</div>
 
 <script>
 /* =========================================================
    APP VERSION  ─ 每次改版請更新此處 + 檔名
    ========================================================= */
-const APP_VERSION   = 'v1.11.0';
-const APP_BUILD     = '2026-05-18';
-const APP_CODENAME  = '祈願文';
+const APP_VERSION   = 'v1.13.0';
+const APP_BUILD     = '2026-05-19';
+const APP_CODENAME  = '左右雙欄';
 document.title = `宏化分壇 渡人管理 · ${APP_VERSION}`;
 
 /* =========================================================
@@ -2815,11 +3017,12 @@ const uid=()=>'id_'+Date.now().toString(36)+Math.random().toString(36).slice(2,7
    SETTINGS (region + user name)
    ========================================================= */
 async function loadSettings(){
+  const KNOWN_REGIONS = ['化真區','化善區','化美區','化定區','化志區','化慧區','化孝區','化仁區','化力區'];
   const s=await Store.get('settings');
   if(s){
     document.getElementById('region-select').value=
-      ['化真區','化善區','化美區','化定區'].includes(s.region)?s.region:'__custom__';
-    if(!['化真區','化善區','化美區','化定區'].includes(s.region)){
+      KNOWN_REGIONS.includes(s.region)?s.region:'__custom__';
+    if(!KNOWN_REGIONS.includes(s.region)){
       document.getElementById('region-custom').style.display='block';
       document.getElementById('region-custom').value=s.region||'';
     }
@@ -2827,6 +3030,7 @@ async function loadSettings(){
   }
 }
 async function saveSettings(){
+  const KNOWN_REGIONS = ['化真區','化善區','化美區','化定區','化志區','化慧區','化孝區','化仁區','化力區'];
   let region=document.getElementById('region-select').value;
   if(region==='__custom__') region=document.getElementById('region-custom').value||'自訂分區';
   await Store.save('settings',{region, name:document.getElementById('user-name').value});
@@ -3324,6 +3528,57 @@ function getAllQuotes(){
   return all;
 }
 
+/* =========================================================
+   仙佛慈語 匾額金句 (給後學每日安頓自身的提醒)
+   後學 = 自己 ; 前賢 = 對方
+   ========================================================= */
+const PLAQUE_QUOTES = [
+  {text:'願 後 學 日 日 安 頓 自 身  ·  靜 心 觀 照  ·  不 退 初 衷', src:'每 日 自 省'},
+  {text:'修 道 修 心  ·  辦 道 盡 心  ·  日 日 反 觀 自 照', src:'活 佛 師 尊 慈 訓'},
+  {text:'晨 起 一 念 善  ·  夜 寢 一 念 慚  ·  日 日 安 頓 此 心', src:'每 日 提 醒'},
+  {text:'心 靜  則 智 慧 生  ·  心 安  則 萬 事 成', src:'修 道 箴 言'},
+  {text:'後 學 當 知  ·  渡 人 須 先 渡 己  ·  立 己 方 能 立 人', src:'修 道 箴 言'},
+  {text:'今 日 一 念 起  ·  願 此 念 利 益 眾 生', src:'每 日 發 願'},
+  {text:'前 賢 之 過 不 必 念  ·  自 己 之 過 須 三 省', src:'修 道 箴 言'},
+  {text:'靜 處 養 心  ·  動 處 煉 性  ·  順 處 養 福  ·  逆 處 養 度', src:'修 身 四 訣'},
+  {text:'微 笑 要 送 給 打 擊 後 學 最 深 的 人', src:'活 佛 師 尊 慈 訓'},
+  {text:'人 在 做 · 天 在 看  ·  問 心 無 愧 最 自 在', src:'修 道 箴 言'},
+  {text:'起 心 動 念  皆 有 因 果  ·  願 後 學 念 念 清 明', src:'每 日 自 省'},
+  {text:'吃 苦 了 苦  ·  享 福 消 福  ·  此 心 不 動 自 圓 滿', src:'修 道 箴 言'},
+  {text:'渡 人 即 渡 己  ·  成 全 前 賢 即 成 全 後 學', src:'活 佛 師 尊 慈 訓'},
+  {text:'不 怕 念 起  ·  只 怕 覺 遲  ·  覺 即 是 修', src:'修 道 箴 言'},
+  {text:'萬 緣 放 下  ·  一 念 不 生  ·  安 住 當 下', src:'修 道 箴 言'},
+  {text:'人 能 弘 道  ·  非 道 弘 人  ·  願 後 學 以 身 弘 道', src:'論 語'},
+  {text:'前 賢 一 句 善 言  ·  勝 過 千 金 之 賜', src:'修 道 箴 言'},
+  {text:'心 地 清 淨 方 為 道  ·  退 步 原 來 是 向 前', src:'佈 袋 和 尚'},
+  {text:'真 修 者  不 見 人 過  常 見 自 己 過', src:'六 祖 壇 經'},
+  {text:'修 道 無 別 事  ·  只 要 改 脾 氣 · 去 毛 病', src:'修 道 箴 言'},
+  {text:'天 道 酬 勤  ·  地 道 酬 善  ·  人 道 酬 誠', src:'修 道 箴 言'},
+  {text:'存 好 心  ·  說 好 話  ·  做 好 事  ·  當 好 人', src:'修 身 四 好'},
+  {text:'誠 則 明  ·  明 則 誠  ·  自 助 而 後 天 助', src:'中 庸'},
+  {text:'平 常 心 是 道  ·  直 心 是 道 場', src:'六 祖 壇 經'},
+  {text:'守 住 一 條 金 線  ·  不 被 外 境 動 搖', src:'修 道 箴 言'},
+  {text:'三 施 並 行  ·  財 施 · 法 施 · 無 畏 施', src:'六 度 萬 行'},
+  {text:'品 字 三 個 口  ·  口 德 積 為 品 德', src:'修 道 箴 言'},
+  {text:'認 理 實 修  ·  明 白 自 己 的 愿 立', src:'修 道 箴 言'},
+  {text:'反 求 諸 己  ·  不 怨 天  ·  不 尤 人', src:'論 語'},
+  {text:'凡 事 盡 心  ·  得 失 隨 緣  ·  此 心 自 在', src:'修 道 箴 言'},
+  {text:'心 轉 境 則 樂  ·  心 隨 境 則 苦', src:'修 道 箴 言'}
+];
+
+/* 顯示今日匾額金句(依日期固定,每日換句) */
+function showPlaqueQuote(){
+  const el = document.getElementById('plaque-quote');
+  const attr = document.getElementById('plaque-attr');
+  if(!el) return;
+  const today = new Date();
+  const dayNum = today.getFullYear()*1000 + (today.getMonth()*31) + today.getDate();
+  const idx = dayNum % PLAQUE_QUOTES.length;
+  const q = PLAQUE_QUOTES[idx];
+  el.textContent = q.text;
+  attr.textContent = '— ' + q.src + ' —';
+}
+
 const CAT_LABEL = {
   confucian: '儒家經典',
   daoist:    '道家經典',
@@ -3630,6 +3885,7 @@ function toast(msg){
    ========================================================= */
 (async function init(){
   await loadSettings();
+  showPlaqueQuote();
   // 第一次開啟時,自動安裝預設行事曆與學習資料
   const installed = await Store.get('__defaults_installed_v1');
   if(!installed){
