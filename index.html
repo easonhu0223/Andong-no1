@@ -162,6 +162,8 @@
     display: flex;
     flex-direction: column;
     gap: 4px;
+    align-items: stretch;
+    justify-content: flex-start;
   }
   .meta-field label {
     font-family: 'ZCOOL XiaoWei', serif;
@@ -169,6 +171,20 @@
     letter-spacing: 3px;
     color: var(--ink-soft);
     padding-left: 2px;
+    height: 14px;
+    line-height: 14px;
+  }
+  .meta-row-top {
+    align-items: start;
+  }
+  /* 自行輸入框:浮出於下方,不撐高欄位 */
+  #region-custom {
+    position: absolute;
+    top: calc(100% + 4px);
+    left: 0;
+    right: 0;
+    margin-top: 0 !important;
+    z-index: 4;
   }
 
   /* 有質感的輸入框 — 仿古卷軸樣式 */
@@ -242,18 +258,18 @@
     padding: 10px 18px 8px;
     text-align: center;
     background:
-      radial-gradient(at 50% 0%, rgba(176, 132, 86, 0.22) 0px, transparent 60%),
-      radial-gradient(at 50% 100%, rgba(138, 42, 31, 0.10) 0px, transparent 70%),
-      url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='400' height='40'><filter id='w'><feTurbulence type='fractalNoise' baseFrequency='0.02 0.6' numOctaves='2' seed='2'/><feColorMatrix values='0 0 0 0 0.2  0 0 0 0 0.13  0 0 0 0 0.08  0 0 0 0.18 0'/></filter><rect width='100%25' height='100%25' filter='url(%23w)'/></svg>"),
-      linear-gradient(180deg, #4a2e1e 0%, #3a2418 50%, #2e1c12 100%);
-    border-top: 2px solid var(--gold);
-    border-bottom: 2px solid var(--gold);
-    border-left: 1px solid rgba(176, 132, 86, 0.5);
-    border-right: 1px solid rgba(176, 132, 86, 0.5);
+      radial-gradient(at 50% 0%, rgba(212, 165, 116, 0.30) 0px, transparent 60%),
+      radial-gradient(at 50% 100%, rgba(176, 132, 86, 0.12) 0px, transparent 70%),
+      url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='400' height='40'><filter id='w'><feTurbulence type='fractalNoise' baseFrequency='0.02 0.6' numOctaves='2' seed='2'/><feColorMatrix values='0 0 0 0 0.3  0 0 0 0 0.2  0 0 0 0 0.12  0 0 0 0.12 0'/></filter><rect width='100%25' height='100%25' filter='url(%23w)'/></svg>"),
+      linear-gradient(180deg, #8a6539 0%, #75522b 50%, #604220 100%);
+    border-top: 2px solid var(--gold-light);
+    border-bottom: 2px solid var(--gold-light);
+    border-left: 1px solid rgba(212, 165, 116, 0.55);
+    border-right: 1px solid rgba(212, 165, 116, 0.55);
     border-radius: 2px;
     box-shadow:
-      inset 0 0 0 1px rgba(212, 165, 116, 0.25),
-      inset 0 0 24px rgba(0, 0, 0, 0.35),
+      inset 0 0 0 1px rgba(245, 227, 195, 0.30),
+      inset 0 0 16px rgba(0, 0, 0, 0.18),
       0 4px 12px rgba(40, 26, 12, 0.15);
     display: flex;
     flex-direction: column;
@@ -263,7 +279,7 @@
     position: absolute;
     top: -6px;
     width: 9px; height: 11px;
-    background: linear-gradient(180deg, var(--gold-light), var(--gold) 50%, #8a6539);
+    background: linear-gradient(180deg, #f0d4a0, var(--gold-light) 50%, var(--gold));
     border-radius: 5px 5px 2px 2px;
     box-shadow: 0 1px 2px rgba(0,0,0,0.4);
   }
@@ -275,7 +291,7 @@
     top: -3px; left: 50%;
     transform: translateX(-50%);
     width: 6px; height: 4px;
-    border: 1.2px solid var(--gold);
+    border: 1.2px solid var(--gold-light);
     border-bottom: none;
     border-radius: 3px 3px 0 0;
     background: transparent;
@@ -283,51 +299,50 @@
   .plaque-title {
     font-family: 'Ma Shan Zheng', 'Noto Serif TC', serif;
     font-size: 14px;
-    color: var(--gold-light);
+    color: #fff5e0;
     letter-spacing: 5px;
     text-indent: 5px;
     line-height: 1.2;
     text-shadow:
-      0 1px 0 #000,
-      0 0 6px rgba(212, 165, 116, 0.55);
+      0 1px 0 rgba(0,0,0,0.6),
+      0 0 6px rgba(255, 230, 180, 0.55);
   }
   .plaque-sub {
     font-family: 'ZCOOL XiaoWei', serif;
     font-size: 9px;
-    color: rgba(212, 165, 116, 0.85);
+    color: rgba(255, 240, 210, 0.92);
     letter-spacing: 2px;
     text-indent: 2px;
     margin-top: 3px;
-    text-shadow: 0 1px 0 #000;
+    text-shadow: 0 1px 0 rgba(0,0,0,0.6);
   }
   .plaque-line {
-    width: 50%;
+    width: 55%;
     height: 1px;
     margin: 5px auto;
-    background: linear-gradient(90deg, transparent, var(--gold), transparent);
-    opacity: 0.7;
+    background: linear-gradient(90deg, transparent, #f0d4a0, transparent);
+    opacity: 0.85;
   }
   .plaque-quote {
     font-family: 'Ma Shan Zheng', 'Noto Serif TC', serif;
     font-size: clamp(13px, 1.6vw, 16px);
-    color: #f5e3c3;
+    color: #fff8e8;
     letter-spacing: 2px;
     line-height: 1.65;
     padding: 2px 4px;
     text-shadow:
-      0 1px 0 #000,
-      0 0 12px rgba(212, 165, 116, 0.45);
-    /* 避免過長破版,超出長度時自動縮字 */
+      0 1px 1px rgba(0,0,0,0.55),
+      0 0 10px rgba(255, 230, 180, 0.35);
     overflow-wrap: break-word;
     word-break: break-word;
   }
   .plaque-attr {
     font-family: 'ZCOOL XiaoWei', serif;
     font-size: 9px;
-    color: rgba(212, 165, 116, 0.7);
+    color: rgba(255, 230, 195, 0.82);
     letter-spacing: 2px;
     margin-top: 3px;
-    text-shadow: 0 1px 0 #000;
+    text-shadow: 0 1px 0 rgba(0,0,0,0.55);
   }
 
   /* ---------- 歲末倒數警鐘 (large unified panel) ---------- */
@@ -498,6 +513,44 @@
     letter-spacing: 2px;
     line-height: 1.35;
     margin-top: 1px;
+  }
+
+  /* 即時天氣 */
+  .weather-strip {
+    margin-top: 6px;
+    padding-top: 5px;
+    border-top: 1px dashed rgba(138, 42, 31, 0.25);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    font-family: 'ZCOOL XiaoWei', serif;
+    color: var(--vermillion-d);
+    flex-wrap: wrap;
+    line-height: 1;
+  }
+  .weather-icon {
+    font-size: 22px;
+    line-height: 1;
+    filter: drop-shadow(0 1px 0 rgba(255,255,255,0.5));
+    animation: weatherFloat 3s ease-in-out infinite;
+  }
+  @keyframes weatherFloat {
+    0%, 100% { transform: translateY(0); }
+    50%      { transform: translateY(-2px); }
+  }
+  .weather-temp {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--vermillion);
+    letter-spacing: 0;
+    font-variant-numeric: tabular-nums;
+  }
+  .weather-desc {
+    font-size: 12px;
+    letter-spacing: 2px;
+    color: var(--ink-soft);
   }
 
   /* 最後 30 天進入緊急模式 */
@@ -2147,7 +2200,7 @@
   <div class="title-wrap">
     <div class="title">安東道場 宏化分壇</div>
     <div class="subtitle">道 務 自 我 紀 錄 管 理</div>
-    <div class="version-tag" id="version-tag">v1.13.0</div>
+    <div class="version-tag" id="version-tag">v1.13.1</div>
   </div>
 </header>
 
@@ -2213,6 +2266,12 @@
     <div class="countdown-dates">
       <div class="date-greg" id="date-greg">國曆</div>
       <div class="date-lunar" id="date-lunar">農曆</div>
+    </div>
+    <!-- 即時天氣 -->
+    <div class="weather-strip" id="weather-strip">
+      <span class="weather-icon" id="weather-icon">☀</span>
+      <span class="weather-temp" id="weather-temp">-- °</span>
+      <span class="weather-desc" id="weather-desc">取得天氣中…</span>
     </div>
   </div>
 </div>
@@ -2643,15 +2702,15 @@
 </div>
 
 <div class="toast" id="toast"></div>
-<div class="version-corner" id="version-corner">v1.13.0 · 2026-05-19</div>
+<div class="version-corner" id="version-corner">v1.13.1 · 2026-05-19</div>
 
 <script>
 /* =========================================================
    APP VERSION  ─ 每次改版請更新此處 + 檔名
    ========================================================= */
-const APP_VERSION   = 'v1.13.0';
+const APP_VERSION   = 'v1.13.1';
 const APP_BUILD     = '2026-05-19';
-const APP_CODENAME  = '左右雙欄';
+const APP_CODENAME  = '即時氣象';
 document.title = `宏化分壇 渡人管理 · ${APP_VERSION}`;
 
 /* =========================================================
@@ -3579,6 +3638,84 @@ function showPlaqueQuote(){
   attr.textContent = '— ' + q.src + ' —';
 }
 
+/* =========================================================
+   即時天氣 (Open-Meteo · 免 API Key)
+   ========================================================= */
+const WEATHER_MAP = {
+  0:  {icon:'☀', desc:'晴朗'},
+  1:  {icon:'🌤', desc:'大致晴朗'},
+  2:  {icon:'⛅', desc:'多雲時晴'},
+  3:  {icon:'☁', desc:'陰天'},
+  45: {icon:'🌫', desc:'起霧'},
+  48: {icon:'🌫', desc:'濃霧'},
+  51: {icon:'🌦', desc:'毛毛雨'},
+  53: {icon:'🌦', desc:'毛毛雨'},
+  55: {icon:'🌧', desc:'毛毛雨'},
+  56: {icon:'🌧', desc:'凍雨'},
+  57: {icon:'🌧', desc:'凍雨'},
+  61: {icon:'🌦', desc:'小雨'},
+  63: {icon:'🌧', desc:'中雨'},
+  65: {icon:'🌧', desc:'大雨'},
+  66: {icon:'🌧', desc:'凍雨'},
+  67: {icon:'🌧', desc:'凍雨'},
+  71: {icon:'🌨', desc:'小雪'},
+  73: {icon:'🌨', desc:'中雪'},
+  75: {icon:'❄', desc:'大雪'},
+  77: {icon:'❄', desc:'雪粒'},
+  80: {icon:'🌦', desc:'陣雨'},
+  81: {icon:'🌧', desc:'陣雨'},
+  82: {icon:'⛈', desc:'豪大雨'},
+  85: {icon:'🌨', desc:'陣雪'},
+  86: {icon:'❄', desc:'陣雪'},
+  95: {icon:'⛈', desc:'雷雨'},
+  96: {icon:'⛈', desc:'雷雨夾冰雹'},
+  99: {icon:'⛈', desc:'雷雨夾冰雹'}
+};
+
+async function loadWeather(){
+  const iconEl = document.getElementById('weather-icon');
+  const tempEl = document.getElementById('weather-temp');
+  const descEl = document.getElementById('weather-desc');
+  if(!iconEl) return;
+
+  function fetchByCoords(lat, lon){
+    const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,weather_code&timezone=auto`;
+    return fetch(url).then(r=>r.json());
+  }
+
+  try{
+    let coords = null;
+    try{
+      coords = await new Promise((resolve, reject)=>{
+        if(!navigator.geolocation){ reject('no geo'); return; }
+        const timer = setTimeout(()=>reject('timeout'), 4000);
+        navigator.geolocation.getCurrentPosition(
+          p=>{ clearTimeout(timer); resolve({lat:p.coords.latitude, lon:p.coords.longitude}); },
+          ()=>{ clearTimeout(timer); reject('denied'); },
+          {timeout:4000, maximumAge:600000}
+        );
+      });
+    }catch(e){
+      // 預設台北
+      coords = {lat:25.033, lon:121.5654};
+    }
+
+    const data = await fetchByCoords(coords.lat, coords.lon);
+    if(data && data.current){
+      const code = data.current.weather_code;
+      const temp = Math.round(data.current.temperature_2m);
+      const w = WEATHER_MAP[code] || {icon:'🌤', desc:'晴時多雲'};
+      iconEl.textContent = w.icon;
+      tempEl.textContent = temp + '°';
+      descEl.textContent = w.desc;
+    }
+  }catch(err){
+    iconEl.textContent = '🌤';
+    tempEl.textContent = '--°';
+    descEl.textContent = '無法取得';
+  }
+}
+
 const CAT_LABEL = {
   confucian: '儒家經典',
   daoist:    '道家經典',
@@ -3886,6 +4023,8 @@ function toast(msg){
 (async function init(){
   await loadSettings();
   showPlaqueQuote();
+  loadWeather();
+  setInterval(loadWeather, 15 * 60 * 1000); // 每 15 分鐘更新
   // 第一次開啟時,自動安裝預設行事曆與學習資料
   const installed = await Store.get('__defaults_installed_v1');
   if(!installed){
