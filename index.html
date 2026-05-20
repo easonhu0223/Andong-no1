@@ -35,6 +35,277 @@
 
   * { box-sizing: border-box; margin: 0; padding: 0; }
 
+  /* ============================================================
+     登入畫面 / 待審核
+     ============================================================ */
+  .auth-screen, .pending-screen {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 200;
+    background-color: var(--paper);
+    background-image:
+      radial-gradient(at 20% 10%, rgba(176, 132, 86, 0.15) 0px, transparent 60%),
+      radial-gradient(at 80% 90%, rgba(138, 42, 31, 0.10) 0px, transparent 60%),
+      url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='220' height='220'><filter id='n'><feTurbulence baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.16  0 0 0 0 0.11  0 0 0 0 0.06  0 0 0 0.05 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+    overflow-y: auto;
+    padding: 20px 16px 40px;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+  }
+  .auth-screen.active, .pending-screen.active { display: flex; }
+  body.auth-active { overflow: hidden; }
+
+  .auth-card, .pending-card {
+    width: 100%;
+    max-width: 440px;
+    background: rgba(255, 252, 245, 0.78);
+    border: 1px solid var(--gold);
+    border-radius: 4px;
+    padding: 36px 28px;
+    box-shadow: 0 12px 40px rgba(40, 26, 12, 0.15);
+    position: relative;
+  }
+  .auth-card::before, .auth-card::after,
+  .pending-card::before, .pending-card::after {
+    content: '';
+    position: absolute;
+    width: 22px; height: 22px;
+    border: 2px solid var(--vermillion);
+    opacity: 0.5;
+  }
+  .auth-card::before, .pending-card::before { top: 8px; left: 8px; border-right: none; border-bottom: none; }
+  .auth-card::after, .pending-card::after { bottom: 8px; right: 8px; border-left: none; border-top: none; }
+
+  .auth-header { text-align: center; margin-bottom: 24px; }
+  .auth-title {
+    font-family: 'Ma Shan Zheng', serif;
+    font-size: 30px;
+    color: var(--vermillion);
+    letter-spacing: 6px;
+    text-shadow: 0 1px 0 rgba(255,255,255,0.5);
+  }
+  .auth-sub {
+    font-family: 'ZCOOL XiaoWei', serif;
+    font-size: 12px;
+    color: var(--ink-soft);
+    letter-spacing: 5px;
+    margin-top: 6px;
+  }
+  .auth-divider {
+    color: var(--gold);
+    font-size: 14px;
+    margin-top: 14px;
+    opacity: 0.6;
+  }
+
+  .auth-tabs {
+    display: flex;
+    gap: 4px;
+    margin-bottom: 20px;
+    border-bottom: 1px dashed var(--line);
+  }
+  .auth-tab {
+    flex: 1;
+    background: transparent;
+    border: none;
+    padding: 10px 4px;
+    font-family: 'ZCOOL XiaoWei', serif;
+    font-size: 14px;
+    color: var(--ink-soft);
+    letter-spacing: 3px;
+    cursor: pointer;
+    transition: all 0.2s;
+    border-bottom: 2px solid transparent;
+    margin-bottom: -1px;
+  }
+  .auth-tab:hover { color: var(--ink); }
+  .auth-tab.active {
+    color: var(--vermillion);
+    border-bottom-color: var(--vermillion);
+    font-weight: 500;
+  }
+
+  .auth-field { margin-bottom: 14px; }
+  .auth-field label {
+    display: block;
+    font-family: 'ZCOOL XiaoWei', serif;
+    font-size: 12px;
+    color: var(--ink-soft);
+    letter-spacing: 3px;
+    margin-bottom: 5px;
+  }
+  .auth-field input {
+    width: 100%;
+    font-family: 'Noto Serif TC', serif;
+    font-size: 15px;
+    padding: 10px 14px;
+    background: rgba(255, 252, 245, 0.85);
+    border: 1px solid rgba(176, 132, 86, 0.4);
+    border-radius: 2px;
+    outline: none;
+    color: var(--ink);
+    transition: all 0.25s;
+  }
+  .auth-field input:focus {
+    border-color: var(--gold);
+    background: #fffdf5;
+    box-shadow: 0 0 0 2px rgba(176, 132, 86, 0.15);
+  }
+
+  .auth-msg {
+    margin-bottom: 14px;
+    min-height: 18px;
+    font-size: 12px;
+    color: var(--vermillion);
+    text-align: center;
+    letter-spacing: 1px;
+    line-height: 1.5;
+  }
+  .auth-msg.success { color: var(--jade); }
+
+  .auth-btn {
+    width: 100%;
+    font-family: 'ZCOOL XiaoWei', serif;
+    font-size: 15px;
+    padding: 11px 14px;
+    border-radius: 2px;
+    cursor: pointer;
+    transition: all 0.2s;
+    letter-spacing: 4px;
+    text-indent: 4px;
+    border: 1px solid;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .auth-btn.primary { background: var(--vermillion); color: var(--paper); border-color: var(--vermillion); }
+  .auth-btn.primary:hover { background: var(--vermillion-d); }
+  .auth-btn.primary:disabled { background: rgba(74, 60, 44, 0.3); border-color: rgba(74, 60, 44, 0.3); cursor: wait; }
+  .auth-btn.google { background: #fff; color: #444; border-color: rgba(74, 60, 44, 0.3); }
+  .auth-btn.google:hover { background: #f8f8f8; }
+  .auth-btn.ghost {
+    background: transparent;
+    color: var(--ink-soft);
+    border-color: rgba(74, 60, 44, 0.25);
+    font-size: 13px;
+    letter-spacing: 2px;
+  }
+  .auth-btn.ghost:hover { background: rgba(176, 132, 86, 0.10); color: var(--ink); }
+
+  .auth-separator {
+    display: flex;
+    align-items: center;
+    margin: 16px 0 10px;
+    color: var(--ink-soft);
+    font-family: 'ZCOOL XiaoWei', serif;
+    font-size: 11px;
+    letter-spacing: 2px;
+  }
+  .auth-separator::before, .auth-separator::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--line);
+  }
+  .auth-separator span { padding: 0 12px; }
+
+  .auth-footer {
+    margin-top: 20px;
+    color: var(--ink-soft);
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 12px;
+    letter-spacing: 1px;
+    opacity: 0.6;
+    text-align: center;
+  }
+
+  .pending-card { text-align: center; }
+  .pending-icon {
+    font-size: 60px;
+    margin-bottom: 14px;
+    animation: pulse-icon 2s ease-in-out infinite;
+  }
+  @keyframes pulse-icon {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+  }
+  .pending-title {
+    font-family: 'Ma Shan Zheng', serif;
+    font-size: 22px;
+    color: var(--vermillion);
+    letter-spacing: 3px;
+    margin-bottom: 14px;
+  }
+  .pending-text {
+    font-family: 'Noto Serif TC', serif;
+    font-size: 14px;
+    color: var(--ink-soft);
+    line-height: 1.9;
+    margin-bottom: 22px;
+  }
+  .pending-actions {
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+    margin-bottom: 22px;
+    flex-wrap: wrap;
+  }
+  .pending-info {
+    padding: 12px;
+    background: rgba(176, 132, 86, 0.12);
+    border-left: 3px solid var(--gold);
+    font-size: 12px;
+    color: var(--ink-soft);
+    line-height: 1.8;
+    text-align: left;
+  }
+
+  body.guest-mode .panel:not(#panel-board):not(#panel-ai) { display: none !important; }
+  body.guest-mode .tab:not([data-tab="board"]):not([data-tab="ai"]) {
+    opacity: 0.35;
+    pointer-events: none;
+  }
+  body.guest-mode .meta-bar { display: none; }
+  body.guest-mode .vow-banner { display: none; }
+  body.pending-mode .tab[data-tab="board"],
+  body.pending-mode .tab[data-tab="ai"] { opacity: 1; pointer-events: auto; }
+
+  /* 使用者徽章(畫面右上) */
+  .user-badge {
+    position: fixed;
+    top: 12px;
+    right: 12px;
+    z-index: 60;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 12px;
+    background: rgba(34, 26, 18, 0.88);
+    border: 1px solid var(--gold);
+    border-radius: 20px;
+    color: var(--paper);
+    font-family: 'ZCOOL XiaoWei', serif;
+    font-size: 12px;
+    letter-spacing: 1px;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    transition: all 0.2s;
+  }
+  .user-badge:hover { background: rgba(58, 44, 30, 0.96); }
+  .user-badge.admin { border-color: var(--vermillion); }
+  .user-badge .role-mark { color: var(--gold); font-size: 11px; }
+  .user-badge.admin .role-mark { color: #ffa84a; }
+  @media (max-width: 480px) {
+    .user-badge { font-size: 11px; padding: 5px 10px; top: 8px; right: 8px; max-width: 50%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .auth-title { font-size: 24px; letter-spacing: 4px; }
+    .auth-sub { font-size: 11px; letter-spacing: 3px; }
+    .auth-card, .pending-card { padding: 28px 20px; }
+  }
+
   html, body {
     font-family: 'Noto Serif TC', 'Cormorant Garamond', serif;
     color: var(--ink);
@@ -1614,6 +1885,177 @@
     .prayer-identity { padding: 20px 14px; }
   }
 
+  /* ============================================================
+     壇辦佈告欄
+     ============================================================ */
+  .board-card {
+    background: linear-gradient(180deg, rgba(255, 250, 235, 0.85), rgba(248, 240, 215, 0.6)) !important;
+    border-left-color: var(--gold) !important;
+  }
+  .board-pin {
+    display: inline-block;
+    font-size: 13px;
+    color: var(--vermillion);
+    margin-right: 6px;
+    transform: rotate(-12deg);
+  }
+  .board-author {
+    margin-top: 8px;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 11px;
+    color: var(--ink-soft);
+    letter-spacing: 1px;
+    opacity: 0.7;
+  }
+
+  /* ============================================================
+     使用者管理
+     ============================================================ */
+  .admin-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: 10px;
+    margin-bottom: 20px;
+  }
+  .admin-stat {
+    text-align: center;
+    padding: 14px 10px;
+    background: rgba(255, 252, 245, 0.7);
+    border: 1px solid var(--line);
+    border-top: 3px solid var(--gold);
+    border-radius: 2px;
+  }
+  .admin-stat-num {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 26px;
+    color: var(--vermillion);
+    font-weight: 500;
+    line-height: 1;
+  }
+  .admin-stat-label {
+    font-family: 'ZCOOL XiaoWei', serif;
+    font-size: 11px;
+    color: var(--ink-soft);
+    letter-spacing: 2px;
+    margin-top: 4px;
+  }
+
+  .admin-group {
+    margin-bottom: 18px;
+    background: rgba(255, 252, 245, 0.55);
+    border: 1px solid var(--line);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+  .admin-group-header {
+    padding: 12px 16px;
+    background: rgba(176, 132, 86, 0.15);
+    border-bottom: 1px dashed var(--line);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-family: 'ZCOOL XiaoWei', serif;
+    letter-spacing: 3px;
+    color: var(--vermillion);
+    cursor: pointer;
+  }
+  .admin-group-header .count {
+    background: var(--vermillion);
+    color: var(--paper);
+    font-size: 11px;
+    padding: 2px 10px;
+    border-radius: 10px;
+    letter-spacing: 1px;
+  }
+  .admin-user-row {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    gap: 12px;
+    padding: 12px 16px;
+    border-bottom: 1px dashed var(--line);
+    align-items: center;
+  }
+  .admin-user-row:last-child { border-bottom: none; }
+  .admin-user-row .u-avatar {
+    width: 38px; height: 38px;
+    border-radius: 50%;
+    background: rgba(176, 132, 86, 0.3);
+    color: var(--ink);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Ma Shan Zheng', serif;
+    font-size: 16px;
+    flex-shrink: 0;
+  }
+  .admin-user-row.pending .u-avatar { background: rgba(196, 146, 47, 0.3); }
+  .admin-user-row.admin .u-avatar { background: rgba(138, 42, 31, 0.3); color: var(--vermillion); }
+  .u-info-name {
+    font-family: 'ZCOOL XiaoWei', serif;
+    font-size: 15px;
+    color: var(--ink);
+    letter-spacing: 1px;
+  }
+  .u-info-meta {
+    font-size: 11px;
+    color: var(--ink-soft);
+    margin-top: 2px;
+    letter-spacing: 0.5px;
+  }
+  .u-status-badge {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 10px;
+    font-family: 'ZCOOL XiaoWei', serif;
+    font-size: 10px;
+    letter-spacing: 1px;
+    margin-left: 6px;
+  }
+  .u-status-badge.active { background: #cfe5c4; color: #2d4d24; }
+  .u-status-badge.pending { background: #f5e5b8; color: #6b4e15; }
+  .u-status-badge.rejected { background: #f5c7c0; color: #5c1c14; }
+  .u-status-badge.admin { background: var(--vermillion); color: var(--paper); }
+  .admin-user-actions {
+    display: flex;
+    gap: 4px;
+    flex-wrap: wrap;
+  }
+  .admin-user-actions .btn {
+    font-size: 11px;
+    padding: 4px 10px;
+    letter-spacing: 1px;
+    min-width: 0;
+  }
+  @media (max-width: 640px) {
+    .admin-user-row { grid-template-columns: auto 1fr; }
+    .admin-user-actions { grid-column: 1 / -1; justify-content: flex-end; margin-top: 4px; }
+  }
+
+  /* 使用者詳細頁 modal */
+  .user-detail-content {
+    max-height: 400px;
+    overflow-y: auto;
+    padding: 14px;
+    background: rgba(255, 252, 245, 0.6);
+    border: 1px solid var(--line);
+    border-radius: 2px;
+    font-size: 12px;
+    line-height: 1.7;
+  }
+  .user-detail-section {
+    margin-bottom: 14px;
+    padding-bottom: 10px;
+    border-bottom: 1px dashed var(--line);
+  }
+  .user-detail-section:last-child { border-bottom: none; }
+  .user-detail-section h5 {
+    color: var(--vermillion);
+    font-family: 'ZCOOL XiaoWei', serif;
+    font-size: 13px;
+    letter-spacing: 2px;
+    margin-bottom: 6px;
+  }
+
   /* ---------- RESET DEFAULT SECTION ---------- */
   .reset-default-section {
     margin-top: 36px;
@@ -1728,6 +2170,33 @@
     color: var(--ink);
     font-family: 'Cormorant Garamond', serif;
     letter-spacing: 1px;
+  }
+  /* 雲端狀態徽章 */
+  .cloud-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 5px 12px;
+    border-radius: 14px;
+    font-family: 'ZCOOL XiaoWei', serif;
+    font-size: 12px;
+    letter-spacing: 2px;
+    border: 1px solid;
+  }
+  .cloud-status.offline {
+    background: rgba(74, 60, 44, 0.08);
+    color: var(--ink-soft);
+    border-color: rgba(74, 60, 44, 0.25);
+  }
+  .cloud-status.online {
+    background: rgba(79, 115, 85, 0.12);
+    color: var(--jade);
+    border-color: rgba(79, 115, 85, 0.4);
+  }
+  .cloud-status.error {
+    background: rgba(138, 42, 31, 0.12);
+    color: var(--vermillion);
+    border-color: rgba(138, 42, 31, 0.4);
   }
 
   /* ---------- MEMBER CARDS ---------- */
@@ -2398,7 +2867,17 @@
     .panel-head { flex-direction: column; align-items: center; gap: 10px; }
     .panel-head .actions { width: 100%; justify-content: center; }
     .panel-title { font-size: 20px; letter-spacing: 2px; }
-    .member-list { grid-template-columns: 1fr; gap: 10px; }
+    .member-list { grid-template-columns: repeat(2, 1fr); gap: 8px; }
+    .member-card { padding: 10px 10px 12px; }
+    .member-head { gap: 8px; margin-bottom: 6px; }
+    .avatar { width: 36px; height: 36px; font-size: 20px; flex-shrink: 0; }
+    .member-name { font-size: 14px; letter-spacing: 1px; }
+    .member-meta { font-size: 10px; letter-spacing: 0; line-height: 1.4; word-break: break-all; }
+    .status-bar { margin: 6px 0 4px; }
+    .status-tag { font-size: 10px; padding: 2px 7px; letter-spacing: 0.5px; }
+    .member-progress { font-size: 10px; padding: 4px 6px; letter-spacing: 0.5px; margin-bottom: 6px; }
+    .member-body { font-size: 11px; line-height: 1.5; max-height: none; padding-top: 6px; }
+    .member-footer { font-size: 9px; flex-direction: column; gap: 1px; align-items: flex-start; letter-spacing: 0; margin-top: 6px; }
     .practice-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
     .actions .btn { font-size: 12px; padding: 6px 10px; letter-spacing: 1px; }
     .item-row { grid-template-columns: auto 1fr; }
@@ -2416,12 +2895,85 @@
 </head>
 <body>
 
+<!-- ============ 登入畫面(未登入時顯示) ============ -->
+<div class="auth-screen" id="auth-screen">
+  <div class="auth-card">
+    <div class="auth-header">
+      <div class="auth-title">安東道場 宏化分壇</div>
+      <div class="auth-sub">道 務 自 我 紀 錄 管 理</div>
+      <div class="auth-divider">❖</div>
+    </div>
+
+    <div class="auth-tabs">
+      <button class="auth-tab active" data-mode="login" onclick="switchAuthMode('login')">登入</button>
+      <button class="auth-tab" data-mode="register" onclick="switchAuthMode('register')">註冊</button>
+      <button class="auth-tab" data-mode="reset" onclick="switchAuthMode('reset')">忘記密碼</button>
+    </div>
+
+    <div class="auth-form" id="auth-form">
+      <div class="auth-field">
+        <label>電子郵件</label>
+        <input type="email" id="auth-email" placeholder="your@email.com" autocomplete="email">
+      </div>
+      <div class="auth-field" id="auth-field-password">
+        <label>密碼</label>
+        <input type="password" id="auth-password" placeholder="至少 6 字元" autocomplete="current-password">
+      </div>
+      <div class="auth-field" id="auth-field-name" style="display:none;">
+        <label>顯示名稱</label>
+        <input type="text" id="auth-name" placeholder="您的道名 / 暱稱">
+      </div>
+      <div class="auth-msg" id="auth-msg"></div>
+      <button class="auth-btn primary" id="auth-submit" onclick="submitAuth()">登入</button>
+
+      <div class="auth-separator"><span>或</span></div>
+
+      <button class="auth-btn google" onclick="signInWithGoogle()">
+        <svg width="18" height="18" viewBox="0 0 18 18" style="vertical-align:middle; margin-right:8px;">
+          <path fill="#4285F4" d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844c-.209 1.125-.843 2.078-1.796 2.717v2.258h2.908c1.702-1.567 2.684-3.874 2.684-6.615z"/>
+          <path fill="#34A853" d="M9 18c2.43 0 4.467-.806 5.956-2.18l-2.908-2.259c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332A8.997 8.997 0 0 0 9 18z"/>
+          <path fill="#FBBC05" d="M3.964 10.71A5.41 5.41 0 0 1 3.682 9c0-.593.102-1.17.282-1.71V4.958H.957A8.996 8.996 0 0 0 0 9c0 1.452.348 2.827.957 4.042l3.007-2.332z"/>
+          <path fill="#EA4335" d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0A8.997 8.997 0 0 0 .957 4.958L3.964 7.29C4.672 5.163 6.656 3.58 9 3.58z"/>
+        </svg>
+        使用 Google 登入
+      </button>
+
+      <button class="auth-btn ghost" onclick="enterGuestMode()">
+        以訪客身份瀏覽佈告欄
+      </button>
+    </div>
+  </div>
+  <div class="auth-footer">
+    <span id="auth-version">v2.0.0</span> · 安東道場 宏化分壇
+  </div>
+</div>
+
+<!-- ============ 待審核遮罩 ============ -->
+<div class="pending-screen" id="pending-screen">
+  <div class="pending-card">
+    <div class="pending-icon">⏳</div>
+    <div class="pending-title">您的帳號正在等待管理員審核</div>
+    <div class="pending-text">
+      您已成功註冊,但需要管理員核可後才能使用完整功能。<br>
+      在此之前,您可以先瀏覽「壇辦佈告欄」與「仙佛詞語」。
+    </div>
+    <div class="pending-actions">
+      <button class="btn outline" onclick="enterPendingMode()">先逛佈告欄</button>
+      <button class="btn outline" onclick="signOutNow()">登出</button>
+    </div>
+    <div class="pending-info">
+      帳號:<span id="pending-email"></span><br>
+      請聯絡管理員 <strong id="pending-admin"></strong> 進行審核
+    </div>
+  </div>
+</div>
+
 <!-- ============ HEADER ============ -->
 <header class="header">
   <div class="title-wrap">
     <div class="title">安東道場 宏化分壇</div>
     <div class="subtitle">道 務 自 我 紀 錄 管 理</div>
-    <div class="version-tag" id="version-tag">v1.14.2</div>
+    <div class="version-tag" id="version-tag">v2.0.0</div>
   </div>
 </header>
 
@@ -2510,21 +3062,16 @@
 
 <!-- ============ TABS (固定底部 · 橫向可滑) ============ -->
 <div class="tabs-wrap" id="tabs-wrap">
-  <div class="tabs-indicator" id="tabs-indicator">
-    <span class="dot-i active"></span>
-    <span class="dot-i"></span>
-    <span class="dot-i"></span>
-    <span class="dot-i"></span>
-    <span class="dot-i"></span>
-    <span class="dot-i"></span>
-  </div>
+  <div class="tabs-indicator" id="tabs-indicator"></div>
   <nav class="tabs" id="tabs">
     <div class="tab active" data-tab="members"><span class="num">壹</span>成全道親</div>
     <div class="tab" data-tab="calendar"><span class="num">貳</span>行事曆</div>
     <div class="tab" data-tab="library"><span class="num">參</span>學習資料</div>
     <div class="tab" data-tab="practice"><span class="num">肆</span>功課實踐</div>
     <div class="tab" data-tab="ai"><span class="num">伍</span>仙佛詞語</div>
-    <div class="tab" data-tab="settings"><span class="num">陸</span>其他設定</div>
+    <div class="tab" data-tab="board"><span class="num">陸</span>壇辦佈告</div>
+    <div class="tab" data-tab="settings"><span class="num">柒</span>其他設定</div>
+    <div class="tab admin-only" data-tab="admin" style="display:none;"><span class="num">★</span>使用者管理</div>
   </nav>
 </div>
 
@@ -2696,7 +3243,52 @@
   </div>
 </section>
 
-<!-- ============ MEMBER MODAL ============ -->
+<!-- ============ PANEL: 壇辦佈告欄 (全壇共享 · 訪客可見) ============ -->
+<section class="panel" id="panel-board">
+  <div class="panel-head">
+    <div class="panel-title-wrap">
+      <div class="panel-title">壇辦佈告欄</div>
+      <div class="panel-vow">
+        <span class="panel-vow-dot">❖</span>
+        <span class="panel-vow-text">全 壇 共 享 · 訊 息 互 通</span>
+        <span class="panel-vow-dot">❖</span>
+      </div>
+      <div class="panel-sub">公告 · 通知 · 法會訊息 · 全壇可見</div>
+    </div>
+    <div class="actions" id="board-actions">
+      <button class="btn" onclick="openBoardModal()">＋ 新增公告</button>
+    </div>
+  </div>
+  <div class="item-list" id="board-list"></div>
+  <div class="empty" id="board-empty" style="display:none;">
+    <div class="lotus">📜</div>
+    <p>佈告欄尚虛 · 請靜候法音</p>
+  </div>
+</section>
+
+<!-- ============ PANEL: 使用者管理 (僅管理員可見) ============ -->
+<section class="panel" id="panel-admin">
+  <div class="panel-head">
+    <div class="panel-title-wrap">
+      <div class="panel-title">使用者管理</div>
+      <div class="panel-vow">
+        <span class="panel-vow-dot">★</span>
+        <span class="panel-vow-text">壇 主 專 屬 管 理 區</span>
+        <span class="panel-vow-dot">★</span>
+      </div>
+      <div class="panel-sub">審核 · 分區檢視 · 備份 · 移除</div>
+    </div>
+    <div class="actions">
+      <button class="btn gold" onclick="adminExportAll()">📦 一鍵備份所有人</button>
+      <button class="btn outline" onclick="adminRefresh()">↻ 重新整理</button>
+    </div>
+  </div>
+
+  <div class="admin-stats" id="admin-stats"></div>
+  <div class="admin-groups" id="admin-groups"></div>
+</section>
+
+
 <div class="modal-bg" id="member-modal">
   <div class="modal">
     <h3 id="member-modal-title">新增道親</h3>
@@ -2960,16 +3552,29 @@
 </div>
 
 <div class="toast" id="toast"></div>
-<div class="version-corner" id="version-corner">v1.14.2 · 2026-05-19</div>
+<div class="version-corner" id="version-corner">v2.0.0 · 2026-05-19</div>
 
-<script>
+<script type="module">
 /* =========================================================
    APP VERSION  ─ 每次改版請更新此處 + 檔名
    ========================================================= */
-const APP_VERSION   = 'v1.14.2';
+const APP_VERSION   = 'v2.0.0';
 const APP_BUILD     = '2026-05-19';
-const APP_CODENAME  = '平板放大';
+const APP_CODENAME  = '壇主紀';
 document.title = `宏化分壇 渡人管理 · ${APP_VERSION}`;
+
+/* =========================================================
+   FIREBASE 統一設定 (管理員預先寫入)
+   ========================================================= */
+const FIREBASE_CONFIG = {
+  apiKey: "AIzaSyC1v3EXOI0EFer2YhjbloWLLKQJ71ASA2E",
+  authDomain: "andong-god-7d32f.firebaseapp.com",
+  projectId: "andong-god-7d32f",
+  storageBucket: "andong-god-7d32f.firebasestorage.app",
+  messagingSenderId: "448407875451",
+  appId: "1:448407875451:web:6640bcb422237e570097de"
+};
+const ADMIN_EMAIL = "eraeason@gmail.com";  // 最高管理者 Email
 
 /* =========================================================
    DEFAULT CALENDAR EVENTS  (115年安東道場宏宗總壇行事曆 - 內建預設)
@@ -3297,26 +3902,243 @@ function updateClock(){
 setInterval(updateClock,1000); updateClock();
 
 /* =========================================================
-   STORAGE LAYER (localStorage · GitHub Pages 可用)
-   要切換到 Firebase 時,只需替換以下四個函式即可。
-   - Keys: members:{id}, calendar:{id}, library:{id}, practice:{id}, settings
+   FIREBASE 模組 — 統一連線 + Auth 帳號隔離 + Firestore 儲存
    ========================================================= */
-const NS = 'andong_dojo::'; // 命名空間,避免與其他網站衝突
+const NS = 'andong_dojo::';
+
+const Firebase = {
+  app: null, db: null, auth: null,
+  fs: null, fbAuth: null,    // ESM 模組
+  user: null,
+  profile: null,             // 使用者 profile (含 status / role / region)
+  ready: false,
+  status: 'connecting',
+
+  async init(){
+    try{
+      const [appMod, fsMod, authMod] = await Promise.all([
+        import('https://www.gstatic.com/firebasejs/10.13.0/firebase-app.js'),
+        import('https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore.js'),
+        import('https://www.gstatic.com/firebasejs/10.13.0/firebase-auth.js')
+      ]);
+      this.app = appMod.initializeApp(FIREBASE_CONFIG);
+      this.db = fsMod.getFirestore(this.app);
+      this.auth = authMod.getAuth(this.app);
+      this.fs = fsMod;
+      this.fbAuth = authMod;
+      this.ready = true;
+      this.status = 'online';
+      // 監聽登入狀態
+      authMod.onAuthStateChanged(this.auth, async (u)=>{
+        this.user = u;
+        if(u){
+          await this.loadProfile();
+          onAuthChanged(u, this.profile);
+        }else{
+          this.profile = null;
+          onAuthChanged(null, null);
+        }
+      });
+      return true;
+    }catch(err){
+      console.error('[Firebase] init failed', err);
+      this.status = 'error';
+      return false;
+    }
+  },
+
+  isAdmin(){
+    return !!(this.user && this.user.email && this.user.email.toLowerCase() === ADMIN_EMAIL.toLowerCase());
+  },
+
+  async loadProfile(){
+    if(!this.user) return null;
+    try{
+      const ref = this.fs.doc(this.db, 'users', this.user.uid);
+      const snap = await this.fs.getDoc(ref);
+      if(snap.exists()){
+        this.profile = snap.data();
+        // 管理者自動為 active 與 admin role
+        if(this.isAdmin() && (this.profile.status !== 'active' || this.profile.role !== 'admin')){
+          this.profile.status = 'active';
+          this.profile.role = 'admin';
+          await this.fs.setDoc(ref, this.profile, {merge:true});
+        }
+      }else{
+        // 第一次:建立 profile
+        this.profile = {
+          uid: this.user.uid,
+          email: this.user.email,
+          displayName: this.user.displayName || this.user.email.split('@')[0],
+          region: '',
+          status: this.isAdmin() ? 'active' : 'pending',
+          role: this.isAdmin() ? 'admin' : 'user',
+          createdAt: new Date().toISOString()
+        };
+        await this.fs.setDoc(ref, this.profile);
+      }
+      return this.profile;
+    }catch(e){ console.warn('loadProfile error', e); return null; }
+  },
+
+  async updateProfile(updates){
+    if(!this.user) return;
+    const ref = this.fs.doc(this.db, 'users', this.user.uid);
+    await this.fs.setDoc(ref, updates, {merge:true});
+    Object.assign(this.profile, updates);
+  },
+
+  /* ── 個人資料文件參照 ── */
+  _userDocRef(key){
+    if(!this.ready || !this.user) return null;
+    const safeKey = key.replace(/[^a-zA-Z0-9_-]/g, '_');
+    return this.fs.doc(this.db, 'users', this.user.uid, 'data', safeKey);
+  },
+  /* ── 全壇共享文件參照 ── */
+  _sharedDocRef(key){
+    if(!this.ready) return null;
+    const safeKey = key.replace(/[^a-zA-Z0-9_-]/g, '_');
+    return this.fs.doc(this.db, 'shared', safeKey);
+  },
+
+  /* 判斷 key 屬於共享還是個人 */
+  _isShared(key){
+    return key.startsWith('board:') || key.startsWith('quote:');
+  },
+
+  async cloudSave(key, value){
+    if(!this.ready) return;
+    try{
+      const ref = this._isShared(key) ? this._sharedDocRef(key) : this._userDocRef(key);
+      if(!ref) return;
+      await this.fs.setDoc(ref, {
+        key,
+        value: typeof value === 'string' ? value : JSON.stringify(value),
+        updatedAt: new Date().toISOString(),
+        updatedBy: this.user ? this.user.uid : null
+      });
+    }catch(e){ console.warn('cloudSave', key, e); }
+  },
+
+  async cloudRemove(key){
+    if(!this.ready) return;
+    try{
+      const ref = this._isShared(key) ? this._sharedDocRef(key) : this._userDocRef(key);
+      if(!ref) return;
+      await this.fs.deleteDoc(ref);
+    }catch(e){ console.warn('cloudRemove', key, e); }
+  },
+
+  /* 從雲端拉取「目前登入者」的個人資料 + 全部共享資料 */
+  async pullUserData(){
+    if(!this.ready || !this.user) return 0;
+    let count = 0;
+    try{
+      const persRef = this.fs.collection(this.db, 'users', this.user.uid, 'data');
+      const persSnap = await this.fs.getDocs(persRef);
+      persSnap.forEach(d=>{
+        const data = d.data();
+        if(data && data.key) {
+          localStorage.setItem(NS + data.key, data.value);
+          count++;
+        }
+      });
+    }catch(e){ console.warn('pull personal', e); }
+    try{
+      const shrRef = this.fs.collection(this.db, 'shared');
+      const shrSnap = await this.fs.getDocs(shrRef);
+      shrSnap.forEach(d=>{
+        const data = d.data();
+        if(data && data.key) {
+          localStorage.setItem(NS + data.key, data.value);
+          count++;
+        }
+      });
+    }catch(e){ console.warn('pull shared', e); }
+    return count;
+  },
+
+  /* 切換使用者時:清掉前一個人的本機資料 */
+  clearLocal(){
+    const toRemove = [];
+    for(let i=0; i<localStorage.length; i++){
+      const k = localStorage.key(i);
+      if(k && k.startsWith(NS) && !k.startsWith(NS+'__')) toRemove.push(k);
+    }
+    toRemove.forEach(k => localStorage.removeItem(k));
+  },
+
+  /* ===== 管理員:列出所有使用者 ===== */
+  async listAllUsers(){
+    if(!this.isAdmin()) return [];
+    try{
+      const ref = this.fs.collection(this.db, 'users');
+      const snap = await this.fs.getDocs(ref);
+      const list = [];
+      snap.forEach(d => list.push({uid: d.id, ...d.data()}));
+      return list;
+    }catch(e){ console.warn(e); return []; }
+  },
+
+  async setUserStatus(uid, status){
+    if(!this.isAdmin()) return false;
+    try{
+      const ref = this.fs.doc(this.db, 'users', uid);
+      await this.fs.setDoc(ref, {status, statusUpdatedAt: new Date().toISOString()}, {merge:true});
+      return true;
+    }catch(e){ console.warn(e); return false; }
+  },
+
+  async getUserData(uid){
+    if(!this.isAdmin()) return {};
+    try{
+      const ref = this.fs.collection(this.db, 'users', uid, 'data');
+      const snap = await this.fs.getDocs(ref);
+      const obj = {};
+      snap.forEach(d => {
+        const data = d.data();
+        try{ obj[data.key] = JSON.parse(data.value); }
+        catch(e){ obj[data.key] = data.value; }
+      });
+      return obj;
+    }catch(e){ console.warn(e); return {}; }
+  },
+
+  async deleteUserData(uid){
+    if(!this.isAdmin()) return false;
+    try{
+      const ref = this.fs.collection(this.db, 'users', uid, 'data');
+      const snap = await this.fs.getDocs(ref);
+      const batch = this.fs.writeBatch(this.db);
+      snap.forEach(d => batch.delete(d.ref));
+      // 同時刪 user profile
+      batch.delete(this.fs.doc(this.db, 'users', uid));
+      await batch.commit();
+      return true;
+    }catch(e){ console.warn(e); return false; }
+  }
+};
+
+/* ── 統一 Store 介面:本地優先 + 雲端鏡像 ── */
 const Store = {
   async list(prefix){
     const items=[];
     const fullPrefix=NS+prefix;
     for(let i=0;i<localStorage.length;i++){
       const k=localStorage.key(i);
-      if(k&&k.startsWith(fullPrefix)){
+      if(k&&k.startsWith(fullPrefix) && !k.startsWith(NS+'__')){
         try{ items.push(JSON.parse(localStorage.getItem(k))); }catch(e){}
       }
     }
     return items;
   },
   async save(key, obj){
-    try{ localStorage.setItem(NS+key, JSON.stringify(obj)); return true;}
-    catch(e){console.error(e); return false;}
+    try{
+      const json = JSON.stringify(obj);
+      localStorage.setItem(NS+key, json);
+      if(Firebase.ready && Firebase.user) Firebase.cloudSave(key, json).catch(()=>{});
+      return true;
+    }catch(e){console.error(e); return false;}
   },
   async get(key){
     const v=localStorage.getItem(NS+key);
@@ -3324,7 +4146,9 @@ const Store = {
     try{ return JSON.parse(v); }catch(e){return null;}
   },
   async remove(key){
-    localStorage.removeItem(NS+key); return true;
+    localStorage.removeItem(NS+key);
+    if(Firebase.ready && Firebase.user) Firebase.cloudRemove(key).catch(()=>{});
+    return true;
   }
 };
 
@@ -3432,6 +4256,8 @@ document.querySelectorAll('.tab').forEach(t=>{
     if(t.dataset.tab==='library') renderList('library');
     if(t.dataset.tab==='practice') renderPractice();
     if(t.dataset.tab==='ai') showTodayQuote();
+    if(t.dataset.tab==='board') renderBoard();
+    if(t.dataset.tab==='admin') adminRefresh();
     if(t.dataset.tab==='settings') updateSettingsInfo();
     // 將點到的 tab 滑到可視中央
     t.scrollIntoView({behavior:'smooth', inline:'center', block:'nearest'});
@@ -3716,12 +4542,18 @@ async function saveGeneric(){
   else { id=uid(); it={id, createdAt:now}; }
   it.title=document.getElementById('g-f1').value;
   it.content=document.getElementById('g-f2').value;
-  if(labels[type].hasDate) it.date=document.getElementById('g-date').value;
+  if(labels[type] && labels[type].hasDate) it.date=document.getElementById('g-date').value;
   it.updatedAt=now;
+  // 佈告欄:紀錄作者
+  if(type === 'board' && Firebase.user){
+    it.authorUid = Firebase.user.uid;
+    it.authorName = (Firebase.profile && Firebase.profile.displayName) || Firebase.user.email;
+  }
   await Store.save(type+':'+id, it);
   closeGenericModal();
   toast('已儲存');
-  renderList(type);
+  if(type==='board') renderBoard();
+  else renderList(type);
 }
 async function deleteGeneric(){
   const type=document.getElementById('g-type').value;
@@ -3730,7 +4562,8 @@ async function deleteGeneric(){
   await Store.remove(type+':'+id);
   closeGenericModal();
   toast('已刪除');
-  renderList(type);
+  if(type==='board') renderBoard();
+  else renderList(type);
 }
 
 /* =========================================================
@@ -4202,6 +5035,10 @@ async function updateSettingsInfo(){
   ]);
   document.getElementById('info-count').textContent =
     `道親 ${m.length} · 行事 ${c.length} · 資料 ${l.length} · 功課 ${p.length}`;
+  // 雲端狀態
+  Firebase._updateStatusBadge();
+  const btn = document.getElementById('disconnect-cloud-btn');
+  if(btn) btn.style.display = Firebase.ready ? '' : 'none';
 }
 
 /* 一鍵備份所有資料(單一 Excel,含多個工作表) */
@@ -4374,46 +5211,487 @@ function toast(msg){
 /* =========================================================
    INIT
    ========================================================= */
-(async function init(){
+/* =========================================================
+   AUTH 流程
+   ========================================================= */
+let currentAuthMode = 'login';
+
+function switchAuthMode(mode){
+  currentAuthMode = mode;
+  document.querySelectorAll('.auth-tab').forEach(t=>{
+    t.classList.toggle('active', t.dataset.mode === mode);
+  });
+  document.getElementById('auth-msg').textContent = '';
+  document.getElementById('auth-msg').className = 'auth-msg';
+  document.getElementById('auth-field-name').style.display = (mode==='register')?'block':'none';
+  document.getElementById('auth-field-password').style.display = (mode==='reset')?'none':'block';
+  const btn = document.getElementById('auth-submit');
+  btn.textContent = mode==='login' ? '登入' : (mode==='register' ? '註冊' : '寄送重設信');
+}
+
+function authMsg(text, success=false){
+  const el = document.getElementById('auth-msg');
+  el.textContent = text || '';
+  el.className = 'auth-msg' + (success ? ' success' : '');
+}
+
+async function submitAuth(){
+  const email = document.getElementById('auth-email').value.trim();
+  const password = document.getElementById('auth-password').value;
+  const name = document.getElementById('auth-name').value.trim();
+  const btn = document.getElementById('auth-submit');
+  if(!email){ authMsg('請輸入電子郵件'); return; }
+
+  if(!Firebase.ready){ authMsg('系統初始化中,請稍後…'); return; }
+
+  btn.disabled = true;
+  try{
+    if(currentAuthMode === 'login'){
+      if(!password){ authMsg('請輸入密碼'); btn.disabled=false; return; }
+      await Firebase.fbAuth.signInWithEmailAndPassword(Firebase.auth, email, password);
+      authMsg('登入成功', true);
+    }else if(currentAuthMode === 'register'){
+      if(!password || password.length < 6){ authMsg('密碼至少 6 字元'); btn.disabled=false; return; }
+      const cred = await Firebase.fbAuth.createUserWithEmailAndPassword(Firebase.auth, email, password);
+      if(name){
+        await Firebase.fbAuth.updateProfile(cred.user, {displayName: name});
+      }
+      authMsg('註冊成功,等候管理員審核', true);
+    }else if(currentAuthMode === 'reset'){
+      await Firebase.fbAuth.sendPasswordResetEmail(Firebase.auth, email);
+      authMsg('重設密碼信已寄出,請至信箱收信', true);
+    }
+  }catch(err){
+    const msg = {
+      'auth/invalid-email': '電子郵件格式錯誤',
+      'auth/user-disabled': '此帳號已停用',
+      'auth/user-not-found': '查無此帳號',
+      'auth/wrong-password': '密碼錯誤',
+      'auth/email-already-in-use': '此 Email 已註冊',
+      'auth/weak-password': '密碼至少 6 字元',
+      'auth/invalid-credential': '帳號或密碼錯誤',
+      'auth/network-request-failed': '網路連線失敗',
+      'auth/too-many-requests': '嘗試次數過多,請稍後再試'
+    }[err.code] || err.message || '操作失敗';
+    authMsg(msg);
+  }
+  btn.disabled = false;
+}
+
+async function signInWithGoogle(){
+  if(!Firebase.ready){ authMsg('系統初始化中,請稍後…'); return; }
+  try{
+    const provider = new Firebase.fbAuth.GoogleAuthProvider();
+    await Firebase.fbAuth.signInWithPopup(Firebase.auth, provider);
+  }catch(err){
+    authMsg(err.message || 'Google 登入失敗');
+  }
+}
+
+function enterGuestMode(){
+  document.body.classList.add('guest-mode');
+  document.getElementById('auth-screen').classList.remove('active');
+  document.getElementById('pending-screen').classList.remove('active');
+  document.body.classList.remove('auth-active');
+  // 切到佈告欄
+  document.querySelectorAll('.tab').forEach(t=>{
+    t.classList.toggle('active', t.dataset.tab === 'board');
+  });
+  document.querySelectorAll('.panel').forEach(p=>{
+    p.classList.toggle('active', p.id === 'panel-board');
+  });
+  renderBoard();
+  showUserBadge('訪客', false, true);
+}
+
+function enterPendingMode(){
+  document.body.classList.add('guest-mode', 'pending-mode');
+  document.getElementById('pending-screen').classList.remove('active');
+  document.body.classList.remove('auth-active');
+  document.querySelectorAll('.tab').forEach(t=>{
+    t.classList.toggle('active', t.dataset.tab === 'board');
+  });
+  document.querySelectorAll('.panel').forEach(p=>{
+    p.classList.toggle('active', p.id === 'panel-board');
+  });
+  renderBoard();
+  showUserBadge(Firebase.profile?.displayName || Firebase.user?.email, false, false, 'pending');
+}
+
+async function signOutNow(){
+  if(Firebase.ready && Firebase.user){
+    await Firebase.fbAuth.signOut(Firebase.auth);
+  }
+  Firebase.clearLocal();
+  location.reload();
+}
+
+function showUserBadge(name, isAdmin, isGuest, status){
+  let badge = document.getElementById('user-badge');
+  if(!badge){
+    badge = document.createElement('div');
+    badge.id = 'user-badge';
+    badge.className = 'user-badge';
+    badge.onclick = ()=>{
+      if(confirm(isGuest?'結束訪客瀏覽,返回登入?':'要登出嗎?')) signOutNow();
+    };
+    document.body.appendChild(badge);
+  }
+  badge.classList.toggle('admin', !!isAdmin);
+  let mark = isAdmin ? '★ 壇主' : (isGuest ? '訪客' : (status==='pending' ? '待審核' : '道親'));
+  badge.innerHTML = `<span class="role-mark">${mark}</span> ${escapeHtml(name||'')}`;
+}
+
+/* 當登入狀態變動時被呼叫 */
+async function onAuthChanged(user, profile){
+  document.body.classList.remove('guest-mode', 'pending-mode', 'auth-active');
+  if(!user){
+    // 未登入
+    document.getElementById('auth-screen').classList.add('active');
+    document.getElementById('pending-screen').classList.remove('active');
+    document.body.classList.add('auth-active');
+    return;
+  }
+  // 已登入,清空本機資料(避免看到上一個帳號的)
+  Firebase.clearLocal();
+  // 拉取雲端資料
+  await Firebase.pullUserData();
   await loadSettings();
+
+  if(profile.status === 'pending' || profile.status === 'rejected'){
+    document.getElementById('pending-email').textContent = user.email;
+    document.getElementById('pending-admin').textContent = ADMIN_EMAIL;
+    document.getElementById('auth-screen').classList.remove('active');
+    document.getElementById('pending-screen').classList.add('active');
+    document.body.classList.add('auth-active');
+    return;
+  }
+  // active:正常進入主畫面
+  document.getElementById('auth-screen').classList.remove('active');
+  document.getElementById('pending-screen').classList.remove('active');
+
+  const isAdmin = Firebase.isAdmin();
+  showUserBadge(profile.displayName || user.email, isAdmin, false);
+  // 管理員可看見「使用者管理」分頁
+  document.querySelectorAll('.tab.admin-only').forEach(t=>{
+    t.style.display = isAdmin ? '' : 'none';
+  });
+  // 首次安裝預設資料
+  await ensureDefaultsInstalled();
+  // 重繪所有資料
+  renderMembers();
+  renderBoard();
+  fitTabs();
+}
+
+/* 首次登入安裝預設行事曆與學習資料 */
+async function ensureDefaultsInstalled(){
+  const installed = await Store.get('__defaults_installed_v2');
+  if(!installed){
+    // 行事曆
+    const cal = await Store.list('calendar:');
+    if(cal.length === 0) await installDefaultCalendar();
+    // 學習資料
+    const lib = await Store.list('library:');
+    if(lib.length === 0) await installDefaultLibrary();
+    await Store.save('__defaults_installed_v2', {installedAt: new Date().toISOString()});
+  }
+}
+
+/* =========================================================
+   壇辦佈告欄
+   ========================================================= */
+async function renderBoard(){
+  const items = await Store.list('board:');
+  items.sort((a,b)=>new Date(b.createdAt) - new Date(a.createdAt));
+  const list = document.getElementById('board-list');
+  const empty = document.getElementById('board-empty');
+  if(!list) return;
+  list.innerHTML = '';
+  if(items.length === 0){ empty.style.display='block'; }
+  else { empty.style.display = 'none'; }
+  // 訪客 / 待審核者隱藏「新增公告」按鈕
+  const actions = document.getElementById('board-actions');
+  const isGuest = document.body.classList.contains('guest-mode');
+  if(actions) actions.style.display = isGuest ? 'none' : '';
+
+  items.forEach(it=>{
+    const row = document.createElement('div');
+    row.className = 'item-row board-card';
+    const d = new Date(it.createdAt);
+    const dateStr = `${d.getMonth()+1}月${d.getDate()}日`;
+    row.innerHTML = `
+      <div class="item-date">${dateStr}</div>
+      <div>
+        <div class="item-title"><span class="board-pin">📌</span>${escapeHtml(it.title||'')}</div>
+        <div class="item-body">${escapeHtml(it.content||'')}</div>
+        <div class="board-author">— ${escapeHtml(it.authorName||'壇辦')}</div>
+      </div>
+      <div class="item-action">${isGuest?'':'編輯 ›'}</div>`;
+    if(!isGuest) row.onclick = ()=>openBoardModal(it.id);
+    list.appendChild(row);
+  });
+}
+
+async function openBoardModal(id){
+  // 沿用 generic modal
+  const type = 'board';
+  document.getElementById('g-type').value = type;
+  document.getElementById('g-id').value = id || '';
+  document.getElementById('g-title').textContent = id ? '編輯公告' : '新增公告';
+  document.getElementById('g-l1').textContent = '公告標題';
+  document.getElementById('g-l2').textContent = '公告內容';
+  document.getElementById('g-row-date').style.display = 'none';
+  if(id){
+    const it = await Store.get('board:'+id);
+    if(it){
+      document.getElementById('g-f1').value = it.title || '';
+      document.getElementById('g-f2').value = it.content || '';
+      document.getElementById('g-delete-btn').style.display = 'inline-block';
+    }
+  }else{
+    document.getElementById('g-f1').value = '';
+    document.getElementById('g-f2').value = '';
+    document.getElementById('g-delete-btn').style.display = 'none';
+  }
+  document.getElementById('generic-modal').classList.add('active');
+}
+
+/* =========================================================
+   使用者管理(管理員)
+   ========================================================= */
+async function adminRefresh(){
+  if(!Firebase.isAdmin()) return;
+  const users = await Firebase.listAllUsers();
+  // 統計
+  const stats = {total:users.length, active:0, pending:0, rejected:0};
+  users.forEach(u=>{
+    if(u.status==='active') stats.active++;
+    else if(u.status==='pending') stats.pending++;
+    else if(u.status==='rejected') stats.rejected++;
+  });
+  document.getElementById('admin-stats').innerHTML = `
+    <div class="admin-stat"><div class="admin-stat-num">${stats.total}</div><div class="admin-stat-label">總人數</div></div>
+    <div class="admin-stat"><div class="admin-stat-num">${stats.active}</div><div class="admin-stat-label">已啟用</div></div>
+    <div class="admin-stat"><div class="admin-stat-num" style="color:#c4922f;">${stats.pending}</div><div class="admin-stat-label">待審核</div></div>
+    <div class="admin-stat"><div class="admin-stat-num" style="color:#a13929;">${stats.rejected}</div><div class="admin-stat-label">已停用</div></div>
+  `;
+  // 依分區分組
+  const groups = {};
+  users.forEach(u=>{
+    const region = u.region || '(未設定分區)';
+    if(!groups[region]) groups[region] = [];
+    groups[region].push(u);
+  });
+  const container = document.getElementById('admin-groups');
+  container.innerHTML = '';
+  Object.keys(groups).sort().forEach(region=>{
+    const ulist = groups[region];
+    const groupEl = document.createElement('div');
+    groupEl.className = 'admin-group';
+    const usersHtml = ulist.map(u=>{
+      const isAdminAcct = u.email && u.email.toLowerCase() === ADMIN_EMAIL.toLowerCase();
+      const initial = (u.displayName || u.email || '?').slice(0,1).toUpperCase();
+      const statusBadge = isAdminAcct
+        ? `<span class="u-status-badge admin">★ 壇主</span>`
+        : `<span class="u-status-badge ${u.status||'pending'}">${({active:'已啟用',pending:'待審核',rejected:'已停用'})[u.status||'pending']}</span>`;
+      let actionsHtml = '';
+      if(!isAdminAcct){
+        if(u.status === 'pending'){
+          actionsHtml = `
+            <button class="btn" onclick="adminApprove('${u.uid}')">核准</button>
+            <button class="btn outline" onclick="adminReject('${u.uid}')">拒絕</button>`;
+        }else if(u.status === 'active'){
+          actionsHtml = `
+            <button class="btn outline" onclick="adminViewUser('${u.uid}')">檢視</button>
+            <button class="btn outline" onclick="adminExportOne('${u.uid}')">備份</button>
+            <button class="btn outline" onclick="adminReject('${u.uid}')">停用</button>
+            <button class="btn outline danger-btn" onclick="adminDeleteUser('${u.uid}','${escapeHtml(u.displayName||u.email)}')">刪除</button>`;
+        }else if(u.status === 'rejected'){
+          actionsHtml = `
+            <button class="btn" onclick="adminApprove('${u.uid}')">重新啟用</button>
+            <button class="btn outline danger-btn" onclick="adminDeleteUser('${u.uid}','${escapeHtml(u.displayName||u.email)}')">刪除</button>`;
+        }
+      }
+      return `
+        <div class="admin-user-row ${u.status||''} ${isAdminAcct?'admin':''}">
+          <div class="u-avatar">${initial}</div>
+          <div>
+            <div class="u-info-name">${escapeHtml(u.displayName||u.email)} ${statusBadge}</div>
+            <div class="u-info-meta">${escapeHtml(u.email||'')} · 建檔 ${(u.createdAt||'').slice(0,10)}</div>
+          </div>
+          <div class="admin-user-actions">${actionsHtml}</div>
+        </div>`;
+    }).join('');
+    groupEl.innerHTML = `
+      <div class="admin-group-header">
+        <span>📍 ${escapeHtml(region)}</span>
+        <span class="count">${ulist.length} 人</span>
+      </div>
+      ${usersHtml}`;
+    container.appendChild(groupEl);
+  });
+}
+
+async function adminApprove(uid){
+  if(!confirm('核准這個帳號?核准後可使用完整功能。')) return;
+  await Firebase.setUserStatus(uid, 'active');
+  toast('已核准');
+  adminRefresh();
+}
+async function adminReject(uid){
+  if(!confirm('停用這個帳號?帳號將無法使用主功能。')) return;
+  await Firebase.setUserStatus(uid, 'rejected');
+  toast('已停用');
+  adminRefresh();
+}
+async function adminViewUser(uid){
+  toast('讀取中…');
+  const data = await Firebase.getUserData(uid);
+  const counts = {
+    members: Object.keys(data).filter(k=>k.startsWith('members:')).length,
+    calendar: Object.keys(data).filter(k=>k.startsWith('calendar:')).length,
+    library: Object.keys(data).filter(k=>k.startsWith('library:')).length,
+    practice: Object.keys(data).filter(k=>k.startsWith('practice:')).length
+  };
+  alert(`使用者資料統計\n\n道親:${counts.members}\n行事曆:${counts.calendar}\n學習資料:${counts.library}\n功課:${counts.practice}\n\n如需詳細備份請點「備份」按鈕。`);
+}
+
+async function adminExportOne(uid){
+  toast('讀取中…');
+  const users = await Firebase.listAllUsers();
+  const user = users.find(u=>u.uid===uid);
+  if(!user){ toast('找不到使用者'); return; }
+  const data = await Firebase.getUserData(uid);
+  const wb = XLSX.utils.book_new();
+  _userDataToWb(wb, user, data);
+  const stamp = new Date().toISOString().slice(0,10);
+  const safeName = (user.displayName||user.email||uid).replace(/[\\\/:*?"<>|]/g,'_');
+  XLSX.writeFile(wb, `安東道場_${safeName}_${stamp}.xlsx`);
+  toast('已匯出');
+}
+
+async function adminExportAll(){
+  if(!confirm('匯出所有使用者的完整資料?')) return;
+  toast('讀取中,請稍候…');
+  const users = await Firebase.listAllUsers();
+  const wb = XLSX.utils.book_new();
+  // 第一個工作表:所有使用者清單
+  const userRows = users.map(u=>({
+    UID:u.uid, Email:u.email, 顯示名:u.displayName||'',
+    分區:u.region||'', 狀態:u.status||'', 角色:u.role||'',
+    建檔:u.createdAt||''
+  }));
+  XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(userRows), '使用者清單');
+  // 每個使用者一組工作表
+  for(const u of users){
+    const data = await Firebase.getUserData(u.uid);
+    const safeName = (u.displayName||u.email||u.uid).replace(/[\\\/:*?"<>|\[\]]/g,'_').slice(0,28);
+    _userDataToWb(wb, u, data, safeName);
+  }
+  const stamp = new Date().toISOString().slice(0,10);
+  XLSX.writeFile(wb, `安東道場_全員備份_${stamp}_${APP_VERSION}.xlsx`);
+  toast('完整備份已匯出');
+}
+
+function _userDataToWb(wb, user, data, prefix){
+  const sheetPrefix = prefix ? prefix.slice(0,20) + '_' : '';
+  const members = Object.keys(data).filter(k=>k.startsWith('members:')).map(k=>data[k]);
+  const calendar = Object.keys(data).filter(k=>k.startsWith('calendar:')).map(k=>data[k]);
+  const library = Object.keys(data).filter(k=>k.startsWith('library:')).map(k=>data[k]);
+  const practice = Object.keys(data).filter(k=>k.startsWith('practice:')).map(k=>data[k]);
+  if(members.length){
+    const rows = members.map(m=>({
+      ID:m.id, 姓名:m.name, 性別:m.gender||'', 年齡:m.age||'', 關係:m.relation||'',
+      認識管道:m.channel||'', 現狀進度:m.progress||'',
+      最新關心紀錄:(m.notes&&m.notes.length)?m.notes[m.notes.length-1].content:'',
+      所有關心紀錄:(m.notes||[]).map(n=>`[${n.date}] ${n.content}`).join(' | '),
+      建檔日期:m.createdAt, 更新日期:m.updatedAt
+    }));
+    XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(rows), (sheetPrefix+'道親').slice(0,31));
+  }
+  if(calendar.length){
+    const rows = calendar.map(it=>({ID:it.id, 日期:it.date||'', 名稱:it.title||'', 內容:it.content||''}));
+    XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(rows), (sheetPrefix+'行事').slice(0,31));
+  }
+  if(library.length){
+    const rows = library.map(it=>({ID:it.id, 標題:it.title||'', 內容:it.content||''}));
+    XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(rows), (sheetPrefix+'學習').slice(0,31));
+  }
+  if(practice.length){
+    const rows = practice.map(p=>({ID:p.id, 功課:p.title, 紀錄:JSON.stringify(p.checks||{})}));
+    XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(rows), (sheetPrefix+'功課').slice(0,31));
+  }
+}
+
+/* 三次確認刪除使用者 */
+const _delConfirm = {}; // {uid: count}
+async function adminDeleteUser(uid, name){
+  _delConfirm[uid] = (_delConfirm[uid]||0) + 1;
+  const n = _delConfirm[uid];
+  if(n === 1){
+    alert(`⚠ 第一次確認\n\n您正要刪除使用者:${name}\n再按兩次「刪除」按鈕才會真正執行。`);
+    setTimeout(()=>{ delete _delConfirm[uid]; }, 10000);
+    return;
+  }
+  if(n === 2){
+    alert(`⚠⚠ 第二次確認\n\n再按一次將永久刪除「${name}」所有資料,無法復原!`);
+    setTimeout(()=>{ delete _delConfirm[uid]; }, 10000);
+    return;
+  }
+  // 第三次:真正刪除
+  if(!confirm(`⚠⚠⚠ 最後確認\n\n真的要永久刪除「${name}」所有資料?\n此動作無法復原!`)) {
+    delete _delConfirm[uid];
+    return;
+  }
+  toast('刪除中…');
+  await Firebase.deleteUserData(uid);
+  delete _delConfirm[uid];
+  toast('已刪除');
+  adminRefresh();
+}
+
+/* =========================================================
+   把所有 inline onclick 會用到的函式掛到 window
+   ========================================================= */
+Object.assign(window, {
+  // Auth
+  switchAuthMode, submitAuth, signInWithGoogle, enterGuestMode, enterPendingMode, signOutNow,
+  // Modal & form
+  openMemberModal, closeMemberModal, saveMember, deleteMember,
+  openCalendarModal, openLibraryModal, openBoardModal, openGenericModal, closeGenericModal, saveGeneric, deleteGeneric,
+  openPracticeModal, editPractice,
+  // Quotes
+  drawQuote,
+  // FAQ viewer
+  openFaqViewer, closeFaqViewer, faqBack, filterFaqList, faqDetailNav,
+  // Prayer viewer
+  openPrayerViewer, closePrayerViewer,
+  // Calendar reset
+  resetCalendarToDefault,
+  // Backup
+  exportExcel, exportAllExcel, importExcel, importAllExcel, clearAllData,
+  // Admin
+  adminRefresh, adminApprove, adminReject, adminViewUser, adminExportOne, adminExportAll, adminDeleteUser,
+});
+
+(async function init(){
   showPlaqueQuote();
   loadWeather();
-  setInterval(loadWeather, 15 * 60 * 1000); // 每 15 分鐘更新
-  // 第一次開啟時,自動安裝預設行事曆與學習資料
-  const installed = await Store.get('__defaults_installed_v1');
-  if(!installed){
-    await installDefaultCalendar();
-    await Store.save('__defaults_installed_v1', {installedAt: new Date().toISOString()});
-  }
-  // v1.5 新增:檢查並安裝學習資料庫預設
-  const libInstalled = await Store.get('__defaults_library_v1');
-  if(!libInstalled){
-    await installDefaultLibrary();
-    await Store.save('__defaults_library_v1', {installedAt: new Date().toISOString()});
-  }
-  // v1.6 升級遷移:將舊版 default_faq100 (含長文字內容) 升級為三層導覽版
-  const oldFAQ = await Store.get('library:default_faq100');
-  if(oldFAQ && !oldFAQ.isFAQ){
-    oldFAQ.isFAQ = true;
-    oldFAQ.content = '宏樂堂修道百問共 213 題,涵蓋道之本質、求道意義、五戒持齋、天命明師、六道輪迴等核心道義。點此進入瀏覽 →';
-    oldFAQ.updatedAt = new Date().toISOString();
-    await Store.save('library:default_faq100', oldFAQ);
-  }
-  // v1.11 升級:加入祈願文預設項
-  const prayer = await Store.get('library:default_prayer');
-  if(!prayer){
-    const now = new Date().toISOString();
-    await Store.save('library:default_prayer', {
-      id: 'default_prayer',
-      title: '喚醒生命實相 祈願文',
-      content: '誠心朗誦此文,可喚醒生命實相,得無極老母慈光護持,圓滿無缺。點此進入誦讀 →',
-      isDefault: true,
-      isPrayer: true,
-      createdAt: now,
-      updatedAt: now
-    });
-  }
-  await renderMembers();
+  setInterval(loadWeather, 15 * 60 * 1000);
+  // 顯示 auth 畫面預備
+  document.body.classList.add('auth-active');
+  document.getElementById('auth-screen').classList.add('active');
+  document.getElementById('auth-version').textContent = APP_VERSION;
+  // 初始化 Firebase(會觸發 onAuthStateChanged → onAuthChanged)
+  await Firebase.init();
+  // 若 4 秒後仍未登入,確保登入畫面顯示
+  setTimeout(()=>{
+    if(!Firebase.user){
+      document.getElementById('auth-screen').classList.add('active');
+      document.body.classList.add('auth-active');
+    }
+  }, 4000);
 })();
 </script>
 </body>
