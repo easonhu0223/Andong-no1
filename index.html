@@ -3484,29 +3484,12 @@
                class="s1-input" style="display:none; margin-top:6px; width:100%;">
 
         <div class="auth-msg" id="s1-msg"></div>
-        <button class="auth-btn primary" id="s1-submit" onclick="goToStep2()">
-          繼續，使用 Google 帳號登入 →
+        <button class="auth-btn primary" id="s1-submit" onclick="validateAndGoogleLogin(this)">
+          使用 Google 帳號登入
         </button>
         <div class="auth-divider">── 已有帳號？ ──</div>
         <button class="auth-btn ghost" onclick="showEmailLogin()">電子郵件登入 / 忘記密碼</button>
         <button class="auth-btn ghost" onclick="enterGuestMode()">以訪客身份瀏覽仙佛詞語</button>
-      </div>
-
-      <!-- ══ 步驟二：Google 登入（填完資料後才顯示） ══ -->
-      <div id="auth-step2" class="auth-form" style="display:none;">
-        <div class="auth-step-title">✅ 第二步：Google 帳號登入</div>
-        <div class="auth-preview" id="s2-preview"></div>
-        <div class="auth-msg" id="s2-msg"></div>
-        <button class="auth-btn google-full" id="s2-google-btn" onclick="confirmGoogleLogin()">
-          <svg width="20" height="20" viewBox="0 0 18 18" style="vertical-align:middle;margin-right:8px;">
-            <path fill="#4285F4" d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844c-.209 1.125-.843 2.078-1.796 2.717v2.258h2.908c1.702-1.567 2.684-3.874 2.684-6.615z"/>
-            <path fill="#34A853" d="M9 18c2.43 0 4.467-.806 5.956-2.18l-2.908-2.259c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332A8.997 8.997 0 0 0 9 18z"/>
-            <path fill="#FBBC05" d="M3.964 10.71A5.41 5.41 0 0 1 3.682 9c0-.593.102-1.17.282-1.71V4.958H.957A8.996 8.996 0 0 0 0 9c0 1.452.348 2.827.957 4.042l3.007-2.332z"/>
-            <path fill="#EA4335" d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0A8.997 8.997 0 0 0 .957 4.958L3.964 7.29C4.672 5.163 6.656 3.58 9 3.58z"/>
-          </svg>
-          使用 Google 帳號完成登入
-        </button>
-        <button class="auth-btn ghost" onclick="backToStep1()">← 重新填寫資料</button>
       </div>
 
       <!-- ══ 電子郵件登入（隱藏，點連結才顯示） ══ -->
@@ -5854,21 +5837,19 @@ function toast(msg){
 /* =========================================================
    AUTH 流程
    ========================================================= */
-// ── 兩步驟 Google 登入流程 ──
-let preAuthData = null;          // 第一步填寫的資料，登入後寫入 Firestore
-let currentAuthMode = 'login';   // 電子郵件表單用
+// ── Google 登入流程（驗證 + 登入 = 同一次 click）──
+let preAuthData = null;
+let currentAuthMode = 'login';
 
-// ── 中文姓名驗證（只能 2-10 個中文字）──
 function validateChineseName(name){
   if(!name) return '請輸入姓名';
-  // 使用 Unicode escape 確保跨環境正確
   const re = new RegExp('^[\u4e00-\u9fa5]{2,10}$');
   if(!re.test(name)) return '姓名請輸入 2–10 個中文字';
   return '';
 }
 
-// ── Step 1 → Step 2 ──
-function goToStep2(){
+// 驗證後直接開 Google popup（在同一個 user-gesture 內，不被瀏覽器擋掉）
+async function validateAndGoogleLogin(btn){
   const name    = document.getElementById('s1-name').value.trim();
   const vSel    = document.getElementById('s1-vocation').value;
   const vCustom = document.getElementById('s1-vocation-custom').value.trim();
@@ -5877,77 +5858,51 @@ function goToStep2(){
   const msgEl   = document.getElementById('s1-msg');
   msgEl.textContent = '';
 
-  // 驗證
   const nameErr = validateChineseName(name);
   if(nameErr){ msgEl.textContent = nameErr; return; }
   if(!vocation){ msgEl.textContent = '請選擇天職'; return; }
   if(vSel === '__other__' && !vCustom){ msgEl.textContent = '請輸入天職名稱（最多5字）'; return; }
   if(!region){ msgEl.textContent = '請選擇分區'; return; }
+  if(!Firebase.ready){ msgEl.textContent = '系統初始化中，請稍後再試'; return; }
 
-  // 儲存到記憶體
   preAuthData = { displayName: name, vocation, region };
+  btn.disabled = true;
+  btn.textContent = '⏳ 開啟 Google 登入...';
 
-  // 顯示確認內容
-  document.getElementById('s2-preview').innerHTML =
-    `<strong>${name}</strong><br>天職：${vocation}　分區：${region}`;
-  document.getElementById('s2-msg').textContent = '';
-
-  // 切換畫面
-  document.getElementById('auth-step1').style.display = 'none';
-  document.getElementById('auth-step2').style.display = 'block';
-}
-
-function backToStep1(){
-  document.getElementById('auth-step2').style.display = 'none';
-  document.getElementById('auth-step1').style.display = 'block';
+  try{
+    const provider = new Firebase.fbAuth.GoogleAuthProvider();
+    await Firebase.fbAuth.signInWithPopup(Firebase.auth, provider);
+  }catch(e){
+    preAuthData = null;
+    const code = e.code || '';
+    msgEl.textContent =
+      code === 'auth/popup-blocked'          ? '彈出視窗被封鎖，請允許此網站彈出視窗後再試' :
+      code === 'auth/popup-closed-by-user'   ? '視窗已關閉，請重新點擊' :
+      code === 'auth/cancelled-popup-request'? '操作已取消，請再試一次' :
+      'Google 登入失敗：' + (e.message || '');
+    btn.disabled = false;
+    btn.textContent = '使用 Google 帳號登入';
+  }
 }
 
 function showStep1(){
   document.getElementById('auth-email-form').style.display = 'none';
-  document.getElementById('auth-step2').style.display = 'none';
   document.getElementById('auth-step1').style.display = 'block';
 }
 
 function showEmailLogin(){
   document.getElementById('auth-step1').style.display = 'none';
-  document.getElementById('auth-step2').style.display = 'none';
   document.getElementById('auth-email-form').style.display = 'block';
   switchAuthMode('login');
 }
 
-// Step 1 天職下拉
 document.getElementById('s1-vocation').addEventListener('change', function(){
   const c = document.getElementById('s1-vocation-custom');
   c.style.display = (this.value === '__other__') ? 'block' : 'none';
   if(this.value !== '__other__') c.value = '';
 });
 
-// ── 確認後執行 Google 登入（Step 2 按鈕） ──
-async function confirmGoogleLogin(){
-  const btn = document.getElementById('s2-google-btn');
-  const msgEl = document.getElementById('s2-msg');
-  if(!Firebase.ready){
-    msgEl.textContent = '系統初始化中，請稍後再試';
-    return;
-  }
-  btn.disabled = true;
-  btn.innerHTML = '⏳ 連線中…';
-  msgEl.textContent = '';
-  try{
-    await signInWithGoogle();
-    // 成功後 onAuthChanged 會自動接手，不需要做任何事
-  }catch(e){
-    const code = (e.code||'');
-    const msg = code==='auth/popup-blocked' ? '彈出視窗被封鎖，請允許此網站開啟彈出視窗' :
-                code==='auth/cancelled-popup-request' ? '登入已取消' :
-                code==='auth/popup-closed-by-user' ? '視窗已關閉，請重新點擊' :
-                'Google 登入失敗，請再試一次';
-    msgEl.textContent = msg;
-    btn.disabled = false;
-    btn.innerHTML = '<svg width="20" height="20" viewBox="0 0 18 18" style="vertical-align:middle;margin-right:8px;"><path fill="#4285F4" d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844c-.209 1.125-.843 2.078-1.796 2.717v2.258h2.908c1.702-1.567 2.684-3.874 2.684-6.615z"/><path fill="#34A853" d="M9 18c2.43 0 4.467-.806 5.956-2.18l-2.908-2.259c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332A8.997 8.997 0 0 0 9 18z"/><path fill="#FBBC05" d="M3.964 10.71A5.41 5.41 0 0 1 3.682 9c0-.593.102-1.17.282-1.71V4.958H.957A8.996 8.996 0 0 0 0 9c0 1.452.348 2.827.957 4.042l3.007-2.332z"/><path fill="#EA4335" d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0A8.997 8.997 0 0 0 .957 4.958L3.964 7.29C4.672 5.163 6.656 3.58 9 3.58z"/></svg>使用 Google 帳號完成登入';
-  }
-}
-
+// ── 電子郵件登入 ──
 // ── 電子郵件登入 ──
 function switchAuthMode(mode){
   currentAuthMode = mode;
