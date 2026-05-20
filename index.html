@@ -500,6 +500,51 @@
     letter-spacing: 1px;
   }
 
+  /* ── 步驟一橫排 ── */
+  .s1-row {
+    display: flex;
+    gap: 6px;
+    margin-bottom: 8px;
+  }
+  .s1-col {
+    flex: 1;
+    min-width: 0;
+  }
+  .s1-label {
+    font-family: 'ZCOOL XiaoWei', serif;
+    font-size: 11px;
+    color: var(--ink-soft);
+    letter-spacing: 0.5px;
+    margin-bottom: 3px;
+  }
+  .s1-input {
+    width: 100%;
+    box-sizing: border-box;
+    font-family: 'Noto Serif TC', serif;
+    font-size: 13px;
+    padding: 8px 8px;
+    background: rgba(255, 252, 245, 0.92);
+    border: 1px solid rgba(176, 132, 86, 0.4);
+    border-radius: 2px;
+    outline: none;
+    color: var(--ink);
+    transition: all 0.2s;
+    appearance: none;
+    -webkit-appearance: none;
+  }
+  select.s1-input {
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='8' height='5'><path d='M0 0l4 5 4-5z' fill='%23b08456'/></svg>");
+    background-repeat: no-repeat;
+    background-position: right 6px center;
+    padding-right: 20px;
+    cursor: pointer;
+  }
+  .s1-input:focus {
+    border-color: var(--gold);
+    background-color: #fffdf5;
+    box-shadow: 0 0 0 2px rgba(176, 132, 86, 0.15);
+  }
+
   .auth-step-title {
     font-family: 'ZCOOL XiaoWei', serif;
     font-size: 13px;
@@ -696,6 +741,12 @@
     transition: all 0.2s;
   }
   .user-badge:hover { background: rgba(58, 44, 30, 0.96); }
+  .badge-region {
+    font-size: 10px;
+    opacity: 0.75;
+    margin-left: 2px;
+    font-family: 'ZCOOL XiaoWei', serif;
+  }
   .user-badge.admin { border-color: var(--vermillion); }
   .user-badge .role-mark { color: var(--gold); font-size: 11px; }
   .user-badge.admin .role-mark { color: #ffa84a; }
@@ -3390,39 +3441,48 @@
     <!-- 下方緊湊登入區 -->
     <div class="auth-body">
 
-      <!-- ══ 步驟一：填寫基本資料（新用戶 / Google 登入前） ══ -->
+      <!-- ══ 步驟一：填寫基本資料（橫排） ══ -->
       <div id="auth-step1" class="auth-form">
-        <div class="auth-step-title">📋 第一步：填寫基本資料</div>
-        <div class="auth-field">
-          <input type="text" id="s1-name" placeholder="中文姓名（如：王大明）" autocomplete="name" maxlength="10">
+        <div class="auth-step-title">📋 請先填寫基本資料</div>
+
+        <!-- 橫排：名字 | 天職 | 分區 -->
+        <div class="s1-row">
+          <div class="s1-col">
+            <div class="s1-label">姓名（中文）</div>
+            <input class="s1-input" type="text" id="s1-name" placeholder="王大明" autocomplete="name" maxlength="10">
+          </div>
+          <div class="s1-col">
+            <div class="s1-label">天職</div>
+            <select class="s1-input" id="s1-vocation">
+              <option value="">請選擇</option>
+              <option value="點傳師">點傳師</option>
+              <option value="壇主">壇主</option>
+              <option value="辦事人員">辦事人員</option>
+              <option value="清口">清口</option>
+              <option value="已求道">已求道</option>
+              <option value="__other__">其他</option>
+            </select>
+          </div>
+          <div class="s1-col">
+            <div class="s1-label">分區</div>
+            <select class="s1-input" id="s1-region">
+              <option value="">請選擇</option>
+              <option value="化真區">化真</option>
+              <option value="化善區">化善</option>
+              <option value="化美區">化美</option>
+              <option value="化定區">化定</option>
+              <option value="化志區">化志</option>
+              <option value="化慧區">化慧</option>
+              <option value="化孝區">化孝</option>
+              <option value="化仁區">化仁</option>
+              <option value="化力區">化力</option>
+            </select>
+          </div>
         </div>
-        <div class="auth-field">
-          <select id="s1-vocation">
-            <option value="">— 請選擇天職 —</option>
-            <option value="點傳師">點傳師</option>
-            <option value="壇主">壇主</option>
-            <option value="辦事人員">辦事人員</option>
-            <option value="清口">清口</option>
-            <option value="已求道">已求道</option>
-            <option value="__other__">其他（自行輸入）</option>
-          </select>
-          <input type="text" id="s1-vocation-custom" placeholder="請輸入天職（最多5字）" maxlength="5"
-                 style="display:none; margin-top:6px;">
-        </div>
-        <div class="auth-field">
-          <select id="s1-region">
-            <option value="">— 請選擇分區 —</option>
-            <option value="化真區">化真區</option>
-            <option value="化善區">化善區</option>
-            <option value="化美區">化美區</option>
-            <option value="化定區">化定區</option>
-            <option value="化志區">化志區</option>
-            <option value="化慧區">化慧區</option>
-            <option value="化孝區">化孝區</option>
-            <option value="化仁區">化仁區</option>
-            <option value="化力區">化力區</option>
-          </select>
-        </div>
+        <!-- 天職其他自填 -->
+        <input type="text" id="s1-vocation-custom" placeholder="請輸入天職（最多5字）" maxlength="5"
+               class="s1-input" style="display:none; margin-top:6px; width:100%;">
+
         <div class="auth-msg" id="s1-msg"></div>
         <button class="auth-btn primary" id="s1-submit" onclick="goToStep2()">
           繼續，使用 Google 帳號登入 →
@@ -5866,13 +5926,23 @@ document.getElementById('s1-vocation').addEventListener('change', function(){
 async function confirmGoogleLogin(){
   const btn = document.getElementById('s2-google-btn');
   const msgEl = document.getElementById('s2-msg');
+  if(!Firebase.ready){
+    msgEl.textContent = '系統初始化中，請稍後再試';
+    return;
+  }
   btn.disabled = true;
-  btn.textContent = '連線中…';
+  btn.innerHTML = '⏳ 連線中…';
   msgEl.textContent = '';
   try{
     await signInWithGoogle();
+    // 成功後 onAuthChanged 會自動接手，不需要做任何事
   }catch(e){
-    msgEl.textContent = 'Google 登入失敗，請再試一次';
+    const code = (e.code||'');
+    const msg = code==='auth/popup-blocked' ? '彈出視窗被封鎖，請允許此網站開啟彈出視窗' :
+                code==='auth/cancelled-popup-request' ? '登入已取消' :
+                code==='auth/popup-closed-by-user' ? '視窗已關閉，請重新點擊' :
+                'Google 登入失敗，請再試一次';
+    msgEl.textContent = msg;
     btn.disabled = false;
     btn.innerHTML = '<svg width="20" height="20" viewBox="0 0 18 18" style="vertical-align:middle;margin-right:8px;"><path fill="#4285F4" d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844c-.209 1.125-.843 2.078-1.796 2.717v2.258h2.908c1.702-1.567 2.684-3.874 2.684-6.615z"/><path fill="#34A853" d="M9 18c2.43 0 4.467-.806 5.956-2.18l-2.908-2.259c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332A8.997 8.997 0 0 0 9 18z"/><path fill="#FBBC05" d="M3.964 10.71A5.41 5.41 0 0 1 3.682 9c0-.593.102-1.17.282-1.71V4.958H.957A8.996 8.996 0 0 0 0 9c0 1.452.348 2.827.957 4.042l3.007-2.332z"/><path fill="#EA4335" d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0A8.997 8.997 0 0 0 .957 4.958L3.964 7.29C4.672 5.163 6.656 3.58 9 3.58z"/></svg>使用 Google 帳號完成登入';
   }
@@ -5931,13 +6001,9 @@ async function submitAuth(){
 }
 
 async function signInWithGoogle(){
-  if(!Firebase.ready){ authMsg('系統初始化中,請稍後…'); return; }
-  try{
-    const provider = new Firebase.fbAuth.GoogleAuthProvider();
-    await Firebase.fbAuth.signInWithPopup(Firebase.auth, provider);
-  }catch(err){
-    authMsg(err.message || 'Google 登入失敗');
-  }
+  if(!Firebase.ready) throw new Error('系統初始化中，請稍後再試');
+  const provider = new Firebase.fbAuth.GoogleAuthProvider();
+  await Firebase.fbAuth.signInWithPopup(Firebase.auth, provider);
 }
 
 
@@ -5979,7 +6045,7 @@ async function submitProfileComplete(){
       document.body.classList.add('auth-active');
     } else {
       // → 進主畫面
-      showUserBadge(name, isAdminNow, false, status, vocation);
+      showUserBadge(name, isAdminNow, false, status, vocation, region);
       document.querySelectorAll('.tab.admin-only').forEach(t=>{ t.style.display = isAdminNow ? '' : 'none'; });
       await ensureDefaultsInstalled();
       renderMembers();
@@ -6040,7 +6106,7 @@ async function signOutNow(){
   location.reload();
 }
 
-function showUserBadge(name, isAdmin, isGuest, status, vocation){
+function showUserBadge(name, isAdmin, isGuest, status, vocation, region){
   let badge = document.getElementById('user-badge');
   if(!badge){
     badge = document.createElement('div');
@@ -6062,7 +6128,9 @@ function showUserBadge(name, isAdmin, isGuest, status, vocation){
   } else {
     mark = vocation || '道親';
   }
-  badge.innerHTML = `<span class="role-mark">${mark}</span> ${escapeHtml(name||'')}`;
+  // 顯示：天職 名字 (分區)
+  const regionStr = (!isAdmin && !isGuest && region) ? ` <span class="badge-region">${escapeHtml(region)}</span>` : '';
+  badge.innerHTML = `<span class="role-mark">${mark}</span> ${escapeHtml(name||'')}${regionStr}`;
 }
 
 /* 當登入狀態變動時被呼叫 */
@@ -6081,10 +6149,16 @@ async function onAuthChanged(user, profile){
   await Firebase.pullUserData();
   await loadSettings();
 
-  // ★★ 如果有第一步預填的資料，立刻合併寫入 Firestore
+  // ★★ 如果有第一步預填的資料，立刻合併寫入 Firestore + Settings
   if(preAuthData){
     try{
       await Firebase.updateProfile(preAuthData);
+      // 同步到 Settings（讓設定頁帶入名字與分區）
+      await Store.save('settings', {
+        name: preAuthData.displayName,
+        region: preAuthData.region
+      });
+      await loadSettings();   // 重新載入，讓設定頁立即反映
     }catch(e){ console.warn('preAuthData 寫入失敗', e); }
     preAuthData = null;
   }
@@ -6123,7 +6197,7 @@ async function onAuthChanged(user, profile){
   }
 
   // ★ Step 3：active → 進入主畫面
-  showUserBadge(profile.displayName || user.email, isAdmin, false, profile.status, profile.vocation);
+  showUserBadge(profile.displayName || user.email, isAdmin, false, profile.status, profile.vocation, profile.region);
   document.querySelectorAll('.tab.admin-only').forEach(t=>{
     t.style.display = isAdmin ? '' : 'none';
   });
