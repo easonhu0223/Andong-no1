@@ -60,66 +60,262 @@
 
   .auth-card, .pending-card {
     width: 100%;
-    max-width: 440px;
-    background: rgba(255, 252, 245, 0.78);
-    border: 1px solid var(--gold);
+    max-width: 460px;
+    background:
+      radial-gradient(at 50% 0%, rgba(255, 248, 232, 0.85), rgba(252, 240, 218, 0.6)),
+      linear-gradient(180deg, #fcf4dd 0%, #f5e6c6 100%);
+    border: 1px solid rgba(176, 132, 86, 0.6);
     border-radius: 4px;
-    padding: 36px 28px;
-    box-shadow: 0 12px 40px rgba(40, 26, 12, 0.15);
+    padding: 0;
+    box-shadow:
+      0 0 0 1px rgba(255, 250, 230, 0.5) inset,
+      0 0 0 6px rgba(255, 252, 245, 0.4),
+      0 0 0 7px rgba(176, 132, 86, 0.35),
+      0 16px 50px rgba(40, 26, 12, 0.20);
     position: relative;
+    overflow: hidden;
   }
+  .auth-card {
+    display: flex;
+    flex-direction: column;
+    min-height: 92vh;
+    max-height: 96vh;
+  }
+  /* 四角朱砂雕花 */
   .auth-card::before, .auth-card::after,
   .pending-card::before, .pending-card::after {
     content: '';
     position: absolute;
-    width: 22px; height: 22px;
+    width: 30px; height: 30px;
     border: 2px solid var(--vermillion);
-    opacity: 0.5;
+    opacity: 0.55;
+    pointer-events: none;
   }
-  .auth-card::before, .pending-card::before { top: 8px; left: 8px; border-right: none; border-bottom: none; }
-  .auth-card::after, .pending-card::after { bottom: 8px; right: 8px; border-left: none; border-top: none; }
+  .auth-card::before, .pending-card::before { top: 16px; left: 16px; border-right: none; border-bottom: none; }
+  .auth-card::after, .pending-card::after { bottom: 16px; right: 16px; border-left: none; border-top: none; }
 
-  .auth-header { text-align: center; margin-bottom: 24px; }
+  /* ───────── 抬頭區(占約 70%)───────── */
+  .auth-header {
+    text-align: center;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 32px 24px 20px;
+    position: relative;
+  }
+
+  /* 母字符號 logo (融入背景) */
+  .auth-seal {
+    width: 88px;
+    height: 88px;
+    margin: 0 auto 18px;
+    background: transparent;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0.92;
+    /* 微微金光,讓 logo 與背景融合更自然 */
+    filter:
+      drop-shadow(0 1px 2px rgba(176, 132, 86, 0.25))
+      drop-shadow(0 0 12px rgba(212, 165, 116, 0.18));
+    animation: seal-breath 4s ease-in-out infinite;
+  }
+  @keyframes seal-breath {
+    0%, 100% { transform: scale(1); opacity: 0.92; }
+    50%      { transform: scale(1.03); opacity: 1; }
+  }
+  .auth-seal-img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    display: block;
+  }
+
+  .auth-title-wrap {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+    margin-bottom: 8px;
+    flex-wrap: nowrap;
+  }
+  .auth-title-side {
+    color: var(--gold);
+    font-size: 16px;
+    opacity: 0.65;
+    flex-shrink: 0;
+  }
   .auth-title {
     font-family: 'Ma Shan Zheng', serif;
-    font-size: 30px;
+    font-size: 28px;
     color: var(--vermillion);
-    letter-spacing: 6px;
-    text-shadow: 0 1px 0 rgba(255,255,255,0.5);
+    letter-spacing: 5px;
+    text-indent: 5px;
+    text-shadow:
+      0 1px 0 rgba(255,255,255,0.6),
+      0 2px 4px rgba(138, 42, 31, 0.15);
+    line-height: 1.1;
+    white-space: nowrap;
   }
   .auth-sub {
     font-family: 'ZCOOL XiaoWei', serif;
     font-size: 12px;
     color: var(--ink-soft);
-    letter-spacing: 5px;
-    margin-top: 6px;
+    letter-spacing: 7px;
+    text-indent: 7px;
+    margin-top: 2px;
   }
-  .auth-divider {
+
+  /* 流光金線 */
+  .auth-flowline {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    margin: 18px auto;
+    max-width: 340px;
+    color: var(--gold);
+  }
+  .auth-flowline-fill {
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--gold) 40%, var(--gold) 60%, transparent);
+    opacity: 0.7;
+  }
+  .diamond-l, .diamond-r {
+    font-size: 9px;
+    opacity: 0.6;
+  }
+  .diamond-c {
+    font-size: 14px;
+    opacity: 0.85;
+    animation: flow-shine 3s ease-in-out infinite;
+  }
+  @keyframes flow-shine {
+    0%, 100% { transform: scale(1); opacity: 0.8; }
+    50% { transform: scale(1.15); opacity: 1; text-shadow: 0 0 8px rgba(212, 165, 116, 0.6); }
+  }
+
+  /* 菩薩八心匾 */
+  .auth-eight-heart {
+    margin: 6px auto 18px;
+    padding: 16px 20px 12px;
+    max-width: 380px;
+    background:
+      radial-gradient(at center, rgba(255, 245, 220, 0.7), rgba(248, 232, 195, 0.5));
+    border: 1px solid rgba(176, 132, 86, 0.4);
+    border-radius: 3px;
+    position: relative;
+    box-shadow:
+      inset 0 0 0 1px rgba(255, 252, 245, 0.7),
+      0 2px 8px rgba(176, 132, 86, 0.12);
+  }
+  /* 八心匾四角 */
+  .auth-eight-heart::before,
+  .auth-eight-heart::after {
+    content: '';
+    position: absolute;
+    width: 10px; height: 10px;
+    border: 1.5px solid var(--gold);
+    opacity: 0.65;
+  }
+  .auth-eight-heart::before { top: 4px; left: 4px; border-right: none; border-bottom: none; }
+  .auth-eight-heart::after { bottom: 4px; right: 4px; border-left: none; border-top: none; }
+
+  .ehl {
+    font-family: 'Ma Shan Zheng', serif;
+    font-size: 18px;
+    color: var(--vermillion);
+    letter-spacing: 8px;
+    text-indent: 8px;
+    margin-bottom: 10px;
+    text-shadow: 0 1px 0 rgba(255,255,255,0.6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+  }
+  .ehl-deco {
     color: var(--gold);
     font-size: 14px;
-    margin-top: 14px;
-    opacity: 0.6;
+    opacity: 0.7;
+    letter-spacing: 0;
+    text-indent: 0;
+  }
+  .ehl2 {
+    font-family: 'Ma Shan Zheng', 'Noto Serif TC', serif;
+    font-size: 13px;
+    color: var(--ink);
+    letter-spacing: 1px;
+    line-height: 1.85;
+    text-shadow: 0 1px 0 rgba(255,255,255,0.4);
+  }
+  .ehl2 span:not(.ehl-dot) {
+    display: inline-block;
+    margin: 0 1px;
+  }
+  .ehl2 .ehl-dot {
+    color: var(--gold);
+    margin: 0 3px;
+    opacity: 0.7;
+    font-size: 10px;
+    vertical-align: middle;
+  }
+
+  .auth-motto {
+    font-family: 'Noto Serif TC', serif;
+    font-size: 13px;
+    color: var(--ink-soft);
+    letter-spacing: 3px;
+    margin-top: 8px;
+    opacity: 0.92;
+    line-height: 1.7;
+  }
+  .motto-quote {
+    color: var(--gold);
+    font-size: 16px;
+    margin: 0 2px;
+    vertical-align: -1px;
+  }
+
+  /* ───────── 下方緊湊登入區(占約 30%)───────── */
+  .auth-body {
+    padding: 16px 26px 22px;
+    border-top: 1px dashed rgba(176, 132, 86, 0.45);
+    background:
+      linear-gradient(180deg, rgba(255, 252, 245, 0.4), rgba(248, 240, 220, 0.25));
+    flex-shrink: 0;
+  }
+  .auth-body::before {
+    content: '';
+    display: block;
+    width: 50%;
+    margin: 0 auto -12px;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--gold), transparent);
+    opacity: 0.4;
+    transform: translateY(-8px);
   }
 
   .auth-tabs {
     display: flex;
-    gap: 4px;
-    margin-bottom: 20px;
-    border-bottom: 1px dashed var(--line);
+    gap: 2px;
+    margin-bottom: 12px;
+    justify-content: center;
   }
   .auth-tab {
-    flex: 1;
     background: transparent;
     border: none;
-    padding: 10px 4px;
+    padding: 6px 14px;
     font-family: 'ZCOOL XiaoWei', serif;
-    font-size: 14px;
+    font-size: 13px;
     color: var(--ink-soft);
-    letter-spacing: 3px;
+    letter-spacing: 2px;
     cursor: pointer;
     transition: all 0.2s;
     border-bottom: 2px solid transparent;
-    margin-bottom: -1px;
   }
   .auth-tab:hover { color: var(--ink); }
   .auth-tab.active {
@@ -128,98 +324,100 @@
     font-weight: 500;
   }
 
-  .auth-field { margin-bottom: 14px; }
-  .auth-field label {
-    display: block;
-    font-family: 'ZCOOL XiaoWei', serif;
-    font-size: 12px;
-    color: var(--ink-soft);
-    letter-spacing: 3px;
-    margin-bottom: 5px;
-  }
+  .auth-field { margin-bottom: 8px; }
   .auth-field input {
     width: 100%;
     font-family: 'Noto Serif TC', serif;
-    font-size: 15px;
-    padding: 10px 14px;
-    background: rgba(255, 252, 245, 0.85);
+    font-size: 14px;
+    padding: 9px 14px;
+    background: rgba(255, 252, 245, 0.92);
     border: 1px solid rgba(176, 132, 86, 0.4);
     border-radius: 2px;
     outline: none;
     color: var(--ink);
     transition: all 0.25s;
+    letter-spacing: 0.5px;
   }
   .auth-field input:focus {
     border-color: var(--gold);
     background: #fffdf5;
     box-shadow: 0 0 0 2px rgba(176, 132, 86, 0.15);
   }
+  .auth-field input::placeholder {
+    color: rgba(74, 60, 44, 0.45);
+    font-family: 'ZCOOL XiaoWei', serif;
+    letter-spacing: 2px;
+    font-size: 13px;
+  }
 
   .auth-msg {
-    margin-bottom: 14px;
-    min-height: 18px;
-    font-size: 12px;
+    margin: 6px 0 10px;
+    min-height: 16px;
+    font-size: 11px;
     color: var(--vermillion);
     text-align: center;
-    letter-spacing: 1px;
-    line-height: 1.5;
+    letter-spacing: 0.5px;
+    line-height: 1.4;
   }
   .auth-msg.success { color: var(--jade); }
 
+  /* 登入 + Google 並排 */
+  .auth-btn-row {
+    display: grid;
+    grid-template-columns: 1fr 50px;
+    gap: 8px;
+    margin-bottom: 6px;
+  }
   .auth-btn {
-    width: 100%;
     font-family: 'ZCOOL XiaoWei', serif;
-    font-size: 15px;
-    padding: 11px 14px;
+    font-size: 14px;
+    padding: 9px 12px;
     border-radius: 2px;
     cursor: pointer;
     transition: all 0.2s;
     letter-spacing: 4px;
     text-indent: 4px;
     border: 1px solid;
-    margin-bottom: 8px;
     display: flex;
     align-items: center;
     justify-content: center;
   }
-  .auth-btn.primary { background: var(--vermillion); color: var(--paper); border-color: var(--vermillion); }
+  .auth-btn.primary {
+    background: var(--vermillion);
+    color: var(--paper);
+    border-color: var(--vermillion);
+    width: 100%;
+  }
   .auth-btn.primary:hover { background: var(--vermillion-d); }
   .auth-btn.primary:disabled { background: rgba(74, 60, 44, 0.3); border-color: rgba(74, 60, 44, 0.3); cursor: wait; }
-  .auth-btn.google { background: #fff; color: #444; border-color: rgba(74, 60, 44, 0.3); }
+  .auth-btn.google {
+    background: #fff;
+    color: #444;
+    border-color: rgba(74, 60, 44, 0.3);
+    padding: 6px;
+    letter-spacing: 0;
+    text-indent: 0;
+    width: 100%;
+  }
   .auth-btn.google:hover { background: #f8f8f8; }
   .auth-btn.ghost {
+    width: 100%;
     background: transparent;
     color: var(--ink-soft);
     border-color: rgba(74, 60, 44, 0.25);
-    font-size: 13px;
+    font-size: 12px;
     letter-spacing: 2px;
+    padding: 7px 10px;
   }
   .auth-btn.ghost:hover { background: rgba(176, 132, 86, 0.10); color: var(--ink); }
 
-  .auth-separator {
-    display: flex;
-    align-items: center;
-    margin: 16px 0 10px;
-    color: var(--ink-soft);
-    font-family: 'ZCOOL XiaoWei', serif;
-    font-size: 11px;
-    letter-spacing: 2px;
-  }
-  .auth-separator::before, .auth-separator::after {
-    content: '';
-    flex: 1;
-    height: 1px;
-    background: var(--line);
-  }
-  .auth-separator span { padding: 0 12px; }
-
   .auth-footer {
-    margin-top: 20px;
+    margin-top: 14px;
     color: var(--ink-soft);
     font-family: 'Cormorant Garamond', serif;
-    font-size: 12px;
-    letter-spacing: 1px;
-    opacity: 0.6;
+    font-size: 11px;
+    letter-spacing: 1.5px;
+    opacity: 0.5;
     text-align: center;
   }
 
@@ -264,13 +462,15 @@
     text-align: left;
   }
 
-  body.guest-mode .panel:not(#panel-board):not(#panel-ai) { display: none !important; }
-  body.guest-mode .tab:not([data-tab="board"]):not([data-tab="ai"]) {
+  body.guest-mode .panel:not(#panel-ai) { display: none !important; }
+  body.guest-mode .tab:not([data-tab="ai"]) {
     opacity: 0.35;
     pointer-events: none;
   }
   body.guest-mode .meta-bar { display: none; }
   body.guest-mode .vow-banner { display: none; }
+  /* 待審核者可看 佈告欄 + 仙佛詞語 */
+  body.pending-mode .panel:not(#panel-board):not(#panel-ai) { display: none !important; }
   body.pending-mode .tab[data-tab="board"],
   body.pending-mode .tab[data-tab="ai"] { opacity: 1; pointer-events: auto; }
 
@@ -301,9 +501,37 @@
   .user-badge.admin .role-mark { color: #ffa84a; }
   @media (max-width: 480px) {
     .user-badge { font-size: 11px; padding: 5px 10px; top: 8px; right: 8px; max-width: 50%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-    .auth-title { font-size: 24px; letter-spacing: 4px; }
-    .auth-sub { font-size: 11px; letter-spacing: 3px; }
-    .auth-card, .pending-card { padding: 28px 20px; }
+    .auth-screen { padding: 12px 12px 24px; }
+    .auth-card, .pending-card { padding: 0; }
+    .auth-card { min-height: 94vh; max-height: 96vh; }
+    .auth-card::before, .auth-card::after { width: 24px; height: 24px; top: 12px; left: 12px; }
+    .auth-card::after { top: auto; left: auto; bottom: 12px; right: 12px; }
+    .auth-header { padding: 24px 20px 14px; }
+    .auth-seal { width: 76px; height: 76px; margin-bottom: 12px; }
+    .auth-title { font-size: 22px; letter-spacing: 3px; text-indent: 3px; }
+    .auth-title-side { font-size: 13px; }
+    .auth-title-wrap { gap: 8px; }
+    .auth-sub { font-size: 11px; letter-spacing: 5px; text-indent: 5px; }
+    .auth-flowline { margin: 14px auto; max-width: 280px; }
+    .auth-eight-heart { padding: 12px 12px 10px; margin: 4px auto 14px; }
+    .ehl { font-size: 16px; letter-spacing: 6px; text-indent: 6px; margin-bottom: 8px; }
+    .ehl-deco { font-size: 12px; }
+    .ehl2 { font-size: 11px; letter-spacing: 0; line-height: 1.85; }
+    .ehl2 .ehl-dot { margin: 0 2px; font-size: 9px; }
+    .auth-motto { font-size: 12px; letter-spacing: 2px; }
+    .motto-quote { font-size: 14px; }
+    .auth-body { padding: 12px 18px 16px; }
+    .auth-tab { font-size: 12px; padding: 5px 10px; letter-spacing: 1.5px; }
+    .auth-field input { font-size: 13px; padding: 8px 12px; }
+    .auth-btn { font-size: 13px; padding: 8px 10px; letter-spacing: 3px; text-indent: 3px; }
+    .auth-btn.ghost { font-size: 11px; padding: 6px 8px; }
+    .auth-footer { font-size: 10px; margin-top: 10px; }
+  }
+  /* 平板與小桌機 */
+  @media (min-width: 600px) {
+    .auth-card { max-width: 480px; min-height: 80vh; }
+    .auth-title { font-size: 32px; }
+    .auth-seal { width: 100px; height: 100px; }
   }
 
   html, body {
@@ -2779,6 +3007,20 @@
     .tabs-wrap::before, .tabs-wrap::after { display: none; }
   }
 
+  /* 摺疊機正方形螢幕(寬高比接近 1):道親卡三欄 */
+  @media (min-width: 641px) and (max-width: 920px) and (min-aspect-ratio: 9/10) and (max-aspect-ratio: 6/5) {
+    .member-list { grid-template-columns: repeat(3, 1fr) !important; gap: 10px !important; }
+    .member-card { padding: 12px 12px 14px; }
+    .member-head { gap: 10px; margin-bottom: 8px; }
+    .avatar { width: 42px; height: 42px; font-size: 22px; }
+    .member-name { font-size: 15px; letter-spacing: 1px; }
+    .member-meta { font-size: 11px; letter-spacing: 0.5px; line-height: 1.4; }
+    .status-bar { margin: 6px 0 4px; }
+    .status-tag { font-size: 11px; padding: 2px 8px; }
+    .member-progress { font-size: 11px; padding: 5px 8px; letter-spacing: 0.8px; margin-bottom: 7px; }
+    .member-body { font-size: 12px; line-height: 1.55; max-height: 90px; padding-top: 7px; }
+    .member-footer { font-size: 10px; flex-direction: column; align-items: flex-start; gap: 1px; margin-top: 7px; }
+  }
   /* 平板 */
   @media (min-width: 641px) and (max-width: 1099px) {
     .panel { padding: 24px 28px 120px; }
@@ -2898,53 +3140,91 @@
 <!-- ============ 登入畫面(未登入時顯示) ============ -->
 <div class="auth-screen" id="auth-screen">
   <div class="auth-card">
+    <!-- 莊嚴抬頭區 -->
     <div class="auth-header">
-      <div class="auth-title">安東道場 宏化分壇</div>
+      <!-- 母字符號 logo -->
+      <div class="auth-seal">
+        <img class="auth-seal-img" src="data:image/png;base64,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" alt="logo">
+      </div>
+      <!-- 主標題:單行 -->
+      <div class="auth-title-wrap">
+        <div class="auth-title-side left">❖</div>
+        <div class="auth-title">安東道場 宏化分壇</div>
+        <div class="auth-title-side right">❖</div>
+      </div>
       <div class="auth-sub">道 務 自 我 紀 錄 管 理</div>
-      <div class="auth-divider">❖</div>
+
+      <!-- 流光金線 -->
+      <div class="auth-flowline">
+        <span class="diamond-l">◆</span>
+        <span class="auth-flowline-fill"></span>
+        <span class="diamond-c">❖</span>
+        <span class="auth-flowline-fill"></span>
+        <span class="diamond-r">◆</span>
+      </div>
+
+      <!-- 菩薩八心匾 -->
+      <div class="auth-eight-heart">
+        <div class="ehl">
+          <span class="ehl-deco">⌜</span>菩 薩 八 心<span class="ehl-deco">⌝</span>
+        </div>
+        <div class="ehl2">
+          <span>苦心</span><span class="ehl-dot">·</span>
+          <span>信心</span><span class="ehl-dot">·</span>
+          <span>愛心</span><span class="ehl-dot">·</span>
+          <span>耐心</span><span class="ehl-dot">·</span>
+          <span>恆心</span><span class="ehl-dot">·</span>
+          <span>真心</span><span class="ehl-dot">·</span>
+          <span>同理心</span><span class="ehl-dot">·</span>
+          <span>包容心</span>
+        </div>
+      </div>
+
+      <div class="auth-motto">
+        <span class="motto-quote">「</span>
+        帳號登入 · 開啟真修真辦真行的人生
+        <span class="motto-quote">」</span>
+      </div>
     </div>
 
-    <div class="auth-tabs">
-      <button class="auth-tab active" data-mode="login" onclick="switchAuthMode('login')">登入</button>
-      <button class="auth-tab" data-mode="register" onclick="switchAuthMode('register')">註冊</button>
-      <button class="auth-tab" data-mode="reset" onclick="switchAuthMode('reset')">忘記密碼</button>
-    </div>
-
-    <div class="auth-form" id="auth-form">
-      <div class="auth-field">
-        <label>電子郵件</label>
-        <input type="email" id="auth-email" placeholder="your@email.com" autocomplete="email">
+    <!-- 下方緊湊登入區(佔約 1/3) -->
+    <div class="auth-body">
+      <div class="auth-tabs">
+        <button class="auth-tab active" data-mode="login" onclick="switchAuthMode('login')">登入</button>
+        <button class="auth-tab" data-mode="register" onclick="switchAuthMode('register')">註冊</button>
+        <button class="auth-tab" data-mode="reset" onclick="switchAuthMode('reset')">忘記密碼</button>
       </div>
-      <div class="auth-field" id="auth-field-password">
-        <label>密碼</label>
-        <input type="password" id="auth-password" placeholder="至少 6 字元" autocomplete="current-password">
+
+      <div class="auth-form" id="auth-form">
+        <div class="auth-field">
+          <input type="email" id="auth-email" placeholder="電子郵件" autocomplete="email">
+        </div>
+        <div class="auth-field" id="auth-field-password">
+          <input type="password" id="auth-password" placeholder="密碼(至少 6 字元)" autocomplete="current-password">
+        </div>
+        <div class="auth-field" id="auth-field-name" style="display:none;">
+          <input type="text" id="auth-name" placeholder="顯示名稱 / 道名">
+        </div>
+        <div class="auth-msg" id="auth-msg"></div>
+        <div class="auth-btn-row">
+          <button class="auth-btn primary" id="auth-submit" onclick="submitAuth()">登入</button>
+          <button class="auth-btn google" onclick="signInWithGoogle()" title="Google 登入">
+            <svg width="20" height="20" viewBox="0 0 18 18">
+              <path fill="#4285F4" d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844c-.209 1.125-.843 2.078-1.796 2.717v2.258h2.908c1.702-1.567 2.684-3.874 2.684-6.615z"/>
+              <path fill="#34A853" d="M9 18c2.43 0 4.467-.806 5.956-2.18l-2.908-2.259c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332A8.997 8.997 0 0 0 9 18z"/>
+              <path fill="#FBBC05" d="M3.964 10.71A5.41 5.41 0 0 1 3.682 9c0-.593.102-1.17.282-1.71V4.958H.957A8.996 8.996 0 0 0 0 9c0 1.452.348 2.827.957 4.042l3.007-2.332z"/>
+              <path fill="#EA4335" d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0A8.997 8.997 0 0 0 .957 4.958L3.964 7.29C4.672 5.163 6.656 3.58 9 3.58z"/>
+            </svg>
+          </button>
+        </div>
+        <button class="auth-btn ghost" onclick="enterGuestMode()">
+          以訪客身份瀏覽仙佛詞語
+        </button>
       </div>
-      <div class="auth-field" id="auth-field-name" style="display:none;">
-        <label>顯示名稱</label>
-        <input type="text" id="auth-name" placeholder="您的道名 / 暱稱">
-      </div>
-      <div class="auth-msg" id="auth-msg"></div>
-      <button class="auth-btn primary" id="auth-submit" onclick="submitAuth()">登入</button>
-
-      <div class="auth-separator"><span>或</span></div>
-
-      <button class="auth-btn google" onclick="signInWithGoogle()">
-        <svg width="18" height="18" viewBox="0 0 18 18" style="vertical-align:middle; margin-right:8px;">
-          <path fill="#4285F4" d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844c-.209 1.125-.843 2.078-1.796 2.717v2.258h2.908c1.702-1.567 2.684-3.874 2.684-6.615z"/>
-          <path fill="#34A853" d="M9 18c2.43 0 4.467-.806 5.956-2.18l-2.908-2.259c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332A8.997 8.997 0 0 0 9 18z"/>
-          <path fill="#FBBC05" d="M3.964 10.71A5.41 5.41 0 0 1 3.682 9c0-.593.102-1.17.282-1.71V4.958H.957A8.996 8.996 0 0 0 0 9c0 1.452.348 2.827.957 4.042l3.007-2.332z"/>
-          <path fill="#EA4335" d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0A8.997 8.997 0 0 0 .957 4.958L3.964 7.29C4.672 5.163 6.656 3.58 9 3.58z"/>
-        </svg>
-        使用 Google 登入
-      </button>
-
-      <button class="auth-btn ghost" onclick="enterGuestMode()">
-        以訪客身份瀏覽佈告欄
-      </button>
     </div>
   </div>
   <div class="auth-footer">
-    <span id="auth-version">v2.0.0</span> · 安東道場 宏化分壇
+    <span id="auth-version">v2.0.3</span> · 安東道場 宏化分壇
   </div>
 </div>
 
@@ -2973,7 +3253,7 @@
   <div class="title-wrap">
     <div class="title">安東道場 宏化分壇</div>
     <div class="subtitle">道 務 自 我 紀 錄 管 理</div>
-    <div class="version-tag" id="version-tag">v2.0.0</div>
+    <div class="version-tag" id="version-tag">v2.0.3</div>
   </div>
 </header>
 
@@ -3552,15 +3832,15 @@
 </div>
 
 <div class="toast" id="toast"></div>
-<div class="version-corner" id="version-corner">v2.0.0 · 2026-05-19</div>
+<div class="version-corner" id="version-corner">v2.0.3 · 2026-05-20</div>
 
 <script type="module">
 /* =========================================================
    APP VERSION  ─ 每次改版請更新此處 + 檔名
    ========================================================= */
-const APP_VERSION   = 'v2.0.0';
-const APP_BUILD     = '2026-05-19';
-const APP_CODENAME  = '壇主紀';
+const APP_VERSION   = 'v2.0.3';
+const APP_BUILD     = '2026-05-20';
+const APP_CODENAME  = '彌勒法相';
 document.title = `宏化分壇 渡人管理 · ${APP_VERSION}`;
 
 /* =========================================================
@@ -3928,7 +4208,6 @@ const Firebase = {
       this.fbAuth = authMod;
       this.ready = true;
       this.status = 'online';
-      // 監聽登入狀態
       authMod.onAuthStateChanged(this.auth, async (u)=>{
         this.user = u;
         if(u){
@@ -3943,6 +4222,15 @@ const Firebase = {
     }catch(err){
       console.error('[Firebase] init failed', err);
       this.status = 'error';
+      // 顯示友善錯誤
+      const msgEl = document.getElementById('auth-msg');
+      if(msgEl){
+        if(location.protocol === 'file:'){
+          msgEl.innerHTML = '⚠ 此頁無法在本機檔案直接開啟<br>請上傳至 GitHub Pages 後再使用';
+        }else{
+          msgEl.innerHTML = '⚠ 無法連線至 Firebase<br>請檢查網路連線或稍後再試';
+        }
+      }
       return false;
     }
   },
@@ -5293,14 +5581,14 @@ function enterGuestMode(){
   document.getElementById('auth-screen').classList.remove('active');
   document.getElementById('pending-screen').classList.remove('active');
   document.body.classList.remove('auth-active');
-  // 切到佈告欄
+  // 切到仙佛詞語
   document.querySelectorAll('.tab').forEach(t=>{
-    t.classList.toggle('active', t.dataset.tab === 'board');
+    t.classList.toggle('active', t.dataset.tab === 'ai');
   });
   document.querySelectorAll('.panel').forEach(p=>{
-    p.classList.toggle('active', p.id === 'panel-board');
+    p.classList.toggle('active', p.id === 'panel-ai');
   });
-  renderBoard();
+  if(typeof showTodayQuote === 'function') showTodayQuote();
   showUserBadge('訪客', false, true);
 }
 
