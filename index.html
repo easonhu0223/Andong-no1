@@ -5775,7 +5775,6 @@ async function submitAuth(){
       if(!region){ authMsg('請選擇分區'); btn.disabled=false; return; }
       if(!password || password.length < 6){ authMsg('密碼至少 6 字元'); btn.disabled=false; return; }
       const cred = await Firebase.fbAuth.createUserWithEmailAndPassword(Firebase.auth, email, password);
-      await Firebase.fbAuth.updateProfile(cred.user, {displayName: name});
       // 立刻建立 profile（含天職），不等 onAuthStateChanged
       const ref = Firebase.fs.doc(Firebase.db, 'users', cred.user.uid);
       await Firebase.fs.setDoc(ref, {
@@ -5826,28 +5825,42 @@ async function submitProfileComplete(){
   const vocation = (vSel === '__other__') ? vCustom : vSel;
   const region = document.getElementById('pc-region').value;
   const msgEl = document.getElementById('pc-msg');
+  const btn = document.querySelector('.pc-btn');
   msgEl.textContent = '';
   if(!name){ msgEl.textContent = '請輸入姓名'; return; }
   if(!vocation){ msgEl.textContent = '請選擇天職'; return; }
   if(vSel === '__other__' && !vCustom){ msgEl.textContent = '請輸入天職名稱（最多5字）'; return; }
   if(!region){ msgEl.textContent = '請選擇分區'; return; }
+  btn.disabled = true;
+  btn.textContent = '儲存中…';
   try{
-    await Firebase.fbAuth.updateProfile(Firebase.user, {displayName: name});
-    await Firebase.updateProfile({displayName: name, vocation, region});
-    // 同步到 settings（settings 頁的 region 與 name）
+    // 直接寫入 Firestore（不呼叫 fbAuth.updateProfile，避免 v9 SDK 相容問題）
+    const uid = Firebase.user.uid;
+    const ref = Firebase.fs.doc(Firebase.db, 'users', uid);
+    const updates = {displayName: name, vocation, region};
+    await Firebase.fs.setDoc(ref, updates, {merge: true});
+    // 更新本地 profile
+    if(Firebase.profile){ Object.assign(Firebase.profile, updates); }
+    // 同步 settings
     await Store.save('settings', {region, name});
+
+    // 隱藏補填畫面
     document.getElementById('profile-complete-screen').classList.remove('active');
     document.body.classList.remove('auth-active');
-    const profile = Firebase.profile;
+
+    const profile = Firebase.profile || {};
     const isAdminNow = Firebase.isAdmin();
-    // 資料填完後，再依 status 決定去向
-    if(!isAdminNow && (profile.status === 'pending' || profile.status === 'rejected')){
+    const status = profile.status || 'pending';
+
+    if(!isAdminNow && (status === 'pending' || status === 'rejected')){
+      // → 顯示「待審核」畫面
       document.getElementById('pending-email').textContent = Firebase.user.email;
       document.getElementById('pending-admin').textContent = ADMIN_EMAIL;
       document.getElementById('pending-screen').classList.add('active');
       document.body.classList.add('auth-active');
     } else {
-      showUserBadge(name, isAdminNow, false, profile.status, vocation);
+      // → 進主畫面
+      showUserBadge(name, isAdminNow, false, status, vocation);
       document.querySelectorAll('.tab.admin-only').forEach(t=>{ t.style.display = isAdminNow ? '' : 'none'; });
       await ensureDefaultsInstalled();
       renderMembers();
@@ -5855,7 +5868,9 @@ async function submitProfileComplete(){
       fitTabs();
     }
   }catch(e){
-    msgEl.textContent = '儲存失敗，請稍後再試：' + (e.message||'');
+    msgEl.textContent = '儲存失敗：' + (e.message || '請確認網路後再試');
+    btn.disabled = false;
+    btn.textContent = '確認儲存';
   }
 }
 
