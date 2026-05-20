@@ -353,6 +353,30 @@
     letter-spacing: 2px;
     font-size: 13px;
   }
+  .auth-field select {
+    width: 100%;
+    font-family: 'Noto Serif TC', serif;
+    font-size: 14px;
+    padding: 9px 14px;
+    background: rgba(255, 252, 245, 0.92);
+    border: 1px solid rgba(176, 132, 86, 0.4);
+    border-radius: 2px;
+    outline: none;
+    color: var(--ink);
+    transition: all 0.25s;
+    letter-spacing: 0.5px;
+    appearance: none;
+    -webkit-appearance: none;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='6'><path d='M0 0l5 6 5-6z' fill='%23b08456'/></svg>");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    cursor: pointer;
+  }
+  .auth-field select:focus {
+    border-color: var(--gold);
+    background-color: #fffdf5;
+    box-shadow: 0 0 0 2px rgba(176, 132, 86, 0.15);
+  }
 
   .auth-msg {
     margin: 6px 0 10px;
@@ -3200,14 +3224,27 @@
       </div>
 
       <div class="auth-form" id="auth-form">
+        <div class="auth-field" id="auth-field-name" style="display:none;">
+          <input type="text" id="auth-name" placeholder="姓名（如：王大明）" autocomplete="name">
+        </div>
+        <div class="auth-field" id="auth-field-vocation" style="display:none;">
+          <select id="auth-vocation">
+            <option value="">— 請選擇天職 —</option>
+            <option value="點傳師">點傳師</option>
+            <option value="壇主">壇主</option>
+            <option value="辦事人員">辦事人員</option>
+            <option value="清口">清口</option>
+            <option value="已求道">已求道</option>
+            <option value="__other__">其他（自行輸入）</option>
+          </select>
+          <input type="text" id="auth-vocation-custom" placeholder="請輸入天職（最多5字）" maxlength="5"
+                 style="display:none; margin-top:6px;">
+        </div>
         <div class="auth-field">
           <input type="email" id="auth-email" placeholder="電子郵件" autocomplete="email">
         </div>
         <div class="auth-field" id="auth-field-password">
           <input type="password" id="auth-password" placeholder="密碼(至少 6 字元)" autocomplete="current-password">
-        </div>
-        <div class="auth-field" id="auth-field-name" style="display:none;">
-          <input type="text" id="auth-name" placeholder="顯示名稱 / 道名">
         </div>
         <div class="auth-msg" id="auth-msg"></div>
         <div class="auth-btn-row">
@@ -4257,11 +4294,12 @@ const Firebase = {
           await this.fs.setDoc(ref, this.profile, {merge:true});
         }
       }else{
-        // 第一次:建立 profile
+        // 第一次:建立 profile（Google 登入者無天職，待審核時補填）
         this.profile = {
           uid: this.user.uid,
           email: this.user.email,
           displayName: this.user.displayName || this.user.email.split('@')[0],
+          vocation: '',
           region: '',
           status: this.isAdmin() ? 'active' : 'pending',
           role: this.isAdmin() ? 'admin' : 'user',
@@ -5516,6 +5554,7 @@ function switchAuthMode(mode){
   document.getElementById('auth-msg').textContent = '';
   document.getElementById('auth-msg').className = 'auth-msg';
   document.getElementById('auth-field-name').style.display = (mode==='register')?'block':'none';
+  document.getElementById('auth-field-vocation').style.display = (mode==='register')?'block':'none';
   document.getElementById('auth-field-password').style.display = (mode==='reset')?'none':'block';
   const btn = document.getElementById('auth-submit');
   btn.textContent = mode==='login' ? '登入' : (mode==='register' ? '註冊' : '寄送重設信');
@@ -5531,6 +5570,9 @@ async function submitAuth(){
   const email = document.getElementById('auth-email').value.trim();
   const password = document.getElementById('auth-password').value;
   const name = document.getElementById('auth-name').value.trim();
+  const vocationSel = document.getElementById('auth-vocation').value;
+  const vocationCustom = document.getElementById('auth-vocation-custom').value.trim();
+  const vocation = (vocationSel === '__other__') ? vocationCustom : vocationSel;
   const btn = document.getElementById('auth-submit');
   if(!email){ authMsg('請輸入電子郵件'); return; }
 
@@ -5543,11 +5585,24 @@ async function submitAuth(){
       await Firebase.fbAuth.signInWithEmailAndPassword(Firebase.auth, email, password);
       authMsg('登入成功', true);
     }else if(currentAuthMode === 'register'){
+      if(!name){ authMsg('請輸入姓名'); btn.disabled=false; return; }
+      if(!vocation){ authMsg('請選擇天職'); btn.disabled=false; return; }
+      if(vocationSel === '__other__' && !vocationCustom){ authMsg('請輸入天職名稱（最多5字）'); btn.disabled=false; return; }
       if(!password || password.length < 6){ authMsg('密碼至少 6 字元'); btn.disabled=false; return; }
       const cred = await Firebase.fbAuth.createUserWithEmailAndPassword(Firebase.auth, email, password);
-      if(name){
-        await Firebase.fbAuth.updateProfile(cred.user, {displayName: name});
-      }
+      await Firebase.fbAuth.updateProfile(cred.user, {displayName: name});
+      // 立刻建立 profile（含天職），不等 onAuthStateChanged
+      const ref = Firebase.fs.doc(Firebase.db, 'users', cred.user.uid);
+      await Firebase.fs.setDoc(ref, {
+        uid: cred.user.uid,
+        email: cred.user.email,
+        displayName: name,
+        vocation: vocation,
+        region: '',
+        status: 'pending',
+        role: 'user',
+        createdAt: new Date().toISOString()
+      });
       authMsg('註冊成功,等候管理員審核', true);
     }else if(currentAuthMode === 'reset'){
       await Firebase.fbAuth.sendPasswordResetEmail(Firebase.auth, email);
@@ -5578,6 +5633,13 @@ async function signInWithGoogle(){
   }catch(err){
     authMsg(err.message || 'Google 登入失敗');
   }
+
+// 天職下拉：選「其他」時顯示自填框
+document.getElementById('auth-vocation').addEventListener('change', function(){
+  const custom = document.getElementById('auth-vocation-custom');
+  custom.style.display = (this.value === '__other__') ? 'block' : 'none';
+  if(this.value !== '__other__') custom.value = '';
+});
 }
 
 function enterGuestMode(){
@@ -5607,7 +5669,7 @@ function enterPendingMode(){
     p.classList.toggle('active', p.id === 'panel-board');
   });
   renderBoard();
-  showUserBadge(Firebase.profile?.displayName || Firebase.user?.email, false, false, 'pending');
+  showUserBadge(Firebase.profile?.displayName || Firebase.user?.email, false, false, 'pending', Firebase.profile?.vocation);
 }
 
 async function signOutNow(){
@@ -5618,7 +5680,7 @@ async function signOutNow(){
   location.reload();
 }
 
-function showUserBadge(name, isAdmin, isGuest, status){
+function showUserBadge(name, isAdmin, isGuest, status, vocation){
   let badge = document.getElementById('user-badge');
   if(!badge){
     badge = document.createElement('div');
@@ -5630,7 +5692,16 @@ function showUserBadge(name, isAdmin, isGuest, status){
     document.body.appendChild(badge);
   }
   badge.classList.toggle('admin', !!isAdmin);
-  let mark = isAdmin ? '★ 壇主' : (isGuest ? '訪客' : (status==='pending' ? '待審核' : '道親'));
+  let mark;
+  if(isAdmin){
+    mark = '★ 壇主';
+  } else if(isGuest){
+    mark = '訪客';
+  } else if(status === 'pending'){
+    mark = '待審核';
+  } else {
+    mark = vocation || '道親';
+  }
   badge.innerHTML = `<span class="role-mark">${mark}</span> ${escapeHtml(name||'')}`;
 }
 
@@ -5663,7 +5734,7 @@ async function onAuthChanged(user, profile){
   document.getElementById('pending-screen').classList.remove('active');
 
   const isAdmin = Firebase.isAdmin();
-  showUserBadge(profile.displayName || user.email, isAdmin, false);
+  showUserBadge(profile.displayName || user.email, isAdmin, false, profile.status, profile.vocation);
   // 管理員可看見「使用者管理」分頁
   document.querySelectorAll('.tab.admin-only').forEach(t=>{
     t.style.display = isAdmin ? '' : 'none';
@@ -5810,7 +5881,7 @@ async function adminRefresh(){
           <div class="u-avatar">${initial}</div>
           <div>
             <div class="u-info-name">${escapeHtml(u.displayName||u.email)} ${statusBadge}</div>
-            <div class="u-info-meta">${escapeHtml(u.email||'')} · 建檔 ${(u.createdAt||'').slice(0,10)}</div>
+            <div class="u-info-meta">${escapeHtml(u.email||'')} · ${escapeHtml(u.vocation||'未填天職')} · 建檔 ${(u.createdAt||'').slice(0,10)}</div>
           </div>
           <div class="admin-user-actions">${actionsHtml}</div>
         </div>`;
@@ -5870,7 +5941,7 @@ async function adminExportAll(){
   const wb = XLSX.utils.book_new();
   // 第一個工作表:所有使用者清單
   const userRows = users.map(u=>({
-    UID:u.uid, Email:u.email, 顯示名:u.displayName||'',
+    UID:u.uid, Email:u.email, 顯示名:u.displayName||'', 天職:u.vocation||'',
     分區:u.region||'', 狀態:u.status||'', 角色:u.role||'',
     建檔:u.createdAt||''
   }));
