@@ -5839,13 +5839,21 @@ async function submitProfileComplete(){
     document.getElementById('profile-complete-screen').classList.remove('active');
     document.body.classList.remove('auth-active');
     const profile = Firebase.profile;
-    const isAdmin = Firebase.isAdmin();
-    showUserBadge(name, isAdmin, false, profile.status, vocation);
-    document.querySelectorAll('.tab.admin-only').forEach(t=>{ t.style.display = isAdmin ? '' : 'none'; });
-    await ensureDefaultsInstalled();
-    renderMembers();
-    renderBoard();
-    fitTabs();
+    const isAdminNow = Firebase.isAdmin();
+    // 資料填完後，再依 status 決定去向
+    if(!isAdminNow && (profile.status === 'pending' || profile.status === 'rejected')){
+      document.getElementById('pending-email').textContent = Firebase.user.email;
+      document.getElementById('pending-admin').textContent = ADMIN_EMAIL;
+      document.getElementById('pending-screen').classList.add('active');
+      document.body.classList.add('auth-active');
+    } else {
+      showUserBadge(name, isAdminNow, false, profile.status, vocation);
+      document.querySelectorAll('.tab.admin-only').forEach(t=>{ t.style.display = isAdminNow ? '' : 'none'; });
+      await ensureDefaultsInstalled();
+      renderMembers();
+      renderBoard();
+      fitTabs();
+    }
   }catch(e){
     msgEl.textContent = '儲存失敗，請稍後再試：' + (e.message||'');
   }
@@ -5944,27 +5952,21 @@ async function onAuthChanged(user, profile){
   await Firebase.pullUserData();
   await loadSettings();
 
-  if(profile.status === 'pending' || profile.status === 'rejected'){
-    document.getElementById('pending-email').textContent = user.email;
-    document.getElementById('pending-admin').textContent = ADMIN_EMAIL;
-    document.getElementById('auth-screen').classList.remove('active');
-    document.getElementById('pending-screen').classList.add('active');
-    document.body.classList.add('auth-active');
-    return;
-  }
-  // active:檢查資料是否完整（管理員跳過）
+  // ★ 先隱藏所有遮罩
   document.getElementById('auth-screen').classList.remove('active');
   document.getElementById('pending-screen').classList.remove('active');
   document.getElementById('profile-complete-screen').classList.remove('active');
 
   const isAdmin = Firebase.isAdmin();
+
+  // ★ Step 1：資料不完整 → 先強制補填（不論 pending 或 active 都要填）
   const profileIncomplete = !isAdmin && (!profile.vocation || !profile.region || !profile.displayName);
   if(profileIncomplete){
-    // 預填已知資料
+    const KNOWN_VOC = ['點傳師','壇主','辦事人員','清口','已求道'];
     document.getElementById('pc-name').value = profile.displayName || user.displayName || '';
     document.getElementById('pc-vocation').value =
-      ['點傳師','壇主','辦事人員','清口','已求道'].includes(profile.vocation) ? profile.vocation : (profile.vocation ? '__other__' : '');
-    if(profile.vocation && !['點傳師','壇主','辦事人員','清口','已求道'].includes(profile.vocation)){
+      KNOWN_VOC.includes(profile.vocation) ? profile.vocation : (profile.vocation ? '__other__' : '');
+    if(profile.vocation && !KNOWN_VOC.includes(profile.vocation)){
       document.getElementById('pc-vocation-custom').value = profile.vocation;
       document.getElementById('pc-vocation-custom').style.display = 'block';
     }
@@ -5974,14 +5976,21 @@ async function onAuthChanged(user, profile){
     return;
   }
 
+  // ★ Step 2：資料完整後，再判斷 pending / rejected
+  if(profile.status === 'pending' || profile.status === 'rejected'){
+    document.getElementById('pending-email').textContent = user.email;
+    document.getElementById('pending-admin').textContent = ADMIN_EMAIL;
+    document.getElementById('pending-screen').classList.add('active');
+    document.body.classList.add('auth-active');
+    return;
+  }
+
+  // ★ Step 3：active → 進入主畫面
   showUserBadge(profile.displayName || user.email, isAdmin, false, profile.status, profile.vocation);
-  // 管理員可看見「使用者管理」分頁
   document.querySelectorAll('.tab.admin-only').forEach(t=>{
     t.style.display = isAdmin ? '' : 'none';
   });
-  // 首次安裝預設資料
   await ensureDefaultsInstalled();
-  // 重繪所有資料
   renderMembers();
   renderBoard();
   fitTabs();
