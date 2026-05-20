@@ -378,6 +378,128 @@
     box-shadow: 0 0 0 2px rgba(176, 132, 86, 0.15);
   }
 
+
+  /* ── 補填資料遮罩（Profile Completion） ── */
+  .profile-complete-screen {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 200;
+    background-color: var(--paper);
+    background-image:
+      radial-gradient(at 20% 10%, rgba(176, 132, 86, 0.15) 0px, transparent 60%),
+      radial-gradient(at 80% 90%, rgba(138, 42, 31, 0.10) 0px, transparent 60%);
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    padding: 20px 16px 40px;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    min-height: 100vh;
+  }
+  .profile-complete-screen.active { display: flex; }
+  .profile-complete-card {
+    width: 100%;
+    max-width: 460px;
+    margin-top: auto;
+    margin-bottom: auto;
+    background: linear-gradient(180deg, #fcf4dd 0%, #f5e6c6 100%);
+    border: 1px solid rgba(176, 132, 86, 0.6);
+    border-radius: 4px;
+    padding: 28px 28px 24px;
+    box-shadow:
+      0 0 0 1px rgba(255, 250, 230, 0.5) inset,
+      0 0 0 6px rgba(255, 252, 245, 0.4),
+      0 0 0 7px rgba(176, 132, 86, 0.35),
+      0 16px 50px rgba(40, 26, 12, 0.20);
+  }
+  .pc-icon { font-size: 32px; text-align: center; margin-bottom: 10px; }
+  .pc-title {
+    font-family: 'Ma Shan Zheng', serif;
+    font-size: 20px;
+    color: var(--vermillion);
+    text-align: center;
+    margin-bottom: 6px;
+    letter-spacing: 2px;
+  }
+  .pc-subtitle {
+    font-family: 'ZCOOL XiaoWei', serif;
+    font-size: 12px;
+    color: var(--ink-soft);
+    text-align: center;
+    margin-bottom: 18px;
+    letter-spacing: 1px;
+    opacity: 0.8;
+  }
+  .pc-label {
+    font-family: 'ZCOOL XiaoWei', serif;
+    font-size: 12px;
+    color: var(--ink-soft);
+    letter-spacing: 1px;
+    margin-bottom: 4px;
+  }
+  .pc-field { margin-bottom: 12px; }
+  .pc-field input, .pc-field select {
+    width: 100%;
+    font-family: 'Noto Serif TC', serif;
+    font-size: 14px;
+    padding: 9px 14px;
+    background: rgba(255, 252, 245, 0.92);
+    border: 1px solid rgba(176, 132, 86, 0.4);
+    border-radius: 2px;
+    outline: none;
+    color: var(--ink);
+    transition: all 0.25s;
+    letter-spacing: 0.5px;
+  }
+  .pc-field select {
+    appearance: none;
+    -webkit-appearance: none;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='6'><path d='M0 0l5 6 5-6z' fill='%23b08456'/></svg>");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    cursor: pointer;
+  }
+  .pc-field input:focus, .pc-field select:focus {
+    border-color: var(--gold);
+    background: #fffdf5;
+    box-shadow: 0 0 0 2px rgba(176, 132, 86, 0.15);
+  }
+  .pc-msg {
+    min-height: 16px;
+    font-size: 11px;
+    color: var(--vermillion);
+    margin-bottom: 10px;
+    text-align: center;
+  }
+  .pc-btn {
+    width: 100%;
+    padding: 10px;
+    background: var(--vermillion);
+    color: #fff8f0;
+    border: none;
+    border-radius: 2px;
+    font-family: 'ZCOOL XiaoWei', serif;
+    font-size: 15px;
+    letter-spacing: 3px;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+  .pc-btn:hover { background: var(--vermillion-d); }
+  .pc-logout {
+    margin-top: 10px;
+    width: 100%;
+    padding: 8px;
+    background: transparent;
+    border: 1px solid rgba(176,132,86,0.4);
+    border-radius: 2px;
+    font-family: 'ZCOOL XiaoWei', serif;
+    font-size: 12px;
+    color: var(--ink-soft);
+    cursor: pointer;
+    letter-spacing: 1px;
+  }
+
   .auth-msg {
     margin: 6px 0 10px;
     min-height: 16px;
@@ -3240,6 +3362,20 @@
           <input type="text" id="auth-vocation-custom" placeholder="請輸入天職（最多5字）" maxlength="5"
                  style="display:none; margin-top:6px;">
         </div>
+        <div class="auth-field" id="auth-field-region" style="display:none;">
+          <select id="auth-region">
+            <option value="">— 請選擇分區 —</option>
+            <option value="化真區">化真區</option>
+            <option value="化善區">化善區</option>
+            <option value="化美區">化美區</option>
+            <option value="化定區">化定區</option>
+            <option value="化志區">化志區</option>
+            <option value="化慧區">化慧區</option>
+            <option value="化孝區">化孝區</option>
+            <option value="化仁區">化仁區</option>
+            <option value="化力區">化力區</option>
+          </select>
+        </div>
         <div class="auth-field">
           <input type="email" id="auth-email" placeholder="電子郵件" autocomplete="email">
         </div>
@@ -3286,6 +3422,52 @@
       帳號:<span id="pending-email"></span><br>
       請聯絡管理員 <strong id="pending-admin"></strong> 進行審核
     </div>
+  </div>
+</div>
+
+<!-- ============ 補填資料遮罩 ============ -->
+<div class="profile-complete-screen" id="profile-complete-screen">
+  <div class="profile-complete-card">
+    <div class="pc-icon">📋</div>
+    <div class="pc-title">完善您的資料</div>
+    <div class="pc-subtitle">請填妥以下欄位，資料將儲存於您的帳號</div>
+
+    <div class="pc-field">
+      <div class="pc-label">姓名</div>
+      <input type="text" id="pc-name" placeholder="請輸入真實姓名">
+    </div>
+    <div class="pc-field">
+      <div class="pc-label">天職</div>
+      <select id="pc-vocation">
+        <option value="">— 請選擇天職 —</option>
+        <option value="點傳師">點傳師</option>
+        <option value="壇主">壇主</option>
+        <option value="辦事人員">辦事人員</option>
+        <option value="清口">清口</option>
+        <option value="已求道">已求道</option>
+        <option value="__other__">其他（自行輸入）</option>
+      </select>
+      <input type="text" id="pc-vocation-custom" placeholder="請輸入天職（最多5字）" maxlength="5"
+             style="display:none; margin-top:6px;">
+    </div>
+    <div class="pc-field">
+      <div class="pc-label">分區</div>
+      <select id="pc-region">
+        <option value="">— 請選擇分區 —</option>
+        <option value="化真區">化真區</option>
+        <option value="化善區">化善區</option>
+        <option value="化美區">化美區</option>
+        <option value="化定區">化定區</option>
+        <option value="化志區">化志區</option>
+        <option value="化慧區">化慧區</option>
+        <option value="化孝區">化孝區</option>
+        <option value="化仁區">化仁區</option>
+        <option value="化力區">化力區</option>
+      </select>
+    </div>
+    <div class="pc-msg" id="pc-msg"></div>
+    <button class="pc-btn" onclick="submitProfileComplete()">確認儲存</button>
+    <button class="pc-logout" onclick="signOutNow()">登出</button>
   </div>
 </div>
 
@@ -5555,6 +5737,7 @@ function switchAuthMode(mode){
   document.getElementById('auth-msg').className = 'auth-msg';
   document.getElementById('auth-field-name').style.display = (mode==='register')?'block':'none';
   document.getElementById('auth-field-vocation').style.display = (mode==='register')?'block':'none';
+  document.getElementById('auth-field-region').style.display = (mode==='register')?'block':'none';
   document.getElementById('auth-field-password').style.display = (mode==='reset')?'none':'block';
   const btn = document.getElementById('auth-submit');
   btn.textContent = mode==='login' ? '登入' : (mode==='register' ? '註冊' : '寄送重設信');
@@ -5573,6 +5756,7 @@ async function submitAuth(){
   const vocationSel = document.getElementById('auth-vocation').value;
   const vocationCustom = document.getElementById('auth-vocation-custom').value.trim();
   const vocation = (vocationSel === '__other__') ? vocationCustom : vocationSel;
+  const region = document.getElementById('auth-region').value;
   const btn = document.getElementById('auth-submit');
   if(!email){ authMsg('請輸入電子郵件'); return; }
 
@@ -5588,6 +5772,7 @@ async function submitAuth(){
       if(!name){ authMsg('請輸入姓名'); btn.disabled=false; return; }
       if(!vocation){ authMsg('請選擇天職'); btn.disabled=false; return; }
       if(vocationSel === '__other__' && !vocationCustom){ authMsg('請輸入天職名稱（最多5字）'); btn.disabled=false; return; }
+      if(!region){ authMsg('請選擇分區'); btn.disabled=false; return; }
       if(!password || password.length < 6){ authMsg('密碼至少 6 字元'); btn.disabled=false; return; }
       const cred = await Firebase.fbAuth.createUserWithEmailAndPassword(Firebase.auth, email, password);
       await Firebase.fbAuth.updateProfile(cred.user, {displayName: name});
@@ -5598,7 +5783,7 @@ async function submitAuth(){
         email: cred.user.email,
         displayName: name,
         vocation: vocation,
-        region: '',
+        region: region,
         status: 'pending',
         role: 'user',
         createdAt: new Date().toISOString()
@@ -5633,6 +5818,44 @@ async function signInWithGoogle(){
   }catch(err){
     authMsg(err.message || 'Google 登入失敗');
   }
+
+async function submitProfileComplete(){
+  const name = document.getElementById('pc-name').value.trim();
+  const vSel = document.getElementById('pc-vocation').value;
+  const vCustom = document.getElementById('pc-vocation-custom').value.trim();
+  const vocation = (vSel === '__other__') ? vCustom : vSel;
+  const region = document.getElementById('pc-region').value;
+  const msgEl = document.getElementById('pc-msg');
+  msgEl.textContent = '';
+  if(!name){ msgEl.textContent = '請輸入姓名'; return; }
+  if(!vocation){ msgEl.textContent = '請選擇天職'; return; }
+  if(vSel === '__other__' && !vCustom){ msgEl.textContent = '請輸入天職名稱（最多5字）'; return; }
+  if(!region){ msgEl.textContent = '請選擇分區'; return; }
+  try{
+    await Firebase.fbAuth.updateProfile(Firebase.user, {displayName: name});
+    await Firebase.updateProfile({displayName: name, vocation, region});
+    // 同步到 settings（settings 頁的 region 與 name）
+    await Store.save('settings', {region, name});
+    document.getElementById('profile-complete-screen').classList.remove('active');
+    document.body.classList.remove('auth-active');
+    const profile = Firebase.profile;
+    const isAdmin = Firebase.isAdmin();
+    showUserBadge(name, isAdmin, false, profile.status, vocation);
+    document.querySelectorAll('.tab.admin-only').forEach(t=>{ t.style.display = isAdmin ? '' : 'none'; });
+    await ensureDefaultsInstalled();
+    renderMembers();
+    renderBoard();
+    fitTabs();
+  }catch(e){
+    msgEl.textContent = '儲存失敗，請稍後再試：' + (e.message||'');
+  }
+}
+
+document.getElementById('pc-vocation').addEventListener('change', function(){
+  const c = document.getElementById('pc-vocation-custom');
+  c.style.display = (this.value === '__other__') ? 'block' : 'none';
+  if(this.value !== '__other__') c.value = '';
+});
 
 // 天職下拉：選「其他」時顯示自填框
 document.getElementById('auth-vocation').addEventListener('change', function(){
@@ -5729,11 +5952,28 @@ async function onAuthChanged(user, profile){
     document.body.classList.add('auth-active');
     return;
   }
-  // active:正常進入主畫面
+  // active:檢查資料是否完整（管理員跳過）
   document.getElementById('auth-screen').classList.remove('active');
   document.getElementById('pending-screen').classList.remove('active');
+  document.getElementById('profile-complete-screen').classList.remove('active');
 
   const isAdmin = Firebase.isAdmin();
+  const profileIncomplete = !isAdmin && (!profile.vocation || !profile.region || !profile.displayName);
+  if(profileIncomplete){
+    // 預填已知資料
+    document.getElementById('pc-name').value = profile.displayName || user.displayName || '';
+    document.getElementById('pc-vocation').value =
+      ['點傳師','壇主','辦事人員','清口','已求道'].includes(profile.vocation) ? profile.vocation : (profile.vocation ? '__other__' : '');
+    if(profile.vocation && !['點傳師','壇主','辦事人員','清口','已求道'].includes(profile.vocation)){
+      document.getElementById('pc-vocation-custom').value = profile.vocation;
+      document.getElementById('pc-vocation-custom').style.display = 'block';
+    }
+    document.getElementById('pc-region').value = profile.region || '';
+    document.getElementById('profile-complete-screen').classList.add('active');
+    document.body.classList.add('auth-active');
+    return;
+  }
+
   showUserBadge(profile.displayName || user.email, isAdmin, false, profile.status, profile.vocation);
   // 管理員可看見「使用者管理」分頁
   document.querySelectorAll('.tab.admin-only').forEach(t=>{
