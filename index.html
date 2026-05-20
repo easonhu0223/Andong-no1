@@ -500,6 +500,56 @@
     letter-spacing: 1px;
   }
 
+  .auth-step-title {
+    font-family: 'ZCOOL XiaoWei', serif;
+    font-size: 13px;
+    color: var(--ink-soft);
+    letter-spacing: 1px;
+    margin-bottom: 10px;
+    text-align: center;
+  }
+  .auth-preview {
+    background: rgba(176,132,86,0.08);
+    border: 1px solid rgba(176,132,86,0.3);
+    border-radius: 2px;
+    padding: 8px 12px;
+    font-family: 'Noto Serif TC', serif;
+    font-size: 13px;
+    color: var(--ink);
+    margin-bottom: 10px;
+    text-align: center;
+    line-height: 1.8;
+  }
+  .auth-divider {
+    text-align: center;
+    font-size: 11px;
+    color: rgba(74,60,44,0.45);
+    font-family: 'ZCOOL XiaoWei', serif;
+    letter-spacing: 2px;
+    margin: 8px 0;
+  }
+  .auth-btn.google-full {
+    width: 100%;
+    padding: 10px;
+    background: #fff;
+    border: 1px solid rgba(176,132,86,0.5);
+    border-radius: 2px;
+    font-family: 'ZCOOL XiaoWei', serif;
+    font-size: 14px;
+    letter-spacing: 1px;
+    color: var(--ink);
+    cursor: pointer;
+    transition: all 0.2s;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .auth-btn.google-full:hover {
+    background: #f8f0e3;
+    border-color: var(--gold);
+  }
+
   .auth-msg {
     margin: 6px 0 10px;
     min-height: 16px;
@@ -3337,20 +3387,17 @@
       </div>
     </div>
 
-    <!-- 下方緊湊登入區(佔約 1/3) -->
+    <!-- 下方緊湊登入區 -->
     <div class="auth-body">
-      <div class="auth-tabs">
-        <button class="auth-tab active" data-mode="login" onclick="switchAuthMode('login')">登入</button>
-        <button class="auth-tab" data-mode="register" onclick="switchAuthMode('register')">註冊</button>
-        <button class="auth-tab" data-mode="reset" onclick="switchAuthMode('reset')">忘記密碼</button>
-      </div>
 
-      <div class="auth-form" id="auth-form">
-        <div class="auth-field" id="auth-field-name" style="display:none;">
-          <input type="text" id="auth-name" placeholder="中文姓名（如：王大明）" autocomplete="name">
+      <!-- ══ 步驟一：填寫基本資料（新用戶 / Google 登入前） ══ -->
+      <div id="auth-step1" class="auth-form">
+        <div class="auth-step-title">📋 第一步：填寫基本資料</div>
+        <div class="auth-field">
+          <input type="text" id="s1-name" placeholder="中文姓名（如：王大明）" autocomplete="name" maxlength="10">
         </div>
-        <div class="auth-field" id="auth-field-vocation" style="display:none;">
-          <select id="auth-vocation">
+        <div class="auth-field">
+          <select id="s1-vocation">
             <option value="">— 請選擇天職 —</option>
             <option value="點傳師">點傳師</option>
             <option value="壇主">壇主</option>
@@ -3359,11 +3406,11 @@
             <option value="已求道">已求道</option>
             <option value="__other__">其他（自行輸入）</option>
           </select>
-          <input type="text" id="auth-vocation-custom" placeholder="請輸入天職（最多5字）" maxlength="5"
+          <input type="text" id="s1-vocation-custom" placeholder="請輸入天職（最多5字）" maxlength="5"
                  style="display:none; margin-top:6px;">
         </div>
-        <div class="auth-field" id="auth-field-region" style="display:none;">
-          <select id="auth-region">
+        <div class="auth-field">
+          <select id="s1-region">
             <option value="">— 請選擇分區 —</option>
             <option value="化真區">化真區</option>
             <option value="化善區">化善區</option>
@@ -3376,28 +3423,49 @@
             <option value="化力區">化力區</option>
           </select>
         </div>
+        <div class="auth-msg" id="s1-msg"></div>
+        <button class="auth-btn primary" id="s1-submit" onclick="goToStep2()">
+          繼續，使用 Google 帳號登入 →
+        </button>
+        <div class="auth-divider">── 已有帳號？ ──</div>
+        <button class="auth-btn ghost" onclick="showEmailLogin()">電子郵件登入 / 忘記密碼</button>
+        <button class="auth-btn ghost" onclick="enterGuestMode()">以訪客身份瀏覽仙佛詞語</button>
+      </div>
+
+      <!-- ══ 步驟二：Google 登入（填完資料後才顯示） ══ -->
+      <div id="auth-step2" class="auth-form" style="display:none;">
+        <div class="auth-step-title">✅ 第二步：Google 帳號登入</div>
+        <div class="auth-preview" id="s2-preview"></div>
+        <div class="auth-msg" id="s2-msg"></div>
+        <button class="auth-btn google-full" id="s2-google-btn" onclick="confirmGoogleLogin()">
+          <svg width="20" height="20" viewBox="0 0 18 18" style="vertical-align:middle;margin-right:8px;">
+            <path fill="#4285F4" d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844c-.209 1.125-.843 2.078-1.796 2.717v2.258h2.908c1.702-1.567 2.684-3.874 2.684-6.615z"/>
+            <path fill="#34A853" d="M9 18c2.43 0 4.467-.806 5.956-2.18l-2.908-2.259c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332A8.997 8.997 0 0 0 9 18z"/>
+            <path fill="#FBBC05" d="M3.964 10.71A5.41 5.41 0 0 1 3.682 9c0-.593.102-1.17.282-1.71V4.958H.957A8.996 8.996 0 0 0 0 9c0 1.452.348 2.827.957 4.042l3.007-2.332z"/>
+            <path fill="#EA4335" d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0A8.997 8.997 0 0 0 .957 4.958L3.964 7.29C4.672 5.163 6.656 3.58 9 3.58z"/>
+          </svg>
+          使用 Google 帳號完成登入
+        </button>
+        <button class="auth-btn ghost" onclick="backToStep1()">← 重新填寫資料</button>
+      </div>
+
+      <!-- ══ 電子郵件登入（隱藏，點連結才顯示） ══ -->
+      <div id="auth-email-form" class="auth-form" style="display:none;">
+        <div class="auth-tabs">
+          <button class="auth-tab active" data-mode="login" onclick="switchAuthMode('login')">登入</button>
+          <button class="auth-tab" data-mode="reset" onclick="switchAuthMode('reset')">忘記密碼</button>
+        </div>
         <div class="auth-field">
           <input type="email" id="auth-email" placeholder="電子郵件" autocomplete="email">
         </div>
         <div class="auth-field" id="auth-field-password">
-          <input type="password" id="auth-password" placeholder="密碼(至少 6 字元)" autocomplete="current-password">
+          <input type="password" id="auth-password" placeholder="密碼" autocomplete="current-password">
         </div>
         <div class="auth-msg" id="auth-msg"></div>
-        <div class="auth-btn-row">
-          <button class="auth-btn primary" id="auth-submit" onclick="submitAuth()">登入</button>
-          <button class="auth-btn google" onclick="signInWithGoogle()" title="Google 登入">
-            <svg width="20" height="20" viewBox="0 0 18 18">
-              <path fill="#4285F4" d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844c-.209 1.125-.843 2.078-1.796 2.717v2.258h2.908c1.702-1.567 2.684-3.874 2.684-6.615z"/>
-              <path fill="#34A853" d="M9 18c2.43 0 4.467-.806 5.956-2.18l-2.908-2.259c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332A8.997 8.997 0 0 0 9 18z"/>
-              <path fill="#FBBC05" d="M3.964 10.71A5.41 5.41 0 0 1 3.682 9c0-.593.102-1.17.282-1.71V4.958H.957A8.996 8.996 0 0 0 0 9c0 1.452.348 2.827.957 4.042l3.007-2.332z"/>
-              <path fill="#EA4335" d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0A8.997 8.997 0 0 0 .957 4.958L3.964 7.29C4.672 5.163 6.656 3.58 9 3.58z"/>
-            </svg>
-          </button>
-        </div>
-        <button class="auth-btn ghost" onclick="enterGuestMode()">
-          以訪客身份瀏覽仙佛詞語
-        </button>
+        <button class="auth-btn primary" id="auth-submit" onclick="submitAuth()">登入</button>
+        <button class="auth-btn ghost" onclick="showStep1()">← 返回</button>
       </div>
+
     </div>
   </div>
   <div class="auth-footer">
@@ -5726,69 +5794,121 @@ function toast(msg){
 /* =========================================================
    AUTH 流程
    ========================================================= */
-let currentAuthMode = 'login';
+// ── 兩步驟 Google 登入流程 ──
+let preAuthData = null;          // 第一步填寫的資料，登入後寫入 Firestore
+let currentAuthMode = 'login';   // 電子郵件表單用
 
+// ── 中文姓名驗證（只能 2-10 個中文字）──
+function validateChineseName(name){
+  if(!name) return '請輸入姓名';
+  // 使用 Unicode escape 確保跨環境正確
+  const re = new RegExp('^[\u4e00-\u9fa5]{2,10}$');
+  if(!re.test(name)) return '姓名請輸入 2–10 個中文字';
+  return '';
+}
+
+// ── Step 1 → Step 2 ──
+function goToStep2(){
+  const name    = document.getElementById('s1-name').value.trim();
+  const vSel    = document.getElementById('s1-vocation').value;
+  const vCustom = document.getElementById('s1-vocation-custom').value.trim();
+  const vocation = (vSel === '__other__') ? vCustom : vSel;
+  const region  = document.getElementById('s1-region').value;
+  const msgEl   = document.getElementById('s1-msg');
+  msgEl.textContent = '';
+
+  // 驗證
+  const nameErr = validateChineseName(name);
+  if(nameErr){ msgEl.textContent = nameErr; return; }
+  if(!vocation){ msgEl.textContent = '請選擇天職'; return; }
+  if(vSel === '__other__' && !vCustom){ msgEl.textContent = '請輸入天職名稱（最多5字）'; return; }
+  if(!region){ msgEl.textContent = '請選擇分區'; return; }
+
+  // 儲存到記憶體
+  preAuthData = { displayName: name, vocation, region };
+
+  // 顯示確認內容
+  document.getElementById('s2-preview').innerHTML =
+    `<strong>${name}</strong><br>天職：${vocation}　分區：${region}`;
+  document.getElementById('s2-msg').textContent = '';
+
+  // 切換畫面
+  document.getElementById('auth-step1').style.display = 'none';
+  document.getElementById('auth-step2').style.display = 'block';
+}
+
+function backToStep1(){
+  document.getElementById('auth-step2').style.display = 'none';
+  document.getElementById('auth-step1').style.display = 'block';
+}
+
+function showStep1(){
+  document.getElementById('auth-email-form').style.display = 'none';
+  document.getElementById('auth-step2').style.display = 'none';
+  document.getElementById('auth-step1').style.display = 'block';
+}
+
+function showEmailLogin(){
+  document.getElementById('auth-step1').style.display = 'none';
+  document.getElementById('auth-step2').style.display = 'none';
+  document.getElementById('auth-email-form').style.display = 'block';
+  switchAuthMode('login');
+}
+
+// Step 1 天職下拉
+document.getElementById('s1-vocation').addEventListener('change', function(){
+  const c = document.getElementById('s1-vocation-custom');
+  c.style.display = (this.value === '__other__') ? 'block' : 'none';
+  if(this.value !== '__other__') c.value = '';
+});
+
+// ── 確認後執行 Google 登入（Step 2 按鈕） ──
+async function confirmGoogleLogin(){
+  const btn = document.getElementById('s2-google-btn');
+  const msgEl = document.getElementById('s2-msg');
+  btn.disabled = true;
+  btn.textContent = '連線中…';
+  msgEl.textContent = '';
+  try{
+    await signInWithGoogle();
+  }catch(e){
+    msgEl.textContent = 'Google 登入失敗，請再試一次';
+    btn.disabled = false;
+    btn.innerHTML = '<svg width="20" height="20" viewBox="0 0 18 18" style="vertical-align:middle;margin-right:8px;"><path fill="#4285F4" d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844c-.209 1.125-.843 2.078-1.796 2.717v2.258h2.908c1.702-1.567 2.684-3.874 2.684-6.615z"/><path fill="#34A853" d="M9 18c2.43 0 4.467-.806 5.956-2.18l-2.908-2.259c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332A8.997 8.997 0 0 0 9 18z"/><path fill="#FBBC05" d="M3.964 10.71A5.41 5.41 0 0 1 3.682 9c0-.593.102-1.17.282-1.71V4.958H.957A8.996 8.996 0 0 0 0 9c0 1.452.348 2.827.957 4.042l3.007-2.332z"/><path fill="#EA4335" d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0A8.997 8.997 0 0 0 .957 4.958L3.964 7.29C4.672 5.163 6.656 3.58 9 3.58z"/></svg>使用 Google 帳號完成登入';
+  }
+}
+
+// ── 電子郵件登入 ──
 function switchAuthMode(mode){
   currentAuthMode = mode;
   document.querySelectorAll('.auth-tab').forEach(t=>{
     t.classList.toggle('active', t.dataset.mode === mode);
   });
-  document.getElementById('auth-msg').textContent = '';
-  document.getElementById('auth-msg').className = 'auth-msg';
-  document.getElementById('auth-field-name').style.display = (mode==='register')?'block':'none';
-  document.getElementById('auth-field-vocation').style.display = (mode==='register')?'block':'none';
-  document.getElementById('auth-field-region').style.display = (mode==='register')?'block':'none';
-  document.getElementById('auth-field-password').style.display = (mode==='reset')?'none':'block';
+  const msgEl = document.getElementById('auth-msg');
+  if(msgEl){ msgEl.textContent = ''; msgEl.className = 'auth-msg'; }
+  const pwField = document.getElementById('auth-field-password');
+  if(pwField) pwField.style.display = (mode==='reset') ? 'none' : 'block';
   const btn = document.getElementById('auth-submit');
-  btn.textContent = mode==='login' ? '登入' : (mode==='register' ? '註冊' : '寄送重設信');
+  if(btn) btn.textContent = mode==='login' ? '登入' : '寄送重設信';
 }
 
 function authMsg(text, success=false){
   const el = document.getElementById('auth-msg');
-  el.textContent = text || '';
-  el.className = 'auth-msg' + (success ? ' success' : '');
+  if(el){ el.textContent = text || ''; el.className = 'auth-msg' + (success ? ' success' : ''); }
 }
 
 async function submitAuth(){
   const email = document.getElementById('auth-email').value.trim();
-  const password = document.getElementById('auth-password').value;
-  const name = document.getElementById('auth-name').value.trim();
-  const vocationSel = document.getElementById('auth-vocation').value;
-  const vocationCustom = document.getElementById('auth-vocation-custom').value.trim();
-  const vocation = (vocationSel === '__other__') ? vocationCustom : vocationSel;
-  const region = document.getElementById('auth-region').value;
+  const password = document.getElementById('auth-password') ? document.getElementById('auth-password').value : '';
   const btn = document.getElementById('auth-submit');
   if(!email){ authMsg('請輸入電子郵件'); return; }
-
   if(!Firebase.ready){ authMsg('系統初始化中,請稍後…'); return; }
-
   btn.disabled = true;
   try{
     if(currentAuthMode === 'login'){
       if(!password){ authMsg('請輸入密碼'); btn.disabled=false; return; }
       await Firebase.fbAuth.signInWithEmailAndPassword(Firebase.auth, email, password);
       authMsg('登入成功', true);
-    }else if(currentAuthMode === 'register'){
-      const nameErrA = validateChineseName(name);
-      if(nameErrA){ authMsg(nameErrA); btn.disabled=false; return; }
-      if(!vocation){ authMsg('請選擇天職'); btn.disabled=false; return; }
-      if(vocationSel === '__other__' && !vocationCustom){ authMsg('請輸入天職名稱（最多5字）'); btn.disabled=false; return; }
-      if(!region){ authMsg('請選擇分區'); btn.disabled=false; return; }
-      if(!password || password.length < 6){ authMsg('密碼至少 6 字元'); btn.disabled=false; return; }
-      const cred = await Firebase.fbAuth.createUserWithEmailAndPassword(Firebase.auth, email, password);
-      // 立刻建立 profile（含天職），不等 onAuthStateChanged
-      const ref = Firebase.fs.doc(Firebase.db, 'users', cred.user.uid);
-      await Firebase.fs.setDoc(ref, {
-        uid: cred.user.uid,
-        email: cred.user.email,
-        displayName: name,
-        vocation: vocation,
-        region: region,
-        status: 'pending',
-        role: 'user',
-        createdAt: new Date().toISOString()
-      });
-      authMsg('註冊成功,等候管理員審核', true);
     }else if(currentAuthMode === 'reset'){
       await Firebase.fbAuth.sendPasswordResetEmail(Firebase.auth, email);
       authMsg('重設密碼信已寄出,請至信箱收信', true);
@@ -5821,11 +5941,6 @@ async function signInWithGoogle(){
 }
 
 
-function validateChineseName(name){
-  if(!name) return '請輸入姓名';
-  if(!/^[一-龥]{2,10}$/.test(name)) return '姓名請輸入 2–10 個中文字';
-  return '';
-}
 async function submitProfileComplete(){
   const name = document.getElementById('pc-name').value.trim();
   const vSel = document.getElementById('pc-vocation').value;
@@ -5885,11 +6000,7 @@ document.getElementById('pc-vocation').addEventListener('change', function(){
 });
 
 // 天職下拉：選「其他」時顯示自填框
-document.getElementById('auth-vocation').addEventListener('change', function(){
-  const custom = document.getElementById('auth-vocation-custom');
-  custom.style.display = (this.value === '__other__') ? 'block' : 'none';
-  if(this.value !== '__other__') custom.value = '';
-});
+// auth-vocation listener moved to s1-vocation
 
 function enterGuestMode(){
   document.body.classList.add('guest-mode');
@@ -5969,6 +6080,14 @@ async function onAuthChanged(user, profile){
   // 拉取雲端資料
   await Firebase.pullUserData();
   await loadSettings();
+
+  // ★★ 如果有第一步預填的資料，立刻合併寫入 Firestore
+  if(preAuthData){
+    try{
+      await Firebase.updateProfile(preAuthData);
+    }catch(e){ console.warn('preAuthData 寫入失敗', e); }
+    preAuthData = null;
+  }
 
   // ★ 先隱藏所有遮罩
   document.getElementById('auth-screen').classList.remove('active');
