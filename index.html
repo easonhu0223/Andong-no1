@@ -3347,7 +3347,7 @@
 
       <div class="auth-form" id="auth-form">
         <div class="auth-field" id="auth-field-name" style="display:none;">
-          <input type="text" id="auth-name" placeholder="姓名（如：王大明）" autocomplete="name">
+          <input type="text" id="auth-name" placeholder="中文姓名（如：王大明）" autocomplete="name">
         </div>
         <div class="auth-field" id="auth-field-vocation" style="display:none;">
           <select id="auth-vocation">
@@ -3434,7 +3434,7 @@
 
     <div class="pc-field">
       <div class="pc-label">姓名</div>
-      <input type="text" id="pc-name" placeholder="請輸入真實姓名">
+      <input type="text" id="pc-name" placeholder="中文姓名，2–10 字（如：王大明）">
     </div>
     <div class="pc-field">
       <div class="pc-label">天職</div>
@@ -5769,7 +5769,8 @@ async function submitAuth(){
       await Firebase.fbAuth.signInWithEmailAndPassword(Firebase.auth, email, password);
       authMsg('登入成功', true);
     }else if(currentAuthMode === 'register'){
-      if(!name){ authMsg('請輸入姓名'); btn.disabled=false; return; }
+      const nameErrA = validateChineseName(name);
+      if(nameErrA){ authMsg(nameErrA); btn.disabled=false; return; }
       if(!vocation){ authMsg('請選擇天職'); btn.disabled=false; return; }
       if(vocationSel === '__other__' && !vocationCustom){ authMsg('請輸入天職名稱（最多5字）'); btn.disabled=false; return; }
       if(!region){ authMsg('請選擇分區'); btn.disabled=false; return; }
@@ -5817,7 +5818,14 @@ async function signInWithGoogle(){
   }catch(err){
     authMsg(err.message || 'Google 登入失敗');
   }
+}
 
+
+function validateChineseName(name){
+  if(!name) return '請輸入姓名';
+  if(!/^[一-龥]{2,10}$/.test(name)) return '姓名請輸入 2–10 個中文字';
+  return '';
+}
 async function submitProfileComplete(){
   const name = document.getElementById('pc-name').value.trim();
   const vSel = document.getElementById('pc-vocation').value;
@@ -5827,20 +5835,16 @@ async function submitProfileComplete(){
   const msgEl = document.getElementById('pc-msg');
   const btn = document.querySelector('.pc-btn');
   msgEl.textContent = '';
-  if(!name){ msgEl.textContent = '請輸入姓名'; return; }
+  const nameErr = validateChineseName(name);
+  if(nameErr){ msgEl.textContent = nameErr; return; }
   if(!vocation){ msgEl.textContent = '請選擇天職'; return; }
   if(vSel === '__other__' && !vCustom){ msgEl.textContent = '請輸入天職名稱（最多5字）'; return; }
   if(!region){ msgEl.textContent = '請選擇分區'; return; }
   btn.disabled = true;
   btn.textContent = '儲存中…';
   try{
-    // 直接寫入 Firestore（不呼叫 fbAuth.updateProfile，避免 v9 SDK 相容問題）
-    const uid = Firebase.user.uid;
-    const ref = Firebase.fs.doc(Firebase.db, 'users', uid);
-    const updates = {displayName: name, vocation, region};
-    await Firebase.fs.setDoc(ref, updates, {merge: true});
-    // 更新本地 profile
-    if(Firebase.profile){ Object.assign(Firebase.profile, updates); }
+    // 使用 Firebase.updateProfile() 寫入 Firestore（已驗證穩定）
+    await Firebase.updateProfile({displayName: name, vocation, region});
     // 同步 settings
     await Store.save('settings', {region, name});
 
