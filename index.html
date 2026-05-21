@@ -3407,7 +3407,7 @@
   font-size:10px;color:rgba(0,0,0,0.3);
   font-family:monospace;pointer-events:none;
   background:rgba(255,255,255,0.6);padding:2px 5px;border-radius:3px;
-">v2.1.5</div>
+">v2.1.6</div>
 
 <!-- ============ 登入畫面(未登入時顯示) ============ -->
 <div class="auth-screen" id="auth-screen">
@@ -3594,7 +3594,7 @@
   <div class="title-wrap">
     <div class="title">安東道場 宏化分壇</div>
     <div class="subtitle">道 務 自 我 紀 錄 管 理</div>
-    <div class="version-tag" id="version-tag">v2.1.5</div>
+    <div class="version-tag" id="version-tag">v2.1.6</div>
   </div>
 </header>
 
@@ -4174,15 +4174,15 @@
 
 <div class="toast" id="toast"></div>
 </div><!-- /#app-wrap -->
-<div class="version-corner" id="version-corner">v2.1.5 · 2026-05-21</div>
+<div class="version-corner" id="version-corner">v2.1.6 · 2026-05-21</div>
 
 <script type="module">
 /* =========================================================
    APP VERSION  ─ 每次改版請更新此處 + 檔名
    ========================================================= */
-const APP_VERSION   = 'v2.1.5';
+const APP_VERSION   = 'v2.1.6';
 const APP_BUILD     = '2026-05-20';
-const APP_CODENAME  = '穩固立柱';
+const APP_CODENAME  = '針鋒所至';
 document.title = `宏化分壇 渡人管理 · ${APP_VERSION}`;
 
 /* =========================================================
@@ -6169,6 +6169,9 @@ async function onAuthChanged(user, profile){
     showDebugMsg('[Flow] loadSettings OK');
   }catch(e){ showDebugMsg('[ERR loadSettings] '+e.message); }
 
+  showDebugMsg('[Flow] CHECKPOINT-A reached');
+  showDebugMsg('[Flow] preAuthData='+(preAuthData?'YES':'null'));
+
   // ★★ 如果有第一步預填的資料，立刻合併寫入 Firestore + Settings
   if(preAuthData){
     try{
@@ -6180,6 +6183,7 @@ async function onAuthChanged(user, profile){
     preAuthData = null;
   }
 
+  showDebugMsg('[Flow] CHECKPOINT-B (about to hide masks)');
   // ★ 先隱藏所有遮罩（安全版本，元素不存在也不崩潰）
   showDebugMsg('[Flow] hiding masks...');
   try{
