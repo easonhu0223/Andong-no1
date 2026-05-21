@@ -3393,7 +3393,7 @@
   font-size:10px;color:rgba(0,0,0,0.3);
   font-family:monospace;pointer-events:none;
   background:rgba(255,255,255,0.6);padding:2px 5px;border-radius:3px;
-">v2.0.7</div>
+">v2.0.8</div>
 
 <!-- ============ 登入畫面(未登入時顯示) ============ -->
 <div class="auth-screen" id="auth-screen">
@@ -3536,10 +3536,30 @@
 
 <!-- ============ HEADER ============ -->
 <header class="header">
+  <!-- 登入狀態列 -->
+  <div id="login-bar" style="
+    display:none;
+    background:rgba(138,42,31,0.9);
+    color:#fff8f0;
+    font-family:'ZCOOL XiaoWei',serif;
+    font-size:13px;
+    letter-spacing:1px;
+    padding:6px 14px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    margin:-0px;
+  ">
+    <span id="login-bar-name">未登入</span>
+    <button onclick="signOutNow()" style="
+      background:transparent;border:1px solid rgba(255,248,240,0.5);
+      color:#fff8f0;font-size:11px;padding:2px 8px;border-radius:10px;cursor:pointer;
+    ">登出</button>
+  </div>
   <div class="title-wrap">
     <div class="title">安東道場 宏化分壇</div>
     <div class="subtitle">道 務 自 我 紀 錄 管 理</div>
-    <div class="version-tag" id="version-tag">v2.0.7</div>
+    <div class="version-tag" id="version-tag">v2.0.8</div>
   </div>
 </header>
 
@@ -4118,15 +4138,15 @@
 </div>
 
 <div class="toast" id="toast"></div>
-<div class="version-corner" id="version-corner">v2.0.7 · 2026-05-20</div>
+<div class="version-corner" id="version-corner">v2.0.8 · 2026-05-21</div>
 
 <script type="module">
 /* =========================================================
    APP VERSION  ─ 每次改版請更新此處 + 檔名
    ========================================================= */
-const APP_VERSION   = 'v2.0.7';
+const APP_VERSION   = 'v2.0.8';
 const APP_BUILD     = '2026-05-20';
-const APP_CODENAME  = '溯源正本';
+const APP_CODENAME  = '顯身正本';
 document.title = `宏化分壇 渡人管理 · ${APP_VERSION}`;
 
 /* =========================================================
@@ -6003,6 +6023,21 @@ function showUserBadge(name, isAdmin, isGuest, status, vocation, region){
   // 顯示：天職 名字 (分區)
   const regionStr = (!isAdmin && !isGuest && region) ? ` <span class="badge-region">${escapeHtml(region)}</span>` : '';
   badge.innerHTML = `<span class="role-mark">${mark}</span> ${escapeHtml(name||'')}${regionStr}`;
+
+  // 同步更新 header 登入列（手機確保可見）
+  const bar = document.getElementById('login-bar');
+  const barName = document.getElementById('login-bar-name');
+  if(bar && barName){
+    if(isGuest){
+      bar.style.display = 'none';
+    } else {
+      const barText = isAdmin ? '★ 壇主　' + escapeHtml(name||'') :
+                      (status==='pending') ? '⏳ 待審核　' + escapeHtml(name||'') :
+                      (mark||'道親') + '　' + escapeHtml(name||'');
+      barName.textContent = barText;
+      bar.style.display = 'flex';
+    }
+  }
 }
 
 /* 當登入狀態變動時被呼叫 */
