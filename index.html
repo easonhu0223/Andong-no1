@@ -401,6 +401,17 @@
     min-height: 100vh;
   }
   .profile-complete-screen.active { display: flex; }
+  .pending-card {
+    width: 100%;
+    max-width: 420px;
+    margin-top: auto;
+    margin-bottom: auto;
+    background: linear-gradient(180deg, #fcf4dd 0%, #f5e6c6 100%);
+    border: 1px solid rgba(176, 132, 86, 0.6);
+    border-radius: 4px;
+    padding: 32px 28px;
+    box-shadow: 0 16px 50px rgba(40, 26, 12, 0.20);
+  }
   .profile-complete-card {
     width: 100%;
     max-width: 460px;
@@ -3396,10 +3407,10 @@
   font-size:10px;color:rgba(0,0,0,0.3);
   font-family:monospace;pointer-events:none;
   background:rgba(255,255,255,0.6);padding:2px 5px;border-radius:3px;
-">v2.0.9</div>
+">v2.1.0</div>
 
 <!-- ============ 登入畫面(未登入時顯示) ============ -->
-<div class="auth-screen" id="auth-screen">
+<div class="auth-screen active" id="auth-screen">
   <div class="auth-card">
     <!-- 狀態列（除錯用） -->
     <div id="auth-status-bar" style="background:#8a2a1f;color:#fff;font-size:12px;text-align:center;padding:5px 8px;border-radius:2px;margin-bottom:8px;display:none;"></div>
@@ -3493,6 +3504,25 @@
 
 </div>
   </div>
+<!-- ============ 待審核畫面 ============ -->
+<div class="pending-screen" id="pending-screen">
+  <div class="pending-card">
+    <div style="font-size:32px;text-align:center;margin-bottom:10px;">⏳</div>
+    <div style="font-family:'Ma Shan Zheng',serif;font-size:22px;color:var(--vermillion);text-align:center;margin-bottom:8px;letter-spacing:2px;">資料審核中</div>
+    <div style="text-align:center;font-size:13px;color:var(--ink-soft);line-height:1.9;font-family:'Noto Serif TC',serif;">
+      帳號：<span id="pending-email"></span><br>
+      請聯絡壇主 <strong id="pending-admin"></strong> 進行審核<br>
+      <span style="font-size:11px;opacity:0.7;">審核通過後即可使用完整功能</span>
+    </div>
+    <button onclick="signOutNow()" style="
+      margin-top:20px;width:100%;padding:10px;
+      background:transparent;border:1px solid rgba(176,132,86,0.5);
+      border-radius:2px;font-family:'ZCOOL XiaoWei',serif;
+      font-size:13px;color:var(--ink-soft);cursor:pointer;letter-spacing:2px;
+    ">登出</button>
+  </div>
+</div>
+
 <!-- ============ 補填資料畫面 ============ -->
 <div class="profile-complete-screen" id="profile-complete-screen">
   <div class="profile-complete-card">
@@ -3564,7 +3594,7 @@
   <div class="title-wrap">
     <div class="title">安東道場 宏化分壇</div>
     <div class="subtitle">道 務 自 我 紀 錄 管 理</div>
-    <div class="version-tag" id="version-tag">v2.0.9</div>
+    <div class="version-tag" id="version-tag">v2.1.0</div>
   </div>
 </header>
 
@@ -4144,15 +4174,15 @@
 
 <div class="toast" id="toast"></div>
 </div><!-- /#app-wrap -->
-<div class="version-corner" id="version-corner">v2.0.9 · 2026-05-21</div>
+<div class="version-corner" id="version-corner">v2.1.0 · 2026-05-21</div>
 
 <script type="module">
 /* =========================================================
    APP VERSION  ─ 每次改版請更新此處 + 檔名
    ========================================================= */
-const APP_VERSION   = 'v2.0.9';
+const APP_VERSION   = 'v2.1.0';
 const APP_BUILD     = '2026-05-20';
-const APP_CODENAME  = '關門立本';
+const APP_CODENAME  = '門戶重立';
 document.title = `宏化分壇 渡人管理 · ${APP_VERSION}`;
 
 /* =========================================================
