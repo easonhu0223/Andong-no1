@@ -4542,6 +4542,20 @@ const Firebase = {
       this.fbAuth = authMod;
       this.ready = true;
       this.status = 'online';
+
+      // ★ 處理 redirect 回來後的結果（手機 Google 登入用）
+      try{
+        const result = await authMod.getRedirectResult(this.auth);
+        if(result && result.user){
+          // redirect 成功，從 sessionStorage 取回 preAuthData
+          const stored = sessionStorage.getItem('preAuthData');
+          if(stored){
+            try{ preAuthData = JSON.parse(stored); }catch(e){}
+            sessionStorage.removeItem('preAuthData');
+          }
+        }
+      }catch(e){ console.warn('[Firebase] getRedirectResult:', e.code); }
+
       authMod.onAuthStateChanged(this.auth, async (u)=>{
         this.user = u;
         if(u){
@@ -5867,21 +5881,40 @@ async function validateAndGoogleLogin(btn){
 
   preAuthData = { displayName: name, vocation, region };
   btn.disabled = true;
-  btn.textContent = '⏳ 開啟 Google 登入...';
+  btn.textContent = '⏳ 連線中...';
+
+  const provider = new Firebase.fbAuth.GoogleAuthProvider();
 
   try{
-    const provider = new Firebase.fbAuth.GoogleAuthProvider();
+    // 先試 popup（桌機）
     await Firebase.fbAuth.signInWithPopup(Firebase.auth, provider);
-  }catch(e){
-    preAuthData = null;
-    const code = e.code || '';
-    msgEl.textContent =
-      code === 'auth/popup-blocked'          ? '彈出視窗被封鎖，請允許此網站彈出視窗後再試' :
-      code === 'auth/popup-closed-by-user'   ? '視窗已關閉，請重新點擊' :
-      code === 'auth/cancelled-popup-request'? '操作已取消，請再試一次' :
-      'Google 登入失敗：' + (e.message || '');
-    btn.disabled = false;
-    btn.textContent = '使用 Google 帳號登入';
+  }catch(popupErr){
+    const code = popupErr.code || '';
+    if(code === 'auth/popup-blocked' || code === 'auth/operation-not-allowed'){
+      // popup 被擋 → 改用 redirect（手機/平板友好）
+      sessionStorage.setItem('preAuthData', JSON.stringify(preAuthData));
+      btn.textContent = '跳轉到 Google 頁面...';
+      try{
+        await Firebase.fbAuth.signInWithRedirect(Firebase.auth, provider);
+        // 頁面會離開，不會執行到這行
+      }catch(redErr){
+        preAuthData = null;
+        sessionStorage.removeItem('preAuthData');
+        msgEl.textContent = 'Google 登入失敗，請稍後再試';
+        btn.disabled = false;
+        btn.textContent = '使用 Google 帳號登入';
+      }
+    }else if(code === 'auth/popup-closed-by-user' || code === 'auth/cancelled-popup-request'){
+      preAuthData = null;
+      msgEl.textContent = '登入已取消，請再點一次';
+      btn.disabled = false;
+      btn.textContent = '使用 Google 帳號登入';
+    }else{
+      preAuthData = null;
+      msgEl.textContent = 'Google 登入失敗：' + (popupErr.message || code);
+      btn.disabled = false;
+      btn.textContent = '使用 Google 帳號登入';
+    }
   }
 }
 
