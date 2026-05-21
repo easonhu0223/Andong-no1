@@ -3387,6 +3387,13 @@
 </style>
 </head>
 <body>
+<!-- ★ 永遠可見的版本角標 -->
+<div id="ver-stamp" style="
+  position:fixed;bottom:6px;left:6px;z-index:9999;
+  font-size:10px;color:rgba(0,0,0,0.3);
+  font-family:monospace;pointer-events:none;
+  background:rgba(255,255,255,0.6);padding:2px 5px;border-radius:3px;
+">v2.0.7</div>
 
 <!-- ============ 登入畫面(未登入時顯示) ============ -->
 <div class="auth-screen" id="auth-screen">
@@ -3532,7 +3539,7 @@
   <div class="title-wrap">
     <div class="title">安東道場 宏化分壇</div>
     <div class="subtitle">道 務 自 我 紀 錄 管 理</div>
-    <div class="version-tag" id="version-tag">v2.0.6</div>
+    <div class="version-tag" id="version-tag">v2.0.7</div>
   </div>
 </header>
 
@@ -4111,15 +4118,15 @@
 </div>
 
 <div class="toast" id="toast"></div>
-<div class="version-corner" id="version-corner">v2.0.6 · 2026-05-20</div>
+<div class="version-corner" id="version-corner">v2.0.7 · 2026-05-20</div>
 
 <script type="module">
 /* =========================================================
    APP VERSION  ─ 每次改版請更新此處 + 檔名
    ========================================================= */
-const APP_VERSION   = 'v2.0.6';
+const APP_VERSION   = 'v2.0.7';
 const APP_BUILD     = '2026-05-20';
-const APP_CODENAME  = '破繭登入';
+const APP_CODENAME  = '溯源正本';
 document.title = `宏化分壇 渡人管理 · ${APP_VERSION}`;
 
 /* =========================================================
