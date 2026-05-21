@@ -3407,7 +3407,7 @@
   font-size:10px;color:rgba(0,0,0,0.3);
   font-family:monospace;pointer-events:none;
   background:rgba(255,255,255,0.6);padding:2px 5px;border-radius:3px;
-">v2.1.2</div>
+">v2.1.3</div>
 
 <!-- ============ 登入畫面(未登入時顯示) ============ -->
 <div class="auth-screen" id="auth-screen">
@@ -3594,7 +3594,7 @@
   <div class="title-wrap">
     <div class="title">安東道場 宏化分壇</div>
     <div class="subtitle">道 務 自 我 紀 錄 管 理</div>
-    <div class="version-tag" id="version-tag">v2.1.2</div>
+    <div class="version-tag" id="version-tag">v2.1.3</div>
   </div>
 </header>
 
@@ -4174,15 +4174,15 @@
 
 <div class="toast" id="toast"></div>
 </div><!-- /#app-wrap -->
-<div class="version-corner" id="version-corner">v2.1.2 · 2026-05-21</div>
+<div class="version-corner" id="version-corner">v2.1.3 · 2026-05-21</div>
 
 <script type="module">
 /* =========================================================
    APP VERSION  ─ 每次改版請更新此處 + 檔名
    ========================================================= */
-const APP_VERSION   = 'v2.1.2';
+const APP_VERSION   = 'v2.1.3';
 const APP_BUILD     = '2026-05-20';
-const APP_CODENAME  = '步步顯化';
+const APP_CODENAME  = '尋幽探微';
 document.title = `宏化分壇 渡人管理 · ${APP_VERSION}`;
 
 /* =========================================================
@@ -4571,9 +4571,15 @@ const Firebase = {
       }
 
       authMod.onAuthStateChanged(this.auth, async (u)=>{
+        if(typeof showDebugMsg==='function') showDebugMsg('[Auth] state changed, user='+(u?u.email:'NULL'));
         this.user = u;
         if(u){
-          await this.loadProfile();
+          try{
+            await this.loadProfile();
+            if(typeof showDebugMsg==='function') showDebugMsg('[Auth] profile loaded: '+JSON.stringify({hasName:!!this.profile?.displayName, vocation:this.profile?.vocation, region:this.profile?.region, status:this.profile?.status}).slice(0,150));
+          }catch(e){
+            if(typeof showDebugMsg==='function') showDebugMsg('[Auth] loadProfile error: '+e.message);
+          }
           onAuthChanged(u, this.profile);
         }else{
           this.profile = null;
@@ -4603,19 +4609,21 @@ const Firebase = {
 
   async loadProfile(){
     if(!this.user) return null;
+    const dbg = typeof showDebugMsg==='function' ? showDebugMsg : ()=>{};
     try{
+      dbg('[Profile] reading from Firestore...');
       const ref = this.fs.doc(this.db, 'users', this.user.uid);
       const snap = await this.fs.getDoc(ref);
       if(snap.exists()){
         this.profile = snap.data();
-        // 管理者自動為 active 與 admin role
+        dbg('[Profile] found existing');
         if(this.isAdmin() && (this.profile.status !== 'active' || this.profile.role !== 'admin')){
           this.profile.status = 'active';
           this.profile.role = 'admin';
           await this.fs.setDoc(ref, this.profile, {merge:true});
         }
       }else{
-        // 第一次:建立 profile（Google 登入者無天職，待審核時補填）
+        dbg('[Profile] new user, creating...');
         this.profile = {
           uid: this.user.uid,
           email: this.user.email,
@@ -4627,9 +4635,14 @@ const Firebase = {
           createdAt: new Date().toISOString()
         };
         await this.fs.setDoc(ref, this.profile);
+        dbg('[Profile] new profile created');
       }
       return this.profile;
-    }catch(e){ console.warn('loadProfile error', e); return null; }
+    }catch(e){
+      dbg('[Profile] ERROR: '+(e.code||e.message||'unknown'));
+      console.error('loadProfile error', e);
+      return null;
+    }
   },
 
   async updateProfile(updates){
@@ -6097,17 +6110,18 @@ function showUserBadge(name, isAdmin, isGuest, status, vocation, region){
 
 /* 當登入狀態變動時被呼叫 */
 function showDebugMsg(msg){
-  // 在畫面顯示除錯訊息（手機可見）
+  // 累積式除錯訊息（不覆蓋、不消失）
   let dbg = document.getElementById('debug-msg');
   if(!dbg){
     dbg = document.createElement('div');
     dbg.id = 'debug-msg';
-    dbg.style.cssText = 'position:fixed;top:0;left:0;right:0;z-index:99999;background:#2a6e1f;color:#fff;font-size:13px;padding:6px 12px;text-align:center;font-family:monospace;';
+    dbg.style.cssText = 'position:fixed;top:0;left:0;right:0;z-index:99999;background:#2a6e1f;color:#fff;font-size:11px;padding:6px 8px;text-align:left;font-family:monospace;max-height:55vh;overflow-y:auto;white-space:pre-line;line-height:1.4;border-bottom:2px solid #fff;';
     document.body.appendChild(dbg);
   }
-  dbg.textContent = msg;
-  // 5 秒後消失
-  setTimeout(()=>{ if(dbg) dbg.remove(); }, 8000);
+  const now = new Date();
+  const ts = String(now.getSeconds()).padStart(2,'0')+'.'+String(now.getMilliseconds()).padStart(3,'0');
+  dbg.textContent = (dbg.textContent||'') + '\n['+ts+'] '+msg;
+  dbg.scrollTop = dbg.scrollHeight;
 }
 
 function showAuthStatus(msg, isError=true){
