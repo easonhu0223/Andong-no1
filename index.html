@@ -58,6 +58,9 @@
   }
   .auth-screen.active, .pending-screen.active { display: flex; }
   body.auth-active { overflow: hidden; }
+  /* 主畫面預設隱藏，登入後才顯示 */
+  #app-wrap { display: none; }
+  body.app-ready #app-wrap { display: block; }
 
   .auth-card, .pending-card {
     width: 100%;
@@ -3393,7 +3396,7 @@
   font-size:10px;color:rgba(0,0,0,0.3);
   font-family:monospace;pointer-events:none;
   background:rgba(255,255,255,0.6);padding:2px 5px;border-radius:3px;
-">v2.0.8</div>
+">v2.0.9</div>
 
 <!-- ============ 登入畫面(未登入時顯示) ============ -->
 <div class="auth-screen" id="auth-screen">
@@ -3534,6 +3537,9 @@
   </div>
 </div>
 
+<!-- ============ app-wrap 開始 ============ -->
+<div id="app-wrap">
+
 <!-- ============ HEADER ============ -->
 <header class="header">
   <!-- 登入狀態列 -->
@@ -3545,10 +3551,9 @@
     font-size:13px;
     letter-spacing:1px;
     padding:6px 14px;
-    display:flex;
     align-items:center;
     justify-content:space-between;
-    margin:-0px;
+    margin:0;
   ">
     <span id="login-bar-name">未登入</span>
     <button onclick="signOutNow()" style="
@@ -3559,7 +3564,7 @@
   <div class="title-wrap">
     <div class="title">安東道場 宏化分壇</div>
     <div class="subtitle">道 務 自 我 紀 錄 管 理</div>
-    <div class="version-tag" id="version-tag">v2.0.8</div>
+    <div class="version-tag" id="version-tag">v2.0.9</div>
   </div>
 </header>
 
@@ -4138,15 +4143,16 @@
 </div>
 
 <div class="toast" id="toast"></div>
-<div class="version-corner" id="version-corner">v2.0.8 · 2026-05-21</div>
+</div><!-- /#app-wrap -->
+<div class="version-corner" id="version-corner">v2.0.9 · 2026-05-21</div>
 
 <script type="module">
 /* =========================================================
    APP VERSION  ─ 每次改版請更新此處 + 檔名
    ========================================================= */
-const APP_VERSION   = 'v2.0.8';
+const APP_VERSION   = 'v2.0.9';
 const APP_BUILD     = '2026-05-20';
-const APP_CODENAME  = '顯身正本';
+const APP_CODENAME  = '關門立本';
 document.title = `宏化分壇 渡人管理 · ${APP_VERSION}`;
 
 /* =========================================================
@@ -6053,7 +6059,7 @@ function showAuthStatus(msg, isError=true){
 }
 
 async function onAuthChanged(user, profile){
-  document.body.classList.remove('guest-mode', 'pending-mode', 'auth-active');
+  document.body.classList.remove('guest-mode', 'pending-mode', 'auth-active', 'app-ready');
   if(!user){
     // 未登入
     document.getElementById('auth-screen').classList.add('active');
@@ -6122,6 +6128,7 @@ async function onAuthChanged(user, profile){
   }
 
   // ★ Step 3：active → 進入主畫面
+  document.body.classList.add('app-ready');
   showUserBadge(profile.displayName || user.email, isAdmin, false, profile.status, profile.vocation, profile.region);
   document.querySelectorAll('.tab.admin-only').forEach(t=>{
     t.style.display = isAdmin ? '' : 'none';
