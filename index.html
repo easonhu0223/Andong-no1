@@ -3407,7 +3407,7 @@
   font-size:10px;color:rgba(0,0,0,0.3);
   font-family:monospace;pointer-events:none;
   background:rgba(255,255,255,0.6);padding:2px 5px;border-radius:3px;
-">v2.1.0</div>
+">v2.1.1</div>
 
 <!-- ============ 登入畫面(未登入時顯示) ============ -->
 <div class="auth-screen active" id="auth-screen">
@@ -3594,7 +3594,7 @@
   <div class="title-wrap">
     <div class="title">安東道場 宏化分壇</div>
     <div class="subtitle">道 務 自 我 紀 錄 管 理</div>
-    <div class="version-tag" id="version-tag">v2.1.0</div>
+    <div class="version-tag" id="version-tag">v2.1.1</div>
   </div>
 </header>
 
@@ -4174,15 +4174,15 @@
 
 <div class="toast" id="toast"></div>
 </div><!-- /#app-wrap -->
-<div class="version-corner" id="version-corner">v2.1.0 · 2026-05-21</div>
+<div class="version-corner" id="version-corner">v2.1.1 · 2026-05-21</div>
 
 <script type="module">
 /* =========================================================
    APP VERSION  ─ 每次改版請更新此處 + 檔名
    ========================================================= */
-const APP_VERSION   = 'v2.1.0';
+const APP_VERSION   = 'v2.1.1';
 const APP_BUILD     = '2026-05-20';
-const APP_CODENAME  = '門戶重立';
+const APP_CODENAME  = '通行接引';
 document.title = `宏化分壇 渡人管理 · ${APP_VERSION}`;
 
 /* =========================================================
@@ -5918,6 +5918,25 @@ function showMainLogin(){
   document.getElementById('auth-main-form').style.display = 'block';
 }
 
+// ── 訪客模式 ──
+function enterGuestMode(){
+  document.body.classList.add('guest-mode');
+  document.body.classList.remove('auth-active');
+  document.getElementById('auth-screen').classList.remove('active');
+  document.getElementById('pending-screen').classList.remove('active');
+  document.body.classList.add('app-ready');
+  showUserBadge('訪客', false, true);
+  // 只開放仙佛詞語分頁
+  document.querySelectorAll('.tab').forEach(t=>{
+    if(t.dataset.tab !== 'ai'){
+      t.style.opacity = '0.3';
+      t.style.pointerEvents = 'none';
+    }
+  });
+  const aiTab = document.querySelector('.tab[data-tab="ai"]');
+  if(aiTab) aiTab.click();
+}
+
 function switchAuthMode(mode){
   currentAuthMode = mode;
   document.querySelectorAll('.auth-tab').forEach(t=>
@@ -6441,7 +6460,7 @@ async function adminDeleteUser(uid, name){
    ========================================================= */
 Object.assign(window, {
   // Auth
-  switchAuthMode, submitAuth, signInWithGoogle, enterGuestMode, enterPendingMode, signOutNow,
+  switchAuthMode, submitAuth, doGoogleLogin, showEmailLogin, showMainLogin, enterGuestMode, signOutNow, validateChineseName, submitProfileComplete,
   // Modal & form
   openMemberModal, closeMemberModal, saveMember, deleteMember,
   openCalendarModal, openLibraryModal, openBoardModal, openGenericModal, closeGenericModal, saveGeneric, deleteGeneric,
