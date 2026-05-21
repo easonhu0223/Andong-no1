@@ -3391,6 +3391,8 @@
 <!-- ============ 登入畫面(未登入時顯示) ============ -->
 <div class="auth-screen" id="auth-screen">
   <div class="auth-card">
+    <!-- 狀態列（除錯用） -->
+    <div id="auth-status-bar" style="background:#8a2a1f;color:#fff;font-size:12px;text-align:center;padding:5px 8px;border-radius:2px;margin-bottom:8px;display:none;"></div>
     <!-- 莊嚴抬頭區 -->
     <div class="auth-header">
       <!-- 母字符號 logo -->
@@ -4522,11 +4524,11 @@ const Firebase = {
       // 顯示友善錯誤
       const msgEl = document.getElementById('auth-msg');
       if(msgEl){
-        if(location.protocol === 'file:'){
-          msgEl.innerHTML = '⚠ 此頁無法在本機檔案直接開啟<br>請上傳至 GitHub Pages 後再使用';
-        }else{
-          msgEl.innerHTML = '⚠ 無法連線至 Firebase<br>請檢查網路連線或稍後再試';
-        }
+        const statusMsg = location.protocol === 'file:'
+          ? '⚠ 請上傳至 GitHub Pages 後使用'
+          : '⚠ 無法連線 Firebase，請確認網路';
+        if(msgEl) msgEl.innerHTML = statusMsg;
+        showAuthStatus(statusMsg);
       }
       return false;
     }
@@ -5997,6 +5999,17 @@ function showUserBadge(name, isAdmin, isGuest, status, vocation, region){
 }
 
 /* 當登入狀態變動時被呼叫 */
+function showAuthStatus(msg, isError=true){
+  const bar = document.getElementById('auth-status-bar');
+  if(!bar) return;
+  bar.textContent = msg;
+  bar.style.display = 'block';
+  bar.style.background = isError ? '#8a2a1f' : '#2a6e1f';
+  // 確保 auth-screen 可見
+  document.getElementById('auth-screen').classList.add('active');
+  document.body.classList.add('auth-active');
+}
+
 async function onAuthChanged(user, profile){
   document.body.classList.remove('guest-mode', 'pending-mode', 'auth-active');
   if(!user){
@@ -6006,7 +6019,14 @@ async function onAuthChanged(user, profile){
     document.body.classList.add('auth-active');
     return;
   }
-  // 已登入,清空本機資料(避免看到上一個帳號的)
+  // 已登入 — 若 profile 讀取失敗則回到登入畫面
+  if(!profile){
+    showAuthStatus('⚠ 帳號資料讀取失敗，請重新登入');
+    const m = document.getElementById('google-msg');
+    if(m) m.textContent = '⚠ 資料讀取失敗，請重試';
+    return;
+  }
+  // 清空本機資料(避免看到上一個帳號的)
   Firebase.clearLocal();
   // 拉取雲端資料
   await Firebase.pullUserData();
@@ -6369,8 +6389,14 @@ Object.assign(window, {
   document.body.classList.add('auth-active');
   document.getElementById('auth-screen').classList.add('active');
   const _av = document.getElementById('auth-version'); if(_av) _av.textContent = APP_VERSION;
+  showAuthStatus('⏳ 連線中...', false);
   // 初始化 Firebase(會觸發 onAuthStateChanged → onAuthChanged)
-  await Firebase.init();
+  const fireOK = await Firebase.init();
+  if(fireOK){
+    // Firebase 連線成功，清掉連線中提示
+    const bar = document.getElementById('auth-status-bar');
+    if(bar) bar.style.display = 'none';
+  }
   // 若 4 秒後仍未登入,確保登入畫面顯示
   setTimeout(()=>{
     if(!Firebase.user){
