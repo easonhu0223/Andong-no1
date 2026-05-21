@@ -3407,7 +3407,7 @@
   font-size:10px;color:rgba(0,0,0,0.3);
   font-family:monospace;pointer-events:none;
   background:rgba(255,255,255,0.6);padding:2px 5px;border-radius:3px;
-">v2.1.7</div>
+">v2.1.8</div>
 
 <!-- ============ 登入畫面(未登入時顯示) ============ -->
 <div class="auth-screen" id="auth-screen">
@@ -3594,7 +3594,7 @@
   <div class="title-wrap">
     <div class="title">安東道場 宏化分壇</div>
     <div class="subtitle">道 務 自 我 紀 錄 管 理</div>
-    <div class="version-tag" id="version-tag">v2.1.7</div>
+    <div class="version-tag" id="version-tag">v2.1.8</div>
   </div>
 </header>
 
@@ -3606,25 +3606,33 @@
       <div class="meta-field">
         <label>分　區</label>
         <div class="field-wrap">
-          <select id="region-select" class="ornate-input">
-            <option value="化真區">化真區</option>
-            <option value="化善區">化善區</option>
-            <option value="化美區">化美區</option>
-            <option value="化定區">化定區</option>
-            <option value="化志區">化志區</option>
-            <option value="化慧區">化慧區</option>
-            <option value="化孝區">化孝區</option>
-            <option value="化仁區">化仁區</option>
+          <div id="region-display" class="ornate-input" style="
+            padding:8px 14px;background:rgba(255,252,245,0.6);
+            border:1px solid rgba(176,132,86,0.3);border-radius:2px;
+            color:var(--ink);font-family:'Noto Serif TC',serif;
+            min-height:38px;display:flex;align-items:center;
+          ">—</div>
+          <!-- 隱藏舊欄位以維持相容 -->
+          <select id="region-select" style="display:none;">
+            <option value="化真區">化真區</option><option value="化善區">化善區</option>
+            <option value="化美區">化美區</option><option value="化定區">化定區</option>
+            <option value="化志區">化志區</option><option value="化慧區">化慧區</option>
+            <option value="化孝區">化孝區</option><option value="化仁區">化仁區</option>
             <option value="化力區">化力區</option>
-            <option value="__custom__">自行輸入…</option>
           </select>
-          <input type="text" id="region-custom" class="ornate-input" placeholder="輸入分區名稱" style="display:none; margin-top:4px;">
+          <input type="text" id="region-custom" style="display:none;">
         </div>
       </div>
       <div class="meta-field">
         <label>姓　名</label>
         <div class="field-wrap">
-          <input type="text" id="user-name" class="ornate-input" placeholder="請輸入您的道名">
+          <div id="user-name-display" class="ornate-input" style="
+            padding:8px 14px;background:rgba(255,252,245,0.6);
+            border:1px solid rgba(176,132,86,0.3);border-radius:2px;
+            color:var(--ink);font-family:'Noto Serif TC',serif;
+            min-height:38px;display:flex;align-items:center;
+          ">—</div>
+          <input type="text" id="user-name" style="display:none;">
         </div>
       </div>
     </div>
@@ -4174,15 +4182,15 @@
 
 <div class="toast" id="toast"></div>
 </div><!-- /#app-wrap -->
-<div class="version-corner" id="version-corner">v2.1.7 · 2026-05-21</div>
+<div class="version-corner" id="version-corner">v2.1.8 · 2026-05-21</div>
 
 <script type="module">
 /* =========================================================
    APP VERSION  ─ 每次改版請更新此處 + 檔名
    ========================================================= */
-const APP_VERSION   = 'v2.1.7';
+const APP_VERSION   = 'v2.1.8';
 const APP_BUILD     = '2026-05-20';
-const APP_CODENAME  = '一字定乾坤';
+const APP_CODENAME  = '安身立命';
 document.title = `宏化分壇 渡人管理 · ${APP_VERSION}`;
 
 /* =========================================================
@@ -4822,17 +4830,19 @@ const uid=()=>'id_'+Date.now().toString(36)+Math.random().toString(36).slice(2,7
    SETTINGS (region + user name)
    ========================================================= */
 async function loadSettings(){
-  const KNOWN_REGIONS = ['化真區','化善區','化美區','化定區','化志區','化慧區','化孝區','化仁區','化力區'];
-  const s=await Store.get('settings');
-  if(s){
-    document.getElementById('region-select').value=
-      KNOWN_REGIONS.includes(s.region)?s.region:'__custom__';
-    if(!KNOWN_REGIONS.includes(s.region)){
-      document.getElementById('region-custom').style.display='block';
-      document.getElementById('region-custom').value=s.region||'';
-    }
-    document.getElementById('user-name').value=s.name||'';
-  }
+  // 優先用 profile（鎖死的登入資料），其次 settings
+  const profile = Firebase.profile || {};
+  const s = await Store.get('settings') || {};
+  const region = profile.region || s.region || '';
+  const name   = profile.displayName || s.name || '';
+  const rd = document.getElementById('region-display');
+  if(rd) rd.textContent = region || '（未設定）';
+  const nd = document.getElementById('user-name-display');
+  if(nd) nd.textContent = name || '（未設定）';
+  // 也同步隱藏欄位的 value 給其他程式使用
+  const rs = document.getElementById('region-select'); if(rs && region) rs.value = region;
+  const rc = document.getElementById('region-custom'); if(rc) rc.value = region;
+  const un = document.getElementById('user-name');     if(un) un.value = name;
 }
 async function saveSettings(){
   const KNOWN_REGIONS = ['化真區','化善區','化美區','化定區','化志區','化慧區','化孝區','化仁區','化力區'];
@@ -4840,12 +4850,7 @@ async function saveSettings(){
   if(region==='__custom__') region=document.getElementById('region-custom').value||'自訂分區';
   await Store.save('settings',{region, name:document.getElementById('user-name').value});
 }
-document.getElementById('region-select').addEventListener('change',e=>{
-  document.getElementById('region-custom').style.display=e.target.value==='__custom__'?'block':'none';
-  saveSettings();
-});
-document.getElementById('region-custom').addEventListener('input',saveSettings);
-document.getElementById('user-name').addEventListener('input',saveSettings);
+// 主頁分區/姓名已鎖死於 profile，無需 listener（移除以避免覆蓋）
 
 /* 關係下拉切換自行輸入 */
 document.getElementById('m-relation').addEventListener('change', e=>{
@@ -5152,13 +5157,14 @@ async function renderList(type){
     }else{
       dateBlock=`<div class="item-date" style="font-size:11px;">${(it.updatedAt||'').slice(0,10)}</div>`;
     }
+    const actionText = (isFAQ || isPrayer) ? '閱覽 ›' : '編輯 ›';
     row.innerHTML=`
       ${dateBlock}
       <div>
         <div class="item-title">${escapeHtml(it.title||'(未命名)')}</div>
         <div class="item-body">${escapeHtml(it.content||'')}</div>
       </div>
-      <div class="item-action">編輯 ›</div>`;
+      <div class="item-action">${actionText}</div>`;
     if(isFAQ){
       row.onclick=()=>openFaqViewer();
     }else if(isPrayer){
@@ -6377,6 +6383,7 @@ async function adminRefresh(){
             <button class="btn outline" onclick="adminReject('${u.uid}')">拒絕</button>`;
         }else if(u.status === 'active'){
           actionsHtml = `
+            <button class="btn outline" onclick="adminEditUser('${u.uid}')">編輯</button>
             <button class="btn outline" onclick="adminViewUser('${u.uid}')">檢視</button>
             <button class="btn outline" onclick="adminExportOne('${u.uid}')">備份</button>
             <button class="btn outline" onclick="adminReject('${u.uid}')">停用</button>
@@ -6419,6 +6426,50 @@ async function adminReject(uid){
   toast('已停用');
   adminRefresh();
 }
+async function adminEditUser(uid){
+  const users = await Firebase.listAllUsers();
+  const user = users.find(u=>u.uid===uid);
+  if(!user){ toast('找不到使用者'); return; }
+  const REGIONS = ['化真區','化善區','化美區','化定區','化志區','化慧區','化孝區','化仁區','化力區'];
+  const VOCS = ['點傳師','壇主','辦事人員','清口','已求道'];
+
+  const newName = prompt('編輯姓名（2–10 中文字）：', user.displayName || '');
+  if(newName === null) return;
+  const nameRE = /^[一-龥]{2,10}$/;
+  if(!nameRE.test(newName.trim())){ alert('姓名需為 2–10 個中文字'); return; }
+
+  const regionOpts = REGIONS.map((r,i)=>`${i+1}. ${r}`).join('\n');
+  const regionPick = prompt('編輯分區（輸入編號 1–9，或直接輸入區名）：\n\n' + regionOpts + '\n\n目前：' + (user.region||'未設定'), '');
+  if(regionPick === null) return;
+  let newRegion = regionPick.trim();
+  const idx = parseInt(newRegion);
+  if(idx >= 1 && idx <= 9) newRegion = REGIONS[idx-1];
+  if(!newRegion){ alert('分區不可為空'); return; }
+
+  const vocOpts = VOCS.map((v,i)=>`${i+1}. ${v}`).join('\n');
+  const vocPick = prompt('編輯天職（輸入編號 1–5，或直接輸入名稱，最多 5 字）：\n\n' + vocOpts + '\n\n目前：' + (user.vocation||'未設定'), '');
+  if(vocPick === null) return;
+  let newVoc = vocPick.trim();
+  const vIdx = parseInt(newVoc);
+  if(vIdx >= 1 && vIdx <= 5) newVoc = VOCS[vIdx-1];
+  if(newVoc.length > 5){ alert('天職最多 5 字'); return; }
+
+  if(!confirm('確認儲存以下變更？\n\n姓名：' + newName.trim() + '\n分區：' + newRegion + '\n天職：' + newVoc)) return;
+
+  try{
+    const ref = Firebase.fs.doc(Firebase.db, 'users', uid);
+    await Firebase.fs.setDoc(ref, {
+      displayName: newName.trim(),
+      region: newRegion,
+      vocation: newVoc
+    }, {merge:true});
+    toast('儲存成功');
+    adminRefresh();
+  }catch(e){
+    alert('儲存失敗：' + (e.message || e.code));
+  }
+}
+
 async function adminViewUser(uid){
   toast('讀取中…');
   const data = await Firebase.getUserData(uid);
@@ -6546,7 +6597,7 @@ Object.assign(window, {
   // Backup
   exportExcel, exportAllExcel, importExcel, importAllExcel, clearAllData,
   // Admin
-  adminRefresh, adminApprove, adminReject, adminViewUser, adminExportOne, adminExportAll, adminDeleteUser,
+  adminRefresh, adminApprove, adminReject, adminEditUser, adminViewUser, adminExportOne, adminExportAll, adminDeleteUser,
 });
 
 (async function init(){
