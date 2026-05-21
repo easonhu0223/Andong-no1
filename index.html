@@ -4540,6 +4540,7 @@ const Firebase = {
       this.auth = authMod.getAuth(this.app);
       this.fs = fsMod;
       this.fbAuth = authMod;
+      this.GoogleAuthProvider = authMod.GoogleAuthProvider;   // ★ 正確取出 class
       this.ready = true;
       this.status = 'online';
 
@@ -4550,11 +4551,16 @@ const Firebase = {
           // redirect 成功，從 sessionStorage 取回 preAuthData
           const stored = sessionStorage.getItem('preAuthData');
           if(stored){
-            try{ preAuthData = JSON.parse(stored); }catch(e){}
+            try{ preAuthData = JSON.parse(stored); }catch(e){ console.warn('parse preAuthData fail',e); }
             sessionStorage.removeItem('preAuthData');
           }
+          console.log('[Firebase] redirect login OK, preAuthData=', preAuthData);
         }
-      }catch(e){ console.warn('[Firebase] getRedirectResult:', e.code); }
+      }catch(e){
+        // getRedirectResult 本身拋錯時，給使用者看到登入失敗
+        console.warn('[Firebase] getRedirectResult error:', e.code, e.message);
+        sessionStorage.removeItem('preAuthData');
+      }
 
       authMod.onAuthStateChanged(this.auth, async (u)=>{
         this.user = u;
@@ -5880,41 +5886,23 @@ async function validateAndGoogleLogin(btn){
   if(!Firebase.ready){ msgEl.textContent = '系統初始化中，請稍後再試'; return; }
 
   preAuthData = { displayName: name, vocation, region };
-  btn.disabled = true;
-  btn.textContent = '⏳ 連線中...';
+  // 存進 sessionStorage 以防 redirect 後頁面重整
+  sessionStorage.setItem('preAuthData', JSON.stringify(preAuthData));
 
-  const provider = new Firebase.fbAuth.GoogleAuthProvider();
+  btn.disabled = true;
+  btn.textContent = '⏳ 前往 Google 登入頁面...';
 
   try{
-    // 先試 popup（桌機）
-    await Firebase.fbAuth.signInWithPopup(Firebase.auth, provider);
-  }catch(popupErr){
-    const code = popupErr.code || '';
-    if(code === 'auth/popup-blocked' || code === 'auth/operation-not-allowed'){
-      // popup 被擋 → 改用 redirect（手機/平板友好）
-      sessionStorage.setItem('preAuthData', JSON.stringify(preAuthData));
-      btn.textContent = '跳轉到 Google 頁面...';
-      try{
-        await Firebase.fbAuth.signInWithRedirect(Firebase.auth, provider);
-        // 頁面會離開，不會執行到這行
-      }catch(redErr){
-        preAuthData = null;
-        sessionStorage.removeItem('preAuthData');
-        msgEl.textContent = 'Google 登入失敗，請稍後再試';
-        btn.disabled = false;
-        btn.textContent = '使用 Google 帳號登入';
-      }
-    }else if(code === 'auth/popup-closed-by-user' || code === 'auth/cancelled-popup-request'){
-      preAuthData = null;
-      msgEl.textContent = '登入已取消，請再點一次';
-      btn.disabled = false;
-      btn.textContent = '使用 Google 帳號登入';
-    }else{
-      preAuthData = null;
-      msgEl.textContent = 'Google 登入失敗：' + (popupErr.message || code);
-      btn.disabled = false;
-      btn.textContent = '使用 Google 帳號登入';
-    }
+    // 直接用 redirect（手機/桌機通用，不會被瀏覽器擋）
+    const provider = new Firebase.GoogleAuthProvider();
+    await Firebase.fbAuth.signInWithRedirect(Firebase.auth, provider);
+    // 頁面跳走，以下不執行
+  }catch(e){
+    preAuthData = null;
+    sessionStorage.removeItem('preAuthData');
+    msgEl.textContent = '登入失敗：' + (e.message || e.code || '');
+    btn.disabled = false;
+    btn.textContent = '使用 Google 帳號登入';
   }
 }
 
@@ -5990,8 +5978,8 @@ async function submitAuth(){
 
 async function signInWithGoogle(){
   if(!Firebase.ready) throw new Error('系統初始化中，請稍後再試');
-  const provider = new Firebase.fbAuth.GoogleAuthProvider();
-  await Firebase.fbAuth.signInWithPopup(Firebase.auth, provider);
+  const provider = new Firebase.GoogleAuthProvider();
+  await Firebase.fbAuth.signInWithRedirect(Firebase.auth, provider);
 }
 
 
