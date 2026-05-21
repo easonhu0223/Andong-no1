@@ -3407,10 +3407,10 @@
   font-size:10px;color:rgba(0,0,0,0.3);
   font-family:monospace;pointer-events:none;
   background:rgba(255,255,255,0.6);padding:2px 5px;border-radius:3px;
-">v2.1.1</div>
+">v2.1.2</div>
 
 <!-- ============ 登入畫面(未登入時顯示) ============ -->
-<div class="auth-screen active" id="auth-screen">
+<div class="auth-screen" id="auth-screen">
   <div class="auth-card">
     <!-- 狀態列（除錯用） -->
     <div id="auth-status-bar" style="background:#8a2a1f;color:#fff;font-size:12px;text-align:center;padding:5px 8px;border-radius:2px;margin-bottom:8px;display:none;"></div>
@@ -3594,7 +3594,7 @@
   <div class="title-wrap">
     <div class="title">安東道場 宏化分壇</div>
     <div class="subtitle">道 務 自 我 紀 錄 管 理</div>
-    <div class="version-tag" id="version-tag">v2.1.1</div>
+    <div class="version-tag" id="version-tag">v2.1.2</div>
   </div>
 </header>
 
@@ -4174,15 +4174,15 @@
 
 <div class="toast" id="toast"></div>
 </div><!-- /#app-wrap -->
-<div class="version-corner" id="version-corner">v2.1.1 · 2026-05-21</div>
+<div class="version-corner" id="version-corner">v2.1.2 · 2026-05-21</div>
 
 <script type="module">
 /* =========================================================
    APP VERSION  ─ 每次改版請更新此處 + 檔名
    ========================================================= */
-const APP_VERSION   = 'v2.1.1';
+const APP_VERSION   = 'v2.1.2';
 const APP_BUILD     = '2026-05-20';
-const APP_CODENAME  = '通行接引';
+const APP_CODENAME  = '步步顯化';
 document.title = `宏化分壇 渡人管理 · ${APP_VERSION}`;
 
 /* =========================================================
@@ -6096,6 +6096,20 @@ function showUserBadge(name, isAdmin, isGuest, status, vocation, region){
 }
 
 /* 當登入狀態變動時被呼叫 */
+function showDebugMsg(msg){
+  // 在畫面顯示除錯訊息（手機可見）
+  let dbg = document.getElementById('debug-msg');
+  if(!dbg){
+    dbg = document.createElement('div');
+    dbg.id = 'debug-msg';
+    dbg.style.cssText = 'position:fixed;top:0;left:0;right:0;z-index:99999;background:#2a6e1f;color:#fff;font-size:13px;padding:6px 12px;text-align:center;font-family:monospace;';
+    document.body.appendChild(dbg);
+  }
+  dbg.textContent = msg;
+  // 5 秒後消失
+  setTimeout(()=>{ if(dbg) dbg.remove(); }, 8000);
+}
+
 function showAuthStatus(msg, isError=true){
   const bar = document.getElementById('auth-status-bar');
   if(!bar) return;
@@ -6152,7 +6166,9 @@ async function onAuthChanged(user, profile){
 
   // ★ Step 1：資料不完整 → 先強制補填（不論 pending 或 active 都要填）
   const profileIncomplete = !isAdmin && (!profile.vocation || !profile.region || !profile.displayName);
+  console.log('[onAuthChanged] profile=', profile, 'isAdmin=', isAdmin, 'incomplete=', profileIncomplete);
   if(profileIncomplete){
+    showDebugMsg('Step1: 補填資料中…');
     const KNOWN_VOC = ['點傳師','壇主','辦事人員','清口','已求道'];
     document.getElementById('pc-name').value = profile.displayName || user.displayName || '';
     document.getElementById('pc-vocation').value =
@@ -6169,6 +6185,7 @@ async function onAuthChanged(user, profile){
 
   // ★ Step 2：資料完整後，再判斷 pending / rejected
   if(profile.status === 'pending' || profile.status === 'rejected'){
+    showDebugMsg('Step2: 待審核');
     document.getElementById('pending-email').textContent = user.email;
     document.getElementById('pending-admin').textContent = ADMIN_EMAIL;
     document.getElementById('pending-screen').classList.add('active');
@@ -6177,6 +6194,7 @@ async function onAuthChanged(user, profile){
   }
 
   // ★ Step 3：active → 進入主畫面
+  showDebugMsg('Step3: 進入主畫面');
   document.body.classList.add('app-ready');
   showUserBadge(profile.displayName || user.email, isAdmin, false, profile.status, profile.vocation, profile.region);
   document.querySelectorAll('.tab.admin-only').forEach(t=>{
