@@ -3407,7 +3407,7 @@
   font-size:10px;color:rgba(0,0,0,0.3);
   font-family:monospace;pointer-events:none;
   background:rgba(255,255,255,0.6);padding:2px 5px;border-radius:3px;
-">v2.1.3</div>
+">v2.1.4</div>
 
 <!-- ============ 登入畫面(未登入時顯示) ============ -->
 <div class="auth-screen" id="auth-screen">
@@ -3594,7 +3594,7 @@
   <div class="title-wrap">
     <div class="title">安東道場 宏化分壇</div>
     <div class="subtitle">道 務 自 我 紀 錄 管 理</div>
-    <div class="version-tag" id="version-tag">v2.1.3</div>
+    <div class="version-tag" id="version-tag">v2.1.4</div>
   </div>
 </header>
 
@@ -4174,15 +4174,15 @@
 
 <div class="toast" id="toast"></div>
 </div><!-- /#app-wrap -->
-<div class="version-corner" id="version-corner">v2.1.3 · 2026-05-21</div>
+<div class="version-corner" id="version-corner">v2.1.4 · 2026-05-21</div>
 
 <script type="module">
 /* =========================================================
    APP VERSION  ─ 每次改版請更新此處 + 檔名
    ========================================================= */
-const APP_VERSION   = 'v2.1.3';
+const APP_VERSION   = 'v2.1.4';
 const APP_BUILD     = '2026-05-20';
-const APP_CODENAME  = '尋幽探微';
+const APP_CODENAME  = '透徹見底';
 document.title = `宏化分壇 渡人管理 · ${APP_VERSION}`;
 
 /* =========================================================
@@ -6152,22 +6152,31 @@ async function onAuthChanged(user, profile){
     return;
   }
   // 清空本機資料(避免看到上一個帳號的)
-  Firebase.clearLocal();
-  // 拉取雲端資料
-  await Firebase.pullUserData();
-  await loadSettings();
+  try{
+    showDebugMsg('[Flow] clearLocal');
+    Firebase.clearLocal();
+  }catch(e){ showDebugMsg('[ERR clearLocal] '+e.message); }
+
+  try{
+    showDebugMsg('[Flow] pullUserData...');
+    await Firebase.pullUserData();
+    showDebugMsg('[Flow] pullUserData OK');
+  }catch(e){ showDebugMsg('[ERR pullUserData] '+e.message); }
+
+  try{
+    showDebugMsg('[Flow] loadSettings...');
+    await loadSettings();
+    showDebugMsg('[Flow] loadSettings OK');
+  }catch(e){ showDebugMsg('[ERR loadSettings] '+e.message); }
 
   // ★★ 如果有第一步預填的資料，立刻合併寫入 Firestore + Settings
   if(preAuthData){
     try{
+      showDebugMsg('[Flow] write preAuthData');
       await Firebase.updateProfile(preAuthData);
-      // 同步到 Settings（讓設定頁帶入名字與分區）
-      await Store.save('settings', {
-        name: preAuthData.displayName,
-        region: preAuthData.region
-      });
-      await loadSettings();   // 重新載入，讓設定頁立即反映
-    }catch(e){ console.warn('preAuthData 寫入失敗', e); }
+      await Store.save('settings', {name: preAuthData.displayName, region: preAuthData.region});
+      await loadSettings();
+    }catch(e){ showDebugMsg('[ERR preAuth] '+e.message); }
     preAuthData = null;
   }
 
@@ -6177,10 +6186,11 @@ async function onAuthChanged(user, profile){
   document.getElementById('profile-complete-screen').classList.remove('active');
 
   const isAdmin = Firebase.isAdmin();
+  showDebugMsg('[Flow] isAdmin='+isAdmin+', email='+Firebase.user?.email);
 
   // ★ Step 1：資料不完整 → 先強制補填（不論 pending 或 active 都要填）
   const profileIncomplete = !isAdmin && (!profile.vocation || !profile.region || !profile.displayName);
-  console.log('[onAuthChanged] profile=', profile, 'isAdmin=', isAdmin, 'incomplete=', profileIncomplete);
+  showDebugMsg('[Flow] incomplete='+profileIncomplete+' (vocation='+profile.vocation+', region='+profile.region+')');
   if(profileIncomplete){
     showDebugMsg('Step1: 補填資料中…');
     const KNOWN_VOC = ['點傳師','壇主','辦事人員','清口','已求道'];
