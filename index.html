@@ -912,9 +912,6 @@
     .auth-seal { width: 100px; height: 100px; }
   }
 
-  html {
-    font-size: calc(16px * var(--app-scale, 1.2));
-  }
   html, body {
     font-family: 'Noto Serif TC', 'Cormorant Garamond', serif;
     color: var(--ink);
@@ -931,7 +928,7 @@
       url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='220' height='220'><filter id='n'><feTurbulence baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.16  0 0 0 0 0.11  0 0 0 0 0.06  0 0 0 0.05 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
     background-attachment: fixed;
   
-    font-size: calc(15px * var(--app-scale, 1.2));
+    font-size: 16.5px;  /* v2.3.4: 固定放大 10%，原 15px */
   }
 
   /* ---------- HEADER ---------- */
@@ -3630,7 +3627,7 @@
   font-size:10px;color:rgba(0,0,0,0.3);
   font-family:monospace;pointer-events:none;
   background:rgba(255,255,255,0.6);padding:2px 5px;border-radius:3px;
-">v2.3.3</div>
+">v2.3.4</div>
 
 <!-- ============ 登入畫面(未登入時顯示) ============ -->
 <div class="auth-screen" id="auth-screen">
@@ -3818,7 +3815,7 @@
   <div class="title-wrap">
     <div class="title">安東道場 宏化分壇</div>
     <div class="subtitle">道 務 自 我 紀 錄 管 理</div>
-    <div class="version-tag" id="version-tag">v2.3.3</div>
+    <div class="version-tag" id="version-tag">v2.3.4</div>
   </div>
 </header>
 
@@ -4068,19 +4065,7 @@
     </div>
   </div>
 
-  <div class="settings-section">
-    <div class="settings-title">🔍 顯示文字大小</div>
-    <div class="settings-desc">依您手機螢幕的閱讀舒適度選擇，整體版面會自動適應。</div>
-    <div class="settings-actions" id="scale-options" style="flex-wrap:wrap;gap:6px;">
-      <button class="btn outline scale-btn" data-scale="1.0"  onclick="setAppScale(1.0)">預設</button>
-      <button class="btn outline scale-btn" data-scale="1.2"  onclick="setAppScale(1.2)">放大 20%</button>
-      <button class="btn outline scale-btn" data-scale="1.3"  onclick="setAppScale(1.3)">放大 30%</button>
-      <button class="btn outline scale-btn" data-scale="1.4"  onclick="setAppScale(1.4)">放大 40%</button>
-      <button class="btn outline scale-btn" data-scale="1.5"  onclick="setAppScale(1.5)">放大 50%</button>
-    </div>
-  </div>
-
-  <div class="settings-section">
+<div class="settings-section">
     <div class="settings-title">📤 資料備份匯出</div>
     <div class="settings-desc">將所有資料(道親、行事曆、學習資料、功課紀錄、個人設定)一次匯出為單一 Excel 檔,建議每週備份一次。</div>
     <div class="settings-actions">
@@ -4458,15 +4443,15 @@
 
 <div class="toast" id="toast"></div>
 </div><!-- /#app-wrap -->
-<div class="version-corner" id="version-corner">v2.3.3 · 2026-05-23</div>
+<div class="version-corner" id="version-corner">v2.3.4 · 2026-05-23</div>
 
 <script type="module">
 /* =========================================================
    APP VERSION  ─ 每次改版請更新此處 + 檔名
    ========================================================= */
-const APP_VERSION   = 'v2.3.3';
+const APP_VERSION   = 'v2.3.4';
 const APP_BUILD     = '2026-05-23';
-const APP_CODENAME  = '左右逢源';
+const APP_CODENAME  = '觸控如意';
 document.title = `宏化分壇 渡人管理 · ${APP_VERSION}`;
 
 /* =========================================================
@@ -6326,26 +6311,22 @@ async function notifyDiscordNewUser(profile){
 
 // ── 顯示大小縮放 (v2.2.1) ──
 function setAppScale(scale){
-  const s = parseFloat(scale) || 1.0;
-  // 純 CSS 套用（避免 zoom 造成手機觸控座標錯位）
-  document.documentElement.style.setProperty('--app-scale', String(s));
-  document.documentElement.style.fontSize = (16 * s) + 'px';
-  // 移除任何舊的 zoom 設定（修復觸控異常）
+  // v2.3.4: 字體縮放功能已停用，固定 +10%
+  // 同時清除任何殘留的 zoom/fontSize 設定，恢復正常觸控
   document.body.style.zoom = '';
-  try{ localStorage.setItem('andong_dojo::__app_scale', String(s)); }catch(e){}
-  document.querySelectorAll('.scale-btn').forEach(b=>{
-    const bs = parseFloat(b.dataset.scale);
-    b.classList.toggle('active', Math.abs(bs - s) < 0.01);
-  });
-  if(typeof toast === 'function') toast('已調整為 ' + (s===1 ? '預設大小' : ('放大 ' + Math.round((s-1)*100) + '%')));
+  document.documentElement.style.fontSize = '';
+  document.documentElement.style.removeProperty('--app-scale');
+  try{ localStorage.removeItem('andong_dojo::__app_scale'); }catch(e){}
 }
 
 function loadAppScale(){
+  // v2.3.4: 清除舊版殘留的縮放設定（修復手機觸控異常）
   try{
-    const saved = localStorage.getItem('andong_dojo::__app_scale');
-    const s = saved ? parseFloat(saved) : 1.0;
-    setAppScale(s);
-  }catch(e){ setAppScale(1.0); }
+    document.body.style.zoom = '';
+    document.documentElement.style.fontSize = '';
+    document.documentElement.style.removeProperty('--app-scale');
+    localStorage.removeItem('andong_dojo::__app_scale');
+  }catch(e){}
 }
 
 // 頁面載入完成後套用儲存的縮放
