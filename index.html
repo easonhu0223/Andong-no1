@@ -3530,7 +3530,7 @@
   font-size:10px;color:rgba(0,0,0,0.3);
   font-family:monospace;pointer-events:none;
   background:rgba(255,255,255,0.6);padding:2px 5px;border-radius:3px;
-">v2.2.1</div>
+">v2.3.0</div>
 
 <!-- ============ 登入畫面(未登入時顯示) ============ -->
 <div class="auth-screen" id="auth-screen">
@@ -3718,7 +3718,7 @@
   <div class="title-wrap">
     <div class="title">安東道場 宏化分壇</div>
     <div class="subtitle">道 務 自 我 紀 錄 管 理</div>
-    <div class="version-tag" id="version-tag">v2.2.1</div>
+    <div class="version-tag" id="version-tag">v2.3.0</div>
   </div>
 </header>
 
@@ -4318,15 +4318,15 @@
 
 <div class="toast" id="toast"></div>
 </div><!-- /#app-wrap -->
-<div class="version-corner" id="version-corner">v2.2.1 · 2026-05-22</div>
+<div class="version-corner" id="version-corner">v2.3.0 · 2026-05-23</div>
 
 <script type="module">
 /* =========================================================
    APP VERSION  ─ 每次改版請更新此處 + 檔名
    ========================================================= */
-const APP_VERSION   = 'v2.2.1';
-const APP_BUILD     = '2026-05-22';
-const APP_CODENAME  = '視野開明';
+const APP_VERSION   = 'v2.3.0';
+const APP_BUILD     = '2026-05-23';
+const APP_CODENAME  = '飛鴻傳訊';
 document.title = `宏化分壇 渡人管理 · ${APP_VERSION}`;
 
 /* =========================================================
@@ -4340,7 +4340,9 @@ const FIREBASE_CONFIG = {
   messagingSenderId: "448407875451",
   appId: "1:448407875451:web:6640bcb422237e570097de"
 };
-const ADMIN_EMAIL = "eraeason@gmail.com";  // 最高管理者 Email
+const ADMIN_EMAIL = "eraeason@gmail.com";
+// v2.3.0：Discord Webhook 通知（新使用者註冊時自動推播給壇主）
+const DISCORD_WEBHOOK_URL = "https://discord.com/api/webhooks/1507423449470210208/5WM3_dfDq9pTQTnUSpAlsHbnKkLtFfnWT-epsTfoTpeMhqVxo_-EFZ2gDsPEE7UaTBeV";  // 最高管理者 Email
 
 /* =========================================================
    DEFAULT CALENDAR EVENTS  (115年安東道場宏宗總壇行事曆 - 內建預設)
@@ -4780,6 +4782,10 @@ const Firebase = {
         };
         await this.fs.setDoc(ref, this.profile);
         dbg('[Profile] new profile created');
+        // v2.3.0：通知壇主有新使用者（非管理員自己）
+        if(!this.isAdmin()){
+          notifyDiscordNewUser(this.profile);
+        }
       }
       return this.profile;
     }catch(e){
@@ -6073,6 +6079,41 @@ function showEmailLogin(){
 function showMainLogin(){
   document.getElementById('auth-email-form').style.display = 'none';
   document.getElementById('auth-main-form').style.display = 'block';
+}
+
+// ── Discord 通知（新使用者註冊推播給壇主） v2.3.0 ──
+async function notifyDiscordNewUser(profile){
+  if(!DISCORD_WEBHOOK_URL) return;
+  try{
+    const now = new Date();
+    const timeStr = now.toLocaleString('zh-TW', {
+      timeZone: 'Asia/Taipei',
+      year:'numeric', month:'2-digit', day:'2-digit',
+      hour:'2-digit', minute:'2-digit'
+    });
+    const payload = {
+      username: '安東道場 · 註冊通知',
+      avatar_url: 'https://i.imgur.com/4M34hi2.png',
+      embeds: [{
+        title: '🙏 有新道親申請加入',
+        color: 9059360,  // 朱砂金色
+        fields: [
+          { name: '📛 姓名', value: profile.displayName || '(未填)', inline: true },
+          { name: '⚡ 天職', value: profile.vocation || '(未填)', inline: true },
+          { name: '📍 分區', value: profile.region || '(未填)', inline: true },
+          { name: '📧 電子郵件', value: profile.email || '(未知)', inline: false },
+          { name: '⏰ 申請時間', value: timeStr, inline: false }
+        ],
+        footer: { text: '請壇主前往「使用者管理」進行審核 · 安東道場 宏化分壇' },
+        timestamp: now.toISOString()
+      }]
+    };
+    await fetch(DISCORD_WEBHOOK_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+  }catch(e){ console.warn('Discord 通知失敗', e); }
 }
 
 // ── 顯示大小縮放 (v2.2.1) ──
