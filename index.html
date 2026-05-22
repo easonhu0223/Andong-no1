@@ -2734,6 +2734,62 @@
     color: #fff8f0;
     border-color: var(--vermillion);
   }
+  /* v2.3.2: 雙欄佈告 */
+  .board-wrap {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+  @media (min-width: 820px){
+    .board-wrap { flex-direction: row; }
+    .board-col { flex: 1; }
+  }
+  .board-col {
+    background: linear-gradient(180deg, rgba(252,244,221,0.5) 0%, rgba(245,230,198,0.4) 100%);
+    border: 1px solid rgba(176,132,86,0.35);
+    border-radius: 4px;
+    padding: 10px 12px 14px;
+  }
+  .board-col-dojo   { border-top: 3px solid var(--vermillion); }
+  .board-col-region { border-top: 3px solid var(--gold); }
+  .board-col-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+    padding-bottom: 6px;
+    border-bottom: 1px dashed rgba(176,132,86,0.35);
+  }
+  .board-col-title {
+    font-family: 'ZCOOL XiaoWei', serif;
+    color: var(--vermillion);
+    font-size: 15px;
+    letter-spacing: 1.5px;
+  }
+  .board-col-tag {
+    font-family: 'ZCOOL XiaoWei', serif;
+    font-size: 10px;
+    color: var(--ink-soft);
+    background: rgba(176,132,86,0.15);
+    padding: 2px 6px;
+    border-radius: 8px;
+    letter-spacing: 1px;
+  }
+  .board-col-actions { margin-bottom: 8px; }
+  .board-col-actions .btn.small {
+    padding: 4px 12px;
+    font-size: 12px;
+  }
+  .board-col-list .item-row { margin-bottom: 6px; }
+  .board-col-empty {
+    text-align: center;
+    padding: 22px 8px;
+    color: var(--ink-soft);
+    font-family: 'ZCOOL XiaoWei', serif;
+    font-size: 12px;
+    opacity: 0.7;
+  }
+
   .settings-section.danger {
     border-left-color: var(--vermillion);
     background: rgba(255, 240, 235, 0.55);
@@ -3571,7 +3627,7 @@
   font-size:10px;color:rgba(0,0,0,0.3);
   font-family:monospace;pointer-events:none;
   background:rgba(255,255,255,0.6);padding:2px 5px;border-radius:3px;
-">v2.3.1</div>
+">v2.3.2</div>
 
 <!-- ============ 登入畫面(未登入時顯示) ============ -->
 <div class="auth-screen" id="auth-screen">
@@ -3759,7 +3815,7 @@
   <div class="title-wrap">
     <div class="title">安東道場 宏化分壇</div>
     <div class="subtitle">道 務 自 我 紀 錄 管 理</div>
-    <div class="version-tag" id="version-tag">v2.3.1</div>
+    <div class="version-tag" id="version-tag">v2.3.2</div>
   </div>
 </header>
 
@@ -4075,19 +4131,40 @@
       <div class="panel-title">壇辦佈告欄</div>
       <div class="panel-vow">
         <span class="panel-vow-dot">❖</span>
-        <span class="panel-vow-text">全 壇 共 享 · 訊 息 互 通</span>
+        <span class="panel-vow-text">分 壇 共 享 · 訊 息 互 通</span>
         <span class="panel-vow-dot">❖</span>
       </div>
-      <div class="panel-sub">公告 · 通知 · 法會訊息 · 全壇可見</div>
-    </div>
-    <div class="actions" id="board-actions">
-      <button class="btn" onclick="openBoardModal()">＋ 新增公告</button>
+      <div class="panel-sub">左：分壇公告（全員可見）· 右：分區公告（同區成員交流）</div>
     </div>
   </div>
-  <div class="item-list" id="board-list"></div>
-  <div class="empty" id="board-empty" style="display:none;">
-    <div class="lotus">📜</div>
-    <p>佈告欄尚虛 · 請靜候法音</p>
+
+  <!-- v2.3.2: 雙欄佈告 -->
+  <div class="board-wrap">
+    <!-- 左：分壇佈告（僅壇主可新增） -->
+    <div class="board-col board-col-dojo">
+      <div class="board-col-header">
+        <span class="board-col-title">🏛 分壇佈告</span>
+        <span class="board-col-tag">全員可見</span>
+      </div>
+      <div class="board-col-actions" id="board-dojo-actions">
+        <button class="btn small" onclick="openBoardModal(null,'dojo')">＋ 新增</button>
+      </div>
+      <div class="board-col-list" id="board-dojo-list"></div>
+      <div class="board-col-empty" id="board-dojo-empty" style="display:none;">尚無公告</div>
+    </div>
+
+    <!-- 右：分區佈告（同區成員可新增） -->
+    <div class="board-col board-col-region">
+      <div class="board-col-header">
+        <span class="board-col-title">📍 <span id="board-region-name">區</span>佈告</span>
+        <span class="board-col-tag">同區交流</span>
+      </div>
+      <div class="board-col-actions" id="board-region-actions">
+        <button class="btn small" onclick="openBoardModal(null,'region')">＋ 新增</button>
+      </div>
+      <div class="board-col-list" id="board-region-list"></div>
+      <div class="board-col-empty" id="board-region-empty" style="display:none;">本區尚無公告</div>
+    </div>
   </div>
 </section>
 
@@ -4378,15 +4455,15 @@
 
 <div class="toast" id="toast"></div>
 </div><!-- /#app-wrap -->
-<div class="version-corner" id="version-corner">v2.3.1 · 2026-05-23</div>
+<div class="version-corner" id="version-corner">v2.3.2 · 2026-05-23</div>
 
 <script type="module">
 /* =========================================================
    APP VERSION  ─ 每次改版請更新此處 + 檔名
    ========================================================= */
-const APP_VERSION   = 'v2.3.1';
+const APP_VERSION   = 'v2.3.2';
 const APP_BUILD     = '2026-05-23';
-const APP_CODENAME  = '範例引航';
+const APP_CODENAME  = '法雨普潤';
 document.title = `宏化分壇 渡人管理 · ${APP_VERSION}`;
 
 /* =========================================================
@@ -5480,10 +5557,15 @@ async function saveGeneric(){
   it.content=document.getElementById('g-f2').value;
   if(labels[type] && labels[type].hasDate) it.date=document.getElementById('g-date').value;
   it.updatedAt=now;
-  // 佈告欄:紀錄作者
+  // 佈告欄:紀錄作者 + scope + region
   if(type === 'board' && Firebase.user){
     it.authorUid = Firebase.user.uid;
     it.authorName = (Firebase.profile && Firebase.profile.displayName) || Firebase.user.email;
+    const scope = document.getElementById('generic-modal').dataset.scope || 'dojo';
+    it.scope = scope;
+    if(scope === 'region'){
+      it.region = (Firebase.profile && Firebase.profile.region) || '';
+    }
   }
   await Store.save(type+':'+id, it);
   closeGenericModal();
@@ -6241,21 +6323,27 @@ async function notifyDiscordNewUser(profile){
 
 // ── 顯示大小縮放 (v2.2.1) ──
 function setAppScale(scale){
-  const s = parseFloat(scale) || 1.2;
+  const s = parseFloat(scale) || 1.0;
+  // 用多種方式套用，確保最大相容性
   document.documentElement.style.setProperty('--app-scale', String(s));
+  document.body.style.zoom = String(s);
+  // 同步 html fontSize（rem 也會跟著）
+  document.documentElement.style.fontSize = (16 * s) + 'px';
   try{ localStorage.setItem('andong_dojo::__app_scale', String(s)); }catch(e){}
   // 更新按鈕 active 狀態
   document.querySelectorAll('.scale-btn').forEach(b=>{
-    b.classList.toggle('active', parseFloat(b.dataset.scale) === s);
+    const bs = parseFloat(b.dataset.scale);
+    b.classList.toggle('active', Math.abs(bs - s) < 0.01);
   });
+  if(typeof toast === 'function') toast('已調整為 ' + (s===1 ? '預設大小' : ('放大 ' + Math.round((s-1)*100) + '%')));
 }
 
 function loadAppScale(){
   try{
     const saved = localStorage.getItem('andong_dojo::__app_scale');
-    const s = saved ? parseFloat(saved) : 1.2;
+    const s = saved ? parseFloat(saved) : 1.0;
     setAppScale(s);
-  }catch(e){ setAppScale(1.2); }
+  }catch(e){ setAppScale(1.0); }
 }
 
 // 頁面載入完成後套用儲存的縮放
@@ -6603,41 +6691,80 @@ async function ensureDefaultsInstalled(){
 async function renderBoard(){
   const items = await Store.list('board:');
   items.sort((a,b)=>new Date(b.createdAt) - new Date(a.createdAt));
-  const list = document.getElementById('board-list');
-  const empty = document.getElementById('board-empty');
+
+  const isGuest  = document.body.classList.contains('guest-mode');
+  const isAdmin  = Firebase.isAdmin();
+  const myRegion = (Firebase.profile && Firebase.profile.region) || '';
+
+  // 更新區佈告標題
+  const regNameEl = document.getElementById('board-region-name');
+  if(regNameEl) regNameEl.textContent = myRegion || '所屬區';
+
+  // 分壇佈告（scope==='dojo' 或無 scope 視為舊資料）
+  const dojoItems   = items.filter(it => (it.scope || 'dojo') === 'dojo');
+  // 區佈告（scope==='region' 且區域符合）
+  const regionItems = items.filter(it => it.scope === 'region' && it.region === myRegion);
+
+  renderBoardColumn('dojo',   dojoItems,   isGuest, isAdmin, myRegion);
+  renderBoardColumn('region', regionItems, isGuest, isAdmin, myRegion);
+}
+
+function renderBoardColumn(scope, items, isGuest, isAdmin, myRegion){
+  const list  = document.getElementById('board-' + scope + '-list');
+  const empty = document.getElementById('board-' + scope + '-empty');
+  const acts  = document.getElementById('board-' + scope + '-actions');
   if(!list) return;
+
+  // 權限判斷
+  let canCreate = false;
+  if(scope === 'dojo'){
+    // 分壇：只有壇主可新增（v2.3.2）
+    canCreate = !isGuest && isAdmin;
+  }else{
+    // 分區：登入且有分區的人可新增
+    canCreate = !isGuest && !!myRegion;
+  }
+  if(acts) acts.style.display = canCreate ? '' : 'none';
+
   list.innerHTML = '';
-  if(items.length === 0){ empty.style.display='block'; }
-  else { empty.style.display = 'none'; }
-  // 訪客 / 待審核者隱藏「新增公告」按鈕
-  const actions = document.getElementById('board-actions');
-  const isGuest = document.body.classList.contains('guest-mode');
-  if(actions) actions.style.display = isGuest ? 'none' : '';
+  if(items.length === 0){ if(empty) empty.style.display = 'block'; return; }
+  if(empty) empty.style.display = 'none';
 
   items.forEach(it=>{
     const row = document.createElement('div');
     row.className = 'item-row board-card';
     const d = new Date(it.createdAt);
-    const dateStr = `${d.getMonth()+1}月${d.getDate()}日`;
-    row.innerHTML = `
-      <div class="item-date">${dateStr}</div>
-      <div>
-        <div class="item-title"><span class="board-pin">📌</span>${escapeHtml(it.title||'')}</div>
-        <div class="item-body">${escapeHtml(it.content||'')}</div>
-        <div class="board-author">— ${escapeHtml(it.authorName||'壇辦')}</div>
-      </div>
-      <div class="item-action">${isGuest?'':'編輯 ›'}</div>`;
-    if(!isGuest) row.onclick = ()=>openBoardModal(it.id);
+    const dateStr = (d.getMonth()+1) + '月' + d.getDate() + '日';
+
+    // 編輯權限：壇主可編所有；其他人只能編自己貼的（區佈告）
+    let canEdit = false;
+    if(isAdmin) canEdit = true;
+    else if(!isGuest && scope === 'region' && it.authorUid === Firebase.user?.uid) canEdit = true;
+
+    row.innerHTML =
+      '<div class="item-date">' + dateStr + '</div>' +
+      '<div>' +
+        '<div class="item-title"><span class="board-pin">📌</span>' + escapeHtml(it.title||'') + '</div>' +
+        '<div class="item-body">' + escapeHtml(it.content||'') + '</div>' +
+        '<div class="board-author">— ' + escapeHtml(it.authorName||'壇辦') +
+          (it.region ? ' · ' + escapeHtml(it.region) : '') + '</div>' +
+      '</div>' +
+      '<div class="item-action">' + (canEdit ? '編輯 ›' : '') + '</div>';
+
+    if(canEdit) row.onclick = ()=>openBoardModal(it.id, scope);
     list.appendChild(row);
   });
 }
 
-async function openBoardModal(id){
-  // 沿用 generic modal
+async function openBoardModal(id, scope){
   const type = 'board';
   document.getElementById('g-type').value = type;
   document.getElementById('g-id').value = id || '';
-  document.getElementById('g-title').textContent = id ? '編輯公告' : '新增公告';
+  // 記錄 scope（dojo / region），存於隱藏資料
+  document.getElementById('generic-modal').dataset.scope = scope || 'dojo';
+
+  let scopeLabel = (scope === 'region') ? '分區佈告' : '分壇佈告';
+  document.getElementById('g-title').textContent = (id ? '編輯' : '新增') + scopeLabel;
   document.getElementById('g-l1').textContent = '公告標題';
   document.getElementById('g-l2').textContent = '公告內容';
   document.getElementById('g-row-date').style.display = 'none';
@@ -6647,6 +6774,8 @@ async function openBoardModal(id){
       document.getElementById('g-f1').value = it.title || '';
       document.getElementById('g-f2').value = it.content || '';
       document.getElementById('g-delete-btn').style.display = 'inline-block';
+      // 記住既有 scope
+      document.getElementById('generic-modal').dataset.scope = it.scope || 'dojo';
     }
   }else{
     document.getElementById('g-f1').value = '';
