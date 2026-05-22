@@ -2821,6 +2821,47 @@
     grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
     gap: 14px;
   }
+
+  /* v2.3.1: 關懷狀態說明卡 */
+  .status-legend {
+    background: linear-gradient(180deg, rgba(252,244,221,0.6) 0%, rgba(245,230,198,0.5) 100%);
+    border: 1px solid rgba(176,132,86,0.3);
+    border-radius: 4px;
+    padding: 10px 14px;
+    margin-bottom: 14px;
+  }
+  .status-legend-title {
+    font-family: 'ZCOOL XiaoWei', serif;
+    font-size: 13px;
+    color: var(--vermillion);
+    letter-spacing: 1.5px;
+    margin-bottom: 6px;
+    padding-bottom: 5px;
+    border-bottom: 1px dashed rgba(176,132,86,0.3);
+  }
+  .status-legend-rows {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+  }
+  .legend-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 5px 8px;
+    border-radius: 3px;
+    font-family: 'Noto Serif TC', serif;
+    font-size: 12px;
+    line-height: 1.5;
+  }
+  .legend-emoji { font-size: 18px; }
+  .legend-green  { background: rgba(143, 188, 143, 0.18); color: #2d5e2d; }
+  .legend-yellow { background: rgba(218, 165,  32, 0.18); color: #6b4f10; }
+  .legend-red    { background: rgba(178,  34,  34, 0.18); color: #802020; }
+  @media (min-width: 820px){
+    .status-legend-rows { flex-direction: row; }
+    .legend-row { flex: 1; }
+  }
   .member-card {
     background: rgba(255, 252, 245, 0.7);
     border: 1px solid var(--line);
@@ -3530,7 +3571,7 @@
   font-size:10px;color:rgba(0,0,0,0.3);
   font-family:monospace;pointer-events:none;
   background:rgba(255,255,255,0.6);padding:2px 5px;border-radius:3px;
-">v2.3.0</div>
+">v2.3.1</div>
 
 <!-- ============ 登入畫面(未登入時顯示) ============ -->
 <div class="auth-screen" id="auth-screen">
@@ -3718,7 +3759,7 @@
   <div class="title-wrap">
     <div class="title">安東道場 宏化分壇</div>
     <div class="subtitle">道 務 自 我 紀 錄 管 理</div>
-    <div class="version-tag" id="version-tag">v2.3.0</div>
+    <div class="version-tag" id="version-tag">v2.3.1</div>
   </div>
 </header>
 
@@ -3842,6 +3883,25 @@
     </div>
     <div class="actions">
       <button class="btn" onclick="openMemberModal()">＋ 新增道親</button>
+    </div>
+  </div>
+
+  <!-- v2.3.1: 關懷狀態說明卡 -->
+  <div class="status-legend">
+    <div class="status-legend-title">⏳ 自動關懷提醒規則</div>
+    <div class="status-legend-rows">
+      <div class="legend-row legend-green">
+        <span class="legend-emoji">😀</span>
+        <span class="legend-text"><strong>兩週內</strong>有更新 · 綠底 · 感謝前賢跟我聯絡</span>
+      </div>
+      <div class="legend-row legend-yellow">
+        <span class="legend-emoji">😟</span>
+        <span class="legend-text"><strong>超過兩週</strong>未更新 · 黃底 · 很久沒有關心我了</span>
+      </div>
+      <div class="legend-row legend-red">
+        <span class="legend-emoji">😢</span>
+        <span class="legend-text"><strong>超過兩個月</strong>未更新 · 紅底 · 拜託快救救我</span>
+      </div>
     </div>
   </div>
 
@@ -4318,15 +4378,15 @@
 
 <div class="toast" id="toast"></div>
 </div><!-- /#app-wrap -->
-<div class="version-corner" id="version-corner">v2.3.0 · 2026-05-23</div>
+<div class="version-corner" id="version-corner">v2.3.1 · 2026-05-23</div>
 
 <script type="module">
 /* =========================================================
    APP VERSION  ─ 每次改版請更新此處 + 檔名
    ========================================================= */
-const APP_VERSION   = 'v2.3.0';
+const APP_VERSION   = 'v2.3.1';
 const APP_BUILD     = '2026-05-23';
-const APP_CODENAME  = '飛鴻傳訊';
+const APP_CODENAME  = '範例引航';
 document.title = `宏化分壇 渡人管理 · ${APP_VERSION}`;
 
 /* =========================================================
@@ -4497,6 +4557,69 @@ function closePrayerViewer(){
 }
 
 /* 安裝預設行事曆(僅在第一次或回復預設時呼叫) */
+async function installDefaultMembers(){
+  const now = new Date();
+  const iso = (daysAgo)=>{
+    const d = new Date(now.getTime() - daysAgo*86400000);
+    return d.toISOString();
+  };
+  const myRegion = (Firebase.profile && Firebase.profile.region) || '化真區';
+
+  // 1. 綠底：3 天前更新
+  await Store.save('members:demo_green', {
+    id: 'demo_green',
+    name: '張示範',
+    gender: '男',
+    age: 32,
+    relation: '朋友',
+    channel: '已求道一段時間',
+    region: myRegion,
+    notes: [
+      { date: iso(15).slice(0,10), content: '邀請參加共修班，相約下週見面。' },
+      { date: iso(3).slice(0,10),  content: '已參與共修，分享心得，狀態良好。' }
+    ],
+    isDemo: true,
+    createdAt: iso(15),
+    updatedAt: iso(3)         // 3 天前 → 綠底 😀
+  });
+
+  // 2. 黃底：30 天前更新
+  await Store.save('members:demo_yellow', {
+    id: 'demo_yellow',
+    name: '李範例',
+    gender: '女',
+    age: 45,
+    relation: '同事',
+    channel: '剛求道',
+    region: myRegion,
+    notes: [
+      { date: iso(40).slice(0,10), content: '初識，介紹道場給她認識。' },
+      { date: iso(30).slice(0,10), content: '電話關懷，回應正面但較忙碌。' }
+    ],
+    isDemo: true,
+    createdAt: iso(40),
+    updatedAt: iso(30)        // 30 天前 → 黃底 😟
+  });
+
+  // 3. 紅底：80 天前更新
+  await Store.save('members:demo_red', {
+    id: 'demo_red',
+    name: '王舉例',
+    gender: '男',
+    age: 28,
+    relation: '親人',
+    channel: '未求道',
+    region: myRegion,
+    notes: [
+      { date: iso(90).slice(0,10), content: '初次接觸，分享道場資訊。' },
+      { date: iso(80).slice(0,10), content: '邀約未果，後續持續聯繫中。' }
+    ],
+    isDemo: true,
+    createdAt: iso(90),
+    updatedAt: iso(80)        // 80 天前 → 紅底 😢
+  });
+}
+
 async function installDefaultCalendar(){
   for(const ev of DEFAULT_CALENDAR_EVENTS){
     const id = uid();
@@ -6467,6 +6590,9 @@ async function ensureDefaultsInstalled(){
     // 學習資料
     const lib = await Store.list('library:');
     if(lib.length === 0) await installDefaultLibrary();
+    // v2.3.1: 道親示範三筆
+    const mem = await Store.list('members:');
+    if(mem.length === 0) await installDefaultMembers();
     await Store.save('__defaults_installed_v2', {installedAt: new Date().toISOString()});
   }
 }
