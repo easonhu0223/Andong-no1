@@ -3519,7 +3519,7 @@
   font-size:10px;color:rgba(0,0,0,0.3);
   font-family:monospace;pointer-events:none;
   background:rgba(255,255,255,0.6);padding:2px 5px;border-radius:3px;
-">v2.1.9</div>
+">v2.2.0</div>
 
 <!-- ============ 登入畫面(未登入時顯示) ============ -->
 <div class="auth-screen" id="auth-screen">
@@ -3707,7 +3707,7 @@
   <div class="title-wrap">
     <div class="title">安東道場 宏化分壇</div>
     <div class="subtitle">道 務 自 我 紀 錄 管 理</div>
-    <div class="version-tag" id="version-tag">v2.1.9</div>
+    <div class="version-tag" id="version-tag">v2.2.0</div>
   </div>
 </header>
 
@@ -4295,15 +4295,15 @@
 
 <div class="toast" id="toast"></div>
 </div><!-- /#app-wrap -->
-<div class="version-corner" id="version-corner">v2.1.9 · 2026-05-22</div>
+<div class="version-corner" id="version-corner">v2.2.0 · 2026-05-22</div>
 
 <script type="module">
 /* =========================================================
    APP VERSION  ─ 每次改版請更新此處 + 檔名
    ========================================================= */
-const APP_VERSION   = 'v2.1.9';
+const APP_VERSION   = 'v2.2.0';
 const APP_BUILD     = '2026-05-22';
-const APP_CODENAME  = '洞察微明';
+const APP_CODENAME  = '渡己渡人';
 document.title = `宏化分壇 渡人管理 · ${APP_VERSION}`;
 
 /* =========================================================
@@ -5254,8 +5254,9 @@ async function renderList(type){
   items.forEach(it=>{
     const row=document.createElement('div');
     row.className='item-row';
-    const isFAQ = type==='library' && it.isFAQ;
-    const isPrayer = type==='library' && it.isPrayer;
+    // v2.2.0: 用 isFAQ/isPrayer 或 id 雙重判斷（避免欄位遺失）
+    const isFAQ = type==='library' && (it.isFAQ || it.id==='default_faq100');
+    const isPrayer = type==='library' && (it.isPrayer || it.id==='default_prayer');
     if(isFAQ) row.className += ' faq-card';
     if(isPrayer) row.className += ' prayer-card';
 
@@ -6478,7 +6479,12 @@ async function adminRefresh(){
         ? `<span class="u-status-badge admin">★ 壇主</span>`
         : `<span class="u-status-badge ${u.status||'pending'}">${({active:'已啟用',pending:'待審核',rejected:'已停用'})[u.status||'pending']}</span>`;
       let actionsHtml = '';
-      if(!isAdminAcct){
+      if(isAdminAcct){
+        // 壇主自己：可編輯名字/分區（但不可停用/刪除自己）
+        actionsHtml = `
+          <button class="btn outline" onclick="adminEditUser('${u.uid}')">編輯</button>
+          <button class="btn outline" onclick="adminExportOne('${u.uid}')">備份</button>`;
+      }else{
         if(u.status === 'pending'){
           actionsHtml = `
             <button class="btn" onclick="adminApprove('${u.uid}')">核准</button>
@@ -6560,11 +6566,20 @@ async function adminEditUser(uid){
 
   try{
     const ref = Firebase.fs.doc(Firebase.db, 'users', uid);
-    await Firebase.fs.setDoc(ref, {
+    const updates = {
       displayName: newName.trim(),
       region: newRegion,
       vocation: newVoc
-    }, {merge:true});
+    };
+    await Firebase.fs.setDoc(ref, updates, {merge:true});
+    // 若編輯的是自己（壇主），同步更新本地 profile 與首頁顯示
+    if(Firebase.user && Firebase.user.uid === uid){
+      if(Firebase.profile) Object.assign(Firebase.profile, updates);
+      await Store.save('settings', {name: updates.displayName, region: updates.region});
+      await loadSettings();
+      // 更新右上角徽章
+      try{ showUserBadge(updates.displayName, true, false, 'active', updates.vocation, updates.region); }catch(e){}
+    }
     toast('儲存成功');
     adminRefresh();
   }catch(e){
