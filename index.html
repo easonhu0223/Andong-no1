@@ -2737,12 +2737,15 @@
   /* v2.3.2: 雙欄佈告 */
   .board-wrap {
     display: flex;
-    flex-direction: column;
-    gap: 14px;
+    flex-direction: row;
+    gap: 8px;
   }
-  @media (min-width: 820px){
-    .board-wrap { flex-direction: row; }
-    .board-col { flex: 1; }
+  .board-col { flex: 1; min-width: 0; }
+  @media (max-width: 480px){
+    .board-wrap { gap: 6px; }
+    .board-col { padding: 8px 8px 10px; }
+    .board-col-title { font-size: 13px; letter-spacing: 1px; }
+    .board-col-tag { font-size: 9px; padding: 1px 4px; }
   }
   .board-col {
     background: linear-gradient(180deg, rgba(252,244,221,0.5) 0%, rgba(245,230,198,0.4) 100%);
@@ -3627,7 +3630,7 @@
   font-size:10px;color:rgba(0,0,0,0.3);
   font-family:monospace;pointer-events:none;
   background:rgba(255,255,255,0.6);padding:2px 5px;border-radius:3px;
-">v2.3.2</div>
+">v2.3.3</div>
 
 <!-- ============ 登入畫面(未登入時顯示) ============ -->
 <div class="auth-screen" id="auth-screen">
@@ -3815,7 +3818,7 @@
   <div class="title-wrap">
     <div class="title">安東道場 宏化分壇</div>
     <div class="subtitle">道 務 自 我 紀 錄 管 理</div>
-    <div class="version-tag" id="version-tag">v2.3.2</div>
+    <div class="version-tag" id="version-tag">v2.3.3</div>
   </div>
 </header>
 
@@ -4455,15 +4458,15 @@
 
 <div class="toast" id="toast"></div>
 </div><!-- /#app-wrap -->
-<div class="version-corner" id="version-corner">v2.3.2 · 2026-05-23</div>
+<div class="version-corner" id="version-corner">v2.3.3 · 2026-05-23</div>
 
 <script type="module">
 /* =========================================================
    APP VERSION  ─ 每次改版請更新此處 + 檔名
    ========================================================= */
-const APP_VERSION   = 'v2.3.2';
+const APP_VERSION   = 'v2.3.3';
 const APP_BUILD     = '2026-05-23';
-const APP_CODENAME  = '法雨普潤';
+const APP_CODENAME  = '左右逢源';
 document.title = `宏化分壇 渡人管理 · ${APP_VERSION}`;
 
 /* =========================================================
@@ -6324,13 +6327,12 @@ async function notifyDiscordNewUser(profile){
 // ── 顯示大小縮放 (v2.2.1) ──
 function setAppScale(scale){
   const s = parseFloat(scale) || 1.0;
-  // 用多種方式套用，確保最大相容性
+  // 純 CSS 套用（避免 zoom 造成手機觸控座標錯位）
   document.documentElement.style.setProperty('--app-scale', String(s));
-  document.body.style.zoom = String(s);
-  // 同步 html fontSize（rem 也會跟著）
   document.documentElement.style.fontSize = (16 * s) + 'px';
+  // 移除任何舊的 zoom 設定（修復觸控異常）
+  document.body.style.zoom = '';
   try{ localStorage.setItem('andong_dojo::__app_scale', String(s)); }catch(e){}
-  // 更新按鈕 active 狀態
   document.querySelectorAll('.scale-btn').forEach(b=>{
     const bs = parseFloat(b.dataset.scale);
     b.classList.toggle('active', Math.abs(bs - s) < 0.01);
