@@ -4050,7 +4050,7 @@
   <div class="title-wrap">
     <div class="title">安東道場 宏化分壇</div>
     <div class="subtitle">道 務 自 我 紀 錄 管 理</div>
-    <div class="version-tag" id="version-tag">v2.4.5</div>
+    <div class="version-tag" id="version-tag">v2.4.6</div>
   </div>
 </header>
 
@@ -4745,15 +4745,15 @@
 
 <div class="toast" id="toast"></div>
 </div><!-- /#app-wrap -->
-<div class="version-corner" id="version-corner">v2.4.5 · 2026-05-23</div>
+<div class="version-corner" id="version-corner">v2.4.6 · 2026-05-24</div>
 
 <script type="module">
 /* =========================================================
    APP VERSION  ─ 每次改版請更新此處 + 檔名
    ========================================================= */
-const APP_VERSION   = 'v2.4.5';
-const APP_BUILD     = '2026-05-23';
-const APP_CODENAME  = '伏魔正氣';
+const APP_VERSION   = 'v2.4.6';
+const APP_BUILD     = '2026-05-24';
+const APP_CODENAME  = '帳號獨立';
 document.title = `宏化分壇 渡人管理 · ${APP_VERSION}`;
 
 /* =========================================================
@@ -7467,20 +7467,30 @@ async function onAuthChanged(user, profile){
 
 /* 首次登入安裝預設行事曆與學習資料 */
 async function ensureDefaultsInstalled(){
-  const installed = await Store.get('__defaults_installed_v2');
-  if(!installed){
-    // 行事曆
-    const cal = await Store.list('calendar:');
+  // v2.4.6: marker 改為 per-uid,避免切換帳號時舊 marker 殘留導致新帳號被跳過預設安裝
+  const uid = (Firebase.user && Firebase.user.uid) || 'local';
+  const markerKey = '__defaults_installed_v2_' + uid;
+  // 同時相容舊版通用 marker(僅限該帳號本機既有資料完整時)
+  const legacyMarker = await Store.get('__defaults_installed_v2');
+  const newMarker = await Store.get(markerKey);
+
+  const cal = await Store.list('calendar:');
+  const lib = await Store.list('library:');
+  const mem = await Store.list('members:');
+
+  // 若新 marker 不存在,或這個帳號實際上資料是空的,就安裝預設
+  const needInstall = !newMarker && (cal.length === 0 || lib.length === 0 || mem.length === 0);
+  if(needInstall){
     if(cal.length === 0) await installDefaultCalendar();
-    // 學習資料
-    const lib = await Store.list('library:');
     if(lib.length === 0) await installDefaultLibrary();
-    // v2.3.1: 道親示範三筆
-    const mem = await Store.list('members:');
     if(mem.length === 0) await installDefaultMembers();
-    await Store.save('__defaults_installed_v2', {installedAt: new Date().toISOString()});
+    await Store.save(markerKey, {installedAt: new Date().toISOString(), uid: uid});
+  }else if(!newMarker && legacyMarker){
+    // 既有用戶(資料齊全 + 舊 marker 存在):補寫新 marker,避免下次又進判斷
+    await Store.save(markerKey, {installedAt: new Date().toISOString(), uid: uid, migratedFrom: 'legacy'});
   }
-  // v2.4.0: 補裝「經典」(既有用戶升級用,冪等)
+
+  // v2.4.0: 補裝「經典」(冪等)
   const classics = await Store.get('library:default_classics');
   if(!classics){
     const now = new Date().toISOString();
