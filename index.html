@@ -4050,7 +4050,7 @@
   <div class="title-wrap">
     <div class="title">安東道場 宏化分壇</div>
     <div class="subtitle">道 務 自 我 紀 錄 管 理</div>
-    <div class="version-tag" id="version-tag">v2.4.6</div>
+    <div class="version-tag" id="version-tag">v2.4.7</div>
   </div>
 </header>
 
@@ -4745,15 +4745,15 @@
 
 <div class="toast" id="toast"></div>
 </div><!-- /#app-wrap -->
-<div class="version-corner" id="version-corner">v2.4.6 · 2026-05-24</div>
+<div class="version-corner" id="version-corner">v2.4.7 · 2026-05-24</div>
 
 <script type="module">
 /* =========================================================
    APP VERSION  ─ 每次改版請更新此處 + 檔名
    ========================================================= */
-const APP_VERSION   = 'v2.4.6';
+const APP_VERSION   = 'v2.4.7';
 const APP_BUILD     = '2026-05-24';
-const APP_CODENAME  = '帳號獨立';
+const APP_CODENAME  = '逐項補裝';
 document.title = `宏化分壇 渡人管理 · ${APP_VERSION}`;
 
 /* =========================================================
@@ -7470,40 +7470,55 @@ async function ensureDefaultsInstalled(){
   // v2.4.6: marker 改為 per-uid,避免切換帳號時舊 marker 殘留導致新帳號被跳過預設安裝
   const uid = (Firebase.user && Firebase.user.uid) || 'local';
   const markerKey = '__defaults_installed_v2_' + uid;
-  // 同時相容舊版通用 marker(僅限該帳號本機既有資料完整時)
-  const legacyMarker = await Store.get('__defaults_installed_v2');
   const newMarker = await Store.get(markerKey);
 
+  // ─── 行事曆 / 道親:依列表為空判斷(整批一次安裝)───
   const cal = await Store.list('calendar:');
-  const lib = await Store.list('library:');
+  if(cal.length === 0) await installDefaultCalendar();
+
   const mem = await Store.list('members:');
+  if(mem.length === 0) await installDefaultMembers();
 
-  // 若新 marker 不存在,或這個帳號實際上資料是空的,就安裝預設
-  const needInstall = !newMarker && (cal.length === 0 || lib.length === 0 || mem.length === 0);
-  if(needInstall){
-    if(cal.length === 0) await installDefaultCalendar();
-    if(lib.length === 0) await installDefaultLibrary();
-    if(mem.length === 0) await installDefaultMembers();
+  // ─── 學習資料:v2.4.7 改為三項各別 ID 冪等補裝 ───
+  // 避免因為「經典」已存在導致 length>0,讓修道百問/祈願文被誤跳過
+  await ensureLibraryDefault('library:default_faq100', () => ({
+    id: 'default_faq100',
+    title: '修道百問',
+    content: '宏樂堂修道百問共 213 題,涵蓋道之本質、求道意義、五戒持齋、天命明師、六道輪迴等核心道義。點此進入瀏覽 →',
+    sourceUrl: 'https://honlostemple.org/index.php/about/faq100',
+    isDefault: true,
+    isFAQ: true
+  }));
+  await ensureLibraryDefault('library:default_prayer', () => ({
+    id: 'default_prayer',
+    title: '喚醒生命實相 祈願文',
+    content: '誠心朗誦此文,可喚醒生命實相,得無極老母慈光護持,圓滿無缺。點此進入誦讀 →',
+    isDefault: true,
+    isPrayer: true
+  }));
+  await ensureLibraryDefault('library:default_classics', () => ({
+    id: 'default_classics',
+    title: '經典',
+    content: '七部經文目錄 · 點此進入研讀 →',
+    isDefault: true,
+    isClassics: true
+  }));
+
+  // 寫入 per-uid marker(僅標記,不再決定是否安裝)
+  if(!newMarker){
     await Store.save(markerKey, {installedAt: new Date().toISOString(), uid: uid});
-  }else if(!newMarker && legacyMarker){
-    // 既有用戶(資料齊全 + 舊 marker 存在):補寫新 marker,避免下次又進判斷
-    await Store.save(markerKey, {installedAt: new Date().toISOString(), uid: uid, migratedFrom: 'legacy'});
   }
+}
 
-  // v2.4.0: 補裝「經典」(冪等)
-  const classics = await Store.get('library:default_classics');
-  if(!classics){
-    const now = new Date().toISOString();
-    await Store.save('library:default_classics', {
-      id: 'default_classics',
-      title: '經典',
-      content: '七部經文目錄 · 點此進入研讀 →',
-      isDefault: true,
-      isClassics: true,
-      createdAt: now,
-      updatedAt: now
-    });
-  }
+/* v2.4.7: 個別預設項目冪等補裝輔助函式 */
+async function ensureLibraryDefault(key, makeObj){
+  const existing = await Store.get(key);
+  if(existing) return;  // 已存在則不動,保留使用者可能的編輯
+  const now = new Date().toISOString();
+  const obj = makeObj();
+  obj.createdAt = now;
+  obj.updatedAt = now;
+  await Store.save(key, obj);
 }
 
 /* =========================================================
