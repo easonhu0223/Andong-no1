@@ -3506,6 +3506,200 @@
   }
   .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
 
+  /* ---------- PWA 加入桌面 指引彈窗 (v2.4.0) ---------- */
+  .pwa-modal {
+    display: none;
+    position: fixed; inset: 0;
+    background: rgba(34,26,18,0.55);
+    z-index: 250;
+    align-items: center;
+    justify-content: center;
+    padding: 16px;
+  }
+  .pwa-modal.active { display: flex; }
+  .pwa-card {
+    background: var(--paper);
+    border: 1px solid var(--gold);
+    border-radius: 4px;
+    max-width: 380px;
+    width: 100%;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.25);
+    overflow: hidden;
+  }
+  .pwa-card-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 16px;
+    background: linear-gradient(180deg, rgba(176,132,86,0.18), rgba(176,132,86,0.08));
+    border-bottom: 1px solid var(--line);
+    font-family: 'ZCOOL XiaoWei', serif;
+    font-size: 15px;
+    letter-spacing: 2px;
+    color: var(--ink);
+  }
+  .pwa-close {
+    background: transparent;
+    border: none;
+    font-size: 16px;
+    color: var(--ink-soft);
+    cursor: pointer;
+    padding: 0 4px;
+  }
+  .pwa-card-body { padding: 16px 18px; }
+  .pwa-step {
+    font-size: 13px;
+    color: var(--ink);
+    line-height: 2;
+    letter-spacing: 1px;
+  }
+  .pwa-step b { color: var(--vermillion); font-weight: 600; }
+  .pwa-card-foot {
+    padding: 10px 16px 14px;
+    text-align: right;
+    border-top: 1px dashed var(--line);
+  }
+
+  /* ---------- 經典 觀覽器 (v2.4.0) ---------- */
+  .classics-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 4px 0 16px;
+  }
+  .classics-item {
+    display: grid;
+    grid-template-columns: 44px 1fr 22px;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 14px;
+    background: linear-gradient(180deg, rgba(252,244,221,0.55), rgba(245,230,198,0.35));
+    border: 1px solid rgba(176,132,86,0.32);
+    border-left: 3px solid var(--gold);
+    border-radius: 3px;
+    cursor: pointer;
+    transition: all 0.18s;
+  }
+  .classics-item:hover {
+    background: linear-gradient(180deg, rgba(252,244,221,0.85), rgba(245,230,198,0.6));
+    border-left-color: var(--vermillion);
+    transform: translateX(2px);
+  }
+  .classics-num {
+    width: 36px; height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Ma Shan Zheng', cursive;
+    font-size: 22px;
+    color: var(--vermillion);
+    background: rgba(255,252,245,0.7);
+    border: 1px solid rgba(138,42,31,0.3);
+    border-radius: 50%;
+  }
+  .classics-body { min-width: 0; }
+  .classics-title {
+    font-family: 'ZCOOL XiaoWei', serif;
+    font-size: 15px;
+    letter-spacing: 2px;
+    color: var(--ink);
+    margin-bottom: 2px;
+  }
+  .classics-sub {
+    font-size: 11px;
+    color: var(--ink-soft);
+    letter-spacing: 1px;
+    opacity: 0.85;
+  }
+  .classics-arrow {
+    font-size: 18px;
+    color: var(--gold);
+    text-align: right;
+  }
+  .classics-detail-note {
+    margin-top: 20px;
+    padding: 18px 16px;
+    text-align: center;
+    background: rgba(255,252,245,0.5);
+    border: 1px dashed rgba(176,132,86,0.4);
+    border-radius: 3px;
+  }
+  .classics-detail-note-line {
+    font-family: 'ZCOOL XiaoWei', serif;
+    font-size: 14px;
+    color: var(--ink-soft);
+    letter-spacing: 3px;
+    margin-bottom: 6px;
+  }
+  .classics-detail-note-sub {
+    font-size: 11px;
+    color: var(--ink-soft);
+    letter-spacing: 2px;
+    opacity: 0.7;
+  }
+  /* classics-card 在學習資料列表中與其他預設卡片一致的微區別 */
+  .item-row.classics-card {
+    border-left: 3px solid var(--gold);
+  }
+
+  /* ---------- 經文內文渲染 (v2.4.1) ---------- */
+  .classics-detail-text {
+    margin-top: 18px;
+    padding: 4px 2px;
+  }
+  .ct-heading {
+    font-family: 'ZCOOL XiaoWei', serif;
+    font-size: 17px;
+    color: var(--vermillion);
+    text-align: center;
+    margin: 22px 0 10px;
+    letter-spacing: 4px;
+    position: relative;
+  }
+  .ct-heading::before,
+  .ct-heading::after {
+    content: '❖';
+    color: var(--gold);
+    font-size: 11px;
+    margin: 0 10px;
+    vertical-align: middle;
+    opacity: 0.7;
+  }
+  .classics-detail-text > .ct-heading:first-child { margin-top: 6px; }
+  .ct-block {
+    margin: 0 0 14px;
+    padding: 12px 14px;
+    background: rgba(255,252,245,0.45);
+    border: 1px solid rgba(176,132,86,0.22);
+    border-left: 2px solid var(--gold);
+    border-radius: 2px;
+    font-family: 'Noto Serif TC', serif;
+    font-size: 14px;
+    line-height: 2;
+    color: var(--ink);
+    letter-spacing: 1px;
+  }
+  .ct-block.ct-center {
+    text-align: center;
+    border-left: none;
+    border-right: none;
+    background: transparent;
+    border-top: 1px dashed rgba(176,132,86,0.4);
+    border-bottom: 1px dashed rgba(176,132,86,0.4);
+    padding: 14px 8px;
+    font-family: 'ZCOOL XiaoWei', serif;
+    letter-spacing: 3px;
+    color: var(--ink);
+  }
+  .ct-line {
+    white-space: pre-wrap;
+    word-break: keep-all;
+  }
+  @media (max-width: 480px){
+    .ct-heading { font-size: 16px; letter-spacing: 3px; }
+    .ct-block { font-size: 13px; padding: 10px 12px; }
+  }
+
   /* ---------- RESPONSIVE ---------- */
 
   /* 桌機:加入最大寬度,避免在大螢幕上元素過寬而失去比例 */
@@ -3856,7 +4050,7 @@
   <div class="title-wrap">
     <div class="title">安東道場 宏化分壇</div>
     <div class="subtitle">道 務 自 我 紀 錄 管 理</div>
-    <div class="version-tag" id="version-tag">v2.3.5</div>
+    <div class="version-tag" id="version-tag">v2.4.4</div>
   </div>
 </header>
 
@@ -4103,6 +4297,14 @@
     <div>
       <div class="panel-title">其他設定</div>
       <div class="panel-sub">資料備份 · 還原 · 版本資訊</div>
+    </div>
+  </div>
+
+<div class="settings-section">
+    <div class="settings-title">📱 加入桌面 · 變成 App</div>
+    <div class="settings-desc">將本壇渡人管理系統一鍵加入手機桌面,日後從桌面圖示開啟即如同 App,免開瀏覽器、免輸網址。</div>
+    <div class="settings-actions">
+      <button class="btn gold" id="pwa-install-btn" onclick="installToHome()">📲 加入桌面</button>
     </div>
   </div>
 
@@ -4482,18 +4684,142 @@
   </div>
 </div>
 
+<!-- ============ 經典 觀覽器 (v2.4.0) ============ -->
+<div class="faq-viewer" id="classics-viewer">
+  <div class="faq-header">
+    <button class="faq-back" id="classics-back-btn" onclick="classicsBack()">‹ 返回</button>
+    <div class="faq-title-wrap">
+      <div class="faq-title" id="classics-header-title">經典</div>
+      <div class="faq-sub" id="classics-header-sub">七部 · 法寶薈萃</div>
+    </div>
+    <button class="faq-close" onclick="closeClassicsViewer()">✕</button>
+  </div>
+
+  <!-- 清單 -->
+  <div class="faq-content" id="classics-list-view">
+    <div class="faq-intro">
+      <div class="faq-intro-quote">「 經 典 七 部 · 法 寶 薈 萃 」</div>
+      <div class="faq-intro-line"></div>
+      <div class="faq-intro-text">
+        收錄本壇研讀之經典共 <strong>七部</strong><br>
+        點選下方任一部以閱覽
+      </div>
+    </div>
+    <div class="classics-list" id="classics-list"></div>
+  </div>
+
+  <!-- 詳細 -->
+  <div class="faq-content" id="classics-detail-view" style="display:none;">
+    <div class="faq-detail-wrap">
+      <div class="faq-num-badge" id="classics-detail-num">一</div>
+      <div class="faq-question" id="classics-detail-title">　</div>
+      <div class="faq-divider">❖</div>
+      <div class="faq-answer" id="classics-detail-sub" style="text-align:center;">　</div>
+      <div class="classics-detail-text" id="classics-detail-text" style="display:none;"></div>
+      <div class="classics-detail-note" id="classics-detail-note">
+        <div class="classics-detail-note-line">經 文 內 容 整 理 中</div>
+        <div class="classics-detail-note-sub">後 學 將 陸 續 補 上 正 文 · 敬 請 期 待</div>
+      </div>
+    </div>
+    <div class="faq-nav">
+      <button class="btn outline" id="classics-prev-btn" onclick="classicsNav(-1)">‹ 上一部</button>
+      <span class="faq-page-indicator" id="classics-page-indicator">1 / 7</span>
+      <button class="btn outline" id="classics-next-btn" onclick="classicsNav(1)">下一部 ›</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============ PWA 安裝指引 Modal ============ -->
+<div class="pwa-modal" id="pwa-guide-modal">
+  <div class="pwa-card">
+    <div class="pwa-card-head">
+      <span>📱 加入桌面 · 操作步驟</span>
+      <button class="pwa-close" onclick="closeInstallGuide()">✕</button>
+    </div>
+    <div class="pwa-card-body" id="pwa-guide-body"></div>
+    <div class="pwa-card-foot">
+      <button class="btn outline" onclick="closeInstallGuide()">我知道了</button>
+    </div>
+  </div>
+</div>
+
 <div class="toast" id="toast"></div>
 </div><!-- /#app-wrap -->
-<div class="version-corner" id="version-corner">v2.3.5 · 2026-05-23</div>
+<div class="version-corner" id="version-corner">v2.4.4 · 2026-05-23</div>
 
 <script type="module">
 /* =========================================================
    APP VERSION  ─ 每次改版請更新此處 + 檔名
    ========================================================= */
-const APP_VERSION   = 'v2.3.5';
+const APP_VERSION   = 'v2.4.4';
 const APP_BUILD     = '2026-05-23';
-const APP_CODENAME  = '清雅簡淨';
+const APP_CODENAME  = '常清常靜';
 document.title = `宏化分壇 渡人管理 · ${APP_VERSION}`;
+
+/* =========================================================
+   PWA · 一鍵加入桌面 (v2.4.0)
+   ========================================================= */
+let _pwaDeferredPrompt = null;
+window.addEventListener('beforeinstallprompt', (e) => {
+  e.preventDefault();
+  _pwaDeferredPrompt = e;
+});
+window.installToHome = async function(){
+  // 已是 standalone(已安裝)
+  const isStandalone = window.matchMedia('(display-mode: standalone)').matches
+                       || window.navigator.standalone === true;
+  if(isStandalone){
+    showInstallToast('您已在桌面 App 模式中開啟,無需再裝。');
+    return;
+  }
+  // Chrome / Android 原生安裝提示
+  if(_pwaDeferredPrompt){
+    _pwaDeferredPrompt.prompt();
+    const choice = await _pwaDeferredPrompt.userChoice;
+    _pwaDeferredPrompt = null;
+    if(choice.outcome === 'accepted'){
+      showInstallToast('已加入桌面,請至主畫面查看圖示。');
+    }
+    return;
+  }
+  // 其他情境(iOS Safari / 未觸發 beforeinstallprompt):顯示平台說明
+  showInstallGuide();
+};
+function showInstallToast(msg){
+  const t = document.getElementById('toast');
+  if(!t) return;
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'), 2800);
+}
+function showInstallGuide(){
+  const ua = navigator.userAgent;
+  const isIOS = /iPad|iPhone|iPod/.test(ua);
+  const isAndroid = /Android/.test(ua);
+  let body = '';
+  if(isIOS){
+    body = `<div class="pwa-step"><b>iPhone / iPad (Safari)</b></div>
+            <div class="pwa-step">1. 點底部 <b>分享 ⬆️</b> 按鈕</div>
+            <div class="pwa-step">2. 選擇 <b>「加入主畫面」</b></div>
+            <div class="pwa-step">3. 點右上 <b>「加入」</b> 即完成</div>`;
+  }else if(isAndroid){
+    body = `<div class="pwa-step"><b>Android (Chrome)</b></div>
+            <div class="pwa-step">1. 點右上 <b>⋮</b> 選單</div>
+            <div class="pwa-step">2. 選擇 <b>「加到主畫面」</b></div>
+            <div class="pwa-step">3. 點 <b>「安裝」</b> 即完成</div>`;
+  }else{
+    body = `<div class="pwa-step"><b>桌機 (Chrome / Edge)</b></div>
+            <div class="pwa-step">1. 點網址列右側的 <b>安裝圖示 ⊕</b></div>
+            <div class="pwa-step">2. 點 <b>「安裝」</b> 即完成</div>`;
+  }
+  const m = document.getElementById('pwa-guide-modal');
+  document.getElementById('pwa-guide-body').innerHTML = body;
+  m.classList.add('active');
+}
+function closeInstallGuide(){
+  document.getElementById('pwa-guide-modal').classList.remove('active');
+}
+window.closeInstallGuide = closeInstallGuide;
 
 /* =========================================================
    FIREBASE 統一設定 (管理員預先寫入)
@@ -4543,6 +4869,16 @@ async function installDefaultLibrary(){
     content: '誠心朗誦此文,可喚醒生命實相,得無極老母慈光護持,圓滿無缺。點此進入誦讀 →',
     isDefault: true,
     isPrayer: true,
+    createdAt: now,
+    updatedAt: now
+  });
+  // 第三項:經典(七部經文目錄)v2.4.0
+  await Store.save('library:default_classics', {
+    id: 'default_classics',
+    title: '經典',
+    content: '七部經文目錄 · 點此進入研讀 →',
+    isDefault: true,
+    isClassics: true,
     createdAt: now,
     updatedAt: now
   });
@@ -4661,6 +4997,322 @@ function openPrayerViewer(){
 function closePrayerViewer(){
   document.getElementById('prayer-viewer').classList.remove('active');
 }
+
+/* ─── 經典 觀覽器 (v2.4.0) ─── */
+const CLASSICS_LIST = [
+  { t:'彌勒救苦真經',    n:'彌勒應運 · 救苦真經', text: [
+    { h:'真經', p:[
+      '佛說彌勒救苦經　彌勒下世不非輕',
+      '領寶齊魯靈山地　拈花印證考三乘',
+      '落在中原三星地　大證四川王桃心',
+      '天真收圓掛聖號　等待時至點神兵',
+      '雲雷震開戊己土　天下神鬼不安寧',
+      '親在仁天中華母　九蓮聖教歸上乘',
+      '天花老母垂玉線　收圓顯化在古東',
+      '南北兩極連宗緒　混元古策在中央',
+      '老母降下通天竅　無影山前對合同',
+      '嬰兒要想歸家去　持念當來彌勒經',
+      '用心持念佛來救　朵朵金蓮去超生',
+      '識得西來白陽子　鄉兒點鐵化成金',
+      '每日志心常持念　三災八難不來侵',
+      '要想成佛勤禮拜　常持聰明智慧心',
+      '休聽邪人胡說話　牢栓意馬念無生',
+      '老母降下真天咒　用心持念有神通',
+      '滿天星斗都下世　五方列仙下天宮',
+      '各方城隍來對號　報事靈童察的清',
+      '三官大帝慈悲註　赦罪天曹救眾生',
+      '救苦天尊來救世　親點文部揭諦神',
+      '八大金剛來護法　四位菩薩救眾生',
+      '緊領三十六員將　五百靈官緊隨跟',
+      '扶助彌勒成大道　保佑鄉兒得安寧',
+      '北方真武為將帥　青臉紅髮顯神通',
+      '扯起皂旗遮日月　頭頂森羅七寶星',
+      '威鎮北方為帥首　肅清諸惡掛甲兵',
+      '搭救原人鄉兒女　火光落地化為塵',
+      '四海龍王來助道　各駕祥雲去騰空',
+      '十方天兵護佛駕　保佑彌勒去成功',
+      '紅陽了道歸家去　轉到三陽彌勒尊',
+      '無皇勒令寄下生　收伏南閻歸正宗',
+      '往來造下真言咒　傳下當來大藏經',
+      '嬰兒奼女常持念　邪神不敢來近身',
+      '持念一遍神通大　持念兩遍得超生',
+      '持念三遍神鬼怕　魍魎邪魔化為塵',
+      '修持劫內尋路逕　念起真言歸佛令'
+    ]},
+    { p:[
+      '南無天元太保　阿彌陀佛　十叩首'
+    ], a:'c' }
+  ]},
+  { t:'心經',            n:'般若波羅蜜多 · 心經', text: [
+    { h:'真經', p:[
+      '觀自在菩薩　行深般若波羅蜜多時',
+      '照見五蘊皆空　度一切苦厄',
+      '舍利子　色不異空　空不異色',
+      '色即是空　空即是色',
+      '受想行識　亦復如是',
+      '舍利子　是諸法空相',
+      '不生不滅　不垢不淨　不增不減',
+      '是故空中無色　無受想行識',
+      '無眼耳鼻舌身意　無色聲香味觸法',
+      '無眼界　乃至無意識界',
+      '無無明　亦無無明盡',
+      '乃至無老死　亦無老死盡',
+      '無苦集滅道　無智亦無得',
+      '以無所得故　菩提薩埵',
+      '依般若波羅蜜多故　心無罣礙',
+      '無罣礙故　無有恐怖',
+      '遠離顛倒夢想　究竟涅槃',
+      '三世諸佛　依般若波羅蜜多故',
+      '得阿耨多羅三藐三菩提',
+      '故知般若波羅蜜多',
+      '是大神咒　是大明咒',
+      '是無上咒　是無等等咒',
+      '能除一切苦　真實不虛',
+      '故說般若波羅蜜多咒　即說咒曰'
+    ]},
+    { h:'真言', p:[
+      '揭諦揭諦　波羅揭諦',
+      '波羅僧揭諦　菩提娑婆訶'
+    ], a:'c' }
+  ]},
+  { t:'清靜經',          n:'太上老君 · 常清靜經', text: [
+    { h:'老君曰', p:[
+      '大道無形　生育天地',
+      '大道無情　運行日月',
+      '大道無名　長養萬物',
+      '吾不知其名　強名曰道'
+    ]},
+    { p:[
+      '夫道者　有清有濁　有動有靜',
+      '天清地濁　天動地靜',
+      '男清女濁　男動女靜',
+      '降本流末　而生萬物'
+    ]},
+    { p:[
+      '清者濁之源　動者靜之基',
+      '人能常清靜　天地悉皆歸'
+    ]},
+    { p:[
+      '夫人神好清　而心擾之',
+      '人心好靜　而慾牽之'
+    ]},
+    { p:[
+      '常能遣其慾　而心自靜',
+      '澄其心　而神自清',
+      '自然六慾不生　三毒消滅'
+    ]},
+    { p:[
+      '所以不能者　為心未澄　慾未遣也'
+    ]},
+    { p:[
+      '能遣之者　內觀其心　心無其心',
+      '外觀其形　形無其形',
+      '遠觀其物　物無其物',
+      '三者既悟　惟見於空'
+    ]},
+    { p:[
+      '觀空亦空　空無所空',
+      '所空既無　無無亦無',
+      '無無既無　湛然常寂',
+      '寂無所寂　慾豈能生',
+      '慾既不生　即是真靜'
+    ]},
+    { p:[
+      '真常應物　真常得性',
+      '常應常靜　常清靜矣'
+    ]},
+    { p:[
+      '如此清靜　漸入真道',
+      '既入真道　名謂得道',
+      '雖名得道　實無所得',
+      '為化眾生　名謂得道',
+      '能悟之者　可傳聖道'
+    ]},
+    { h:'太上老君曰', p:[
+      '上士無爭　下士好爭',
+      '上德不德　下德執德',
+      '執著之者　不明道德'
+    ]},
+    { p:[
+      '眾生所以不得真道者　為有妄心'
+    ]},
+    { p:[
+      '既有妄心　即驚其神',
+      '既驚其神　即著萬物',
+      '既著萬物　即生貪求',
+      '既生貪求　即是煩惱'
+    ]},
+    { p:[
+      '煩惱妄想　憂苦身心',
+      '便遭濁辱　流浪生死',
+      '常沉苦海　永失真道',
+      '真常之道　悟者自得',
+      '得悟道者　常清靜矣'
+    ]}
+  ]},
+  { t:'濟公活佛救世真經', n:'濟公活佛 · 救世真經', text: [
+    { h:'開經讚', p:[
+      '開經結善緣　經聲透上天　鬼神聞經卷　邪魔自滅形',
+      '舉香讚爐中　焚寶香　香煙達三界　三界神聖降　降宅賜福祥',
+      '淨五官　靈台清靜　神降太虛　色聲香味意　相皆無　六根清靜',
+      '摩柯普照莊嚴法相　令吾安居'
+    ]},
+    { h:'淨心咒', p:[
+      '人心萬物靈　靈為萬物遷　遷善改諸惡　惡念化為煙'
+    ]},
+    { p:[
+      '濟世群生照三千　公正無私可達天',
+      '活用真經傳萬世　佛法無邊化大千'
+    ]},
+    { h:'真經', p:[
+      '真經應運出　災消劫除大道尊　修身化世立功勳',
+      '八八聖賢紀　佛聖仙真發慈悲　德澤群生得光輝',
+      '東來紫氣展　普渡三曹開妙玄　應身下凡師天然',
+      '中土有緣份　繼往開來萬八春　白陽逢運道線存',
+      '青紅運已隱　陽光普照道德揚　萬邦咸仰運大同',
+      '家家佛光照　靈山如來靜觀招　吾師指點路一條',
+      '千經萬典有　未聞真經說因由　有緣明師會相求',
+      '開泰白陽運　佛今說破朦朧雲　善至於止離苦淪',
+      '二六時守一　五氣朝元一紀飛　蓮花座上會丹墀',
+      '尊者本羅漢　丈六金身照世間　濟人醒世皈依安',
+      '心明善男女　經文悟透莫遲疑　受師點化脫苦之',
+      '學致中庸並　心誠把經奉佛名　一切災殃化作塵',
+      '道大惟天大　至尊至貴點靈台　應運開泰萬象裁',
+      '善智慧朗朗　立身行道內外功　理正事明天下通',
+      '古今誰無錯　過勿憚改入善科　科程過後苦海逃',
+      '市農及工賈　志心常唸福德高　閤家平安萬事和',
+      '經文雖淺近　不可視為頂上雲　奉行真經脫苦輪',
+      '心誠虔拜誦　消災解厄離苦障　逢凶化吉定禎祥',
+      '朝夕誠心念　心明神清身不癲　萬病解卻孽不纏',
+      '唸經心頭正　驅邪除穢事安寧　福祿壽元亨利貞'
+    ]},
+    { h:'誦經功德', p:[
+      '誦此活佛經　福慧雙增長　　　誦此活佛經　子孫得安寧',
+      '誦唸活佛經　功名利祿得平步　誦得真經文　永世化為吉',
+      '若為父母唸　父母得長壽　　　若為亡化唸　亡靈得超生',
+      '若為親友求病殃　病殃得安痊　全家老幼同聲唸　老幼保安寧',
+      '誦唸濟公真經　免災又消難',
+      '誦唸濟公真經　覺悟第一先　真經廣佈十方界'
+    ]},
+    { p:[
+      '奉請南無大慈大悲護法尊者',
+      '稽首頓首'
+    ], a:'c' },
+    { h:'諸尊菩薩同讚曰', p:[
+      '濟公活佛大慈悲　為救九六眾原靈　了卻人生死生路'
+    ]},
+    { h:'濟公活佛曰', p:[
+      '家中有本真經　可保平安　奉上神桌確保爾　卻除邪魔永消滅',
+      '真誠誦此經　佈經說經典　功德無量福無邊　老幼康安壽延年'
+    ]},
+    { p:[
+      '稽首頓首',
+      '恭請',
+      '南無大慈大悲救苦救難濟公活佛　　十叩首'
+    ], a:'c' },
+    { h:'迴向文', p:[
+      '功德一一迴向給我累世　前世　今世所結冤怨',
+      '請冤親債主　和我們共修佛法　發菩提心',
+      '給六親眷屬　往生淨土　給他們離苦得樂'
+    ]}
+  ]},
+  { t:'關聖帝君覺世真經', n:'關聖帝君 · 覺世真經' },
+  { t:'安東家訓',        n:'安東道場 · 家訓' },
+  { t:'金公祖師 48 訓',  n:'金公祖師 · 四十八訓' }
+];
+let classicsIdx = 0;
+let classicsView = 'list';  // 'list' | 'detail'
+function openClassicsViewer(){
+  classicsView = 'list';
+  document.getElementById('classics-viewer').classList.add('active');
+  document.getElementById('classics-list-view').style.display = 'block';
+  document.getElementById('classics-detail-view').style.display = 'none';
+  document.getElementById('classics-header-title').textContent = '經典';
+  document.getElementById('classics-header-sub').textContent = '七部 · 法寶薈萃';
+  document.getElementById('classics-back-btn').textContent = '‹ 返回';
+  renderClassicsList();
+  document.getElementById('classics-viewer').scrollTop = 0;
+}
+function closeClassicsViewer(){
+  document.getElementById('classics-viewer').classList.remove('active');
+}
+function classicsBack(){
+  if(classicsView === 'detail'){
+    classicsView = 'list';
+    document.getElementById('classics-list-view').style.display = 'block';
+    document.getElementById('classics-detail-view').style.display = 'none';
+    document.getElementById('classics-header-title').textContent = '經典';
+    document.getElementById('classics-header-sub').textContent = '七部 · 法寶薈萃';
+  }else{
+    closeClassicsViewer();
+  }
+}
+function renderClassicsList(){
+  const list = document.getElementById('classics-list');
+  list.innerHTML = '';
+  CLASSICS_LIST.forEach((c, idx)=>{
+    const row = document.createElement('div');
+    row.className = 'classics-item';
+    row.innerHTML = `
+      <div class="classics-num">${['一','二','三','四','五','六','七'][idx]||(idx+1)}</div>
+      <div class="classics-body">
+        <div class="classics-title">${escapeHtml(c.t)}</div>
+        <div class="classics-sub">${escapeHtml(c.n)}</div>
+      </div>
+      <div class="classics-arrow">›</div>`;
+    row.onclick = ()=>showClassicsDetail(idx);
+    list.appendChild(row);
+  });
+}
+function showClassicsDetail(idx){
+  classicsIdx = idx;
+  classicsView = 'detail';
+  const c = CLASSICS_LIST[idx];
+  document.getElementById('classics-list-view').style.display = 'none';
+  document.getElementById('classics-detail-view').style.display = 'block';
+  document.getElementById('classics-header-title').textContent = c.t;
+  document.getElementById('classics-header-sub').textContent = c.n;
+  document.getElementById('classics-detail-title').textContent = c.t;
+  document.getElementById('classics-detail-sub').textContent = c.n;
+  document.getElementById('classics-detail-num').textContent = ['一','二','三','四','五','六','七'][idx]||(idx+1);
+  document.getElementById('classics-page-indicator').textContent = `${idx+1} / ${CLASSICS_LIST.length}`;
+  document.getElementById('classics-prev-btn').disabled = (idx===0);
+  document.getElementById('classics-next-btn').disabled = (idx===CLASSICS_LIST.length-1);
+  // v2.4.1: 有 text 則渲染經文,否則顯示整理中
+  const textEl = document.getElementById('classics-detail-text');
+  const noteEl = document.getElementById('classics-detail-note');
+  if(c.text && c.text.length){
+    textEl.innerHTML = renderClassicsText(c.text);
+    textEl.style.display = 'block';
+    noteEl.style.display = 'none';
+  }else{
+    textEl.innerHTML = '';
+    textEl.style.display = 'none';
+    noteEl.style.display = 'block';
+  }
+  document.getElementById('classics-viewer').scrollTop = 0;
+}
+function renderClassicsText(sections){
+  return sections.map(s => {
+    let html = '';
+    if(s.h) html += `<div class="ct-heading">${escapeHtml(s.h)}</div>`;
+    if(s.p){
+      const align = s.a === 'c' ? ' ct-center' : '';
+      html += `<div class="ct-block${align}">` +
+              s.p.map(line => `<div class="ct-line">${escapeHtml(line)}</div>`).join('') +
+              '</div>';
+    }
+    return html;
+  }).join('');
+}
+function classicsNav(delta){
+  const next = classicsIdx + delta;
+  if(next >= 0 && next < CLASSICS_LIST.length) showClassicsDetail(next);
+}
+window.openClassicsViewer = openClassicsViewer;
+window.closeClassicsViewer = closeClassicsViewer;
+window.classicsBack = classicsBack;
+window.classicsNav = classicsNav;
 
 /* 安裝預設行事曆(僅在第一次或回復預設時呼叫) */
 async function installDefaultMembers(){
@@ -5515,8 +6167,10 @@ async function renderList(type){
     // v2.2.0: 用 isFAQ/isPrayer 或 id 雙重判斷（避免欄位遺失）
     const isFAQ = type==='library' && (it.isFAQ || it.id==='default_faq100');
     const isPrayer = type==='library' && (it.isPrayer || it.id==='default_prayer');
+    const isClassics = type==='library' && (it.isClassics || it.id==='default_classics');
     if(isFAQ) row.className += ' faq-card';
     if(isPrayer) row.className += ' prayer-card';
+    if(isClassics) row.className += ' classics-card';
 
     let dateBlock='';
     if(type==='calendar'&&it.date){
@@ -5526,10 +6180,12 @@ async function renderList(type){
       dateBlock=`<div class="item-date">📜<br>百問</div>`;
     }else if(isPrayer){
       dateBlock=`<div class="item-date">🕉<br>祈願</div>`;
+    }else if(isClassics){
+      dateBlock=`<div class="item-date">📚<br>經典</div>`;
     }else{
       dateBlock=`<div class="item-date" style="font-size:11px;">${(it.updatedAt||'').slice(0,10)}</div>`;
     }
-    const actionText = (isFAQ || isPrayer) ? '閱覽 ›' : '編輯 ›';
+    const actionText = (isFAQ || isPrayer || isClassics) ? '閱覽 ›' : '編輯 ›';
     row.innerHTML=`
       ${dateBlock}
       <div>
@@ -5541,6 +6197,8 @@ async function renderList(type){
       row.onclick=()=>openFaqViewer();
     }else if(isPrayer){
       row.onclick=()=>openPrayerViewer();
+    }else if(isClassics){
+      row.onclick=()=>openClassicsViewer();
     }else{
       row.onclick=()=>openGenericModal(type, it.id);
     }
@@ -6706,6 +7364,20 @@ async function ensureDefaultsInstalled(){
     const mem = await Store.list('members:');
     if(mem.length === 0) await installDefaultMembers();
     await Store.save('__defaults_installed_v2', {installedAt: new Date().toISOString()});
+  }
+  // v2.4.0: 補裝「經典」(既有用戶升級用,冪等)
+  const classics = await Store.get('library:default_classics');
+  if(!classics){
+    const now = new Date().toISOString();
+    await Store.save('library:default_classics', {
+      id: 'default_classics',
+      title: '經典',
+      content: '七部經文目錄 · 點此進入研讀 →',
+      isDefault: true,
+      isClassics: true,
+      createdAt: now,
+      updatedAt: now
+    });
   }
 }
 
