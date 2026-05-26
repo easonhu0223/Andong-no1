@@ -3622,6 +3622,45 @@
     color: var(--ink);
   }
 
+  /* ---------- 匯出人標籤 (v2.5.3) ---------- */
+  .exporter-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    margin: 8px 0 12px;
+    padding: 6px 14px;
+    background: linear-gradient(180deg, rgba(252,244,221,0.55), rgba(245,230,198,0.4));
+    border: 1px solid rgba(176,132,86,0.35);
+    border-left: 3px solid var(--gold);
+    border-radius: 2px;
+    font-family: 'Noto Serif TC', serif;
+    font-size: 13px;
+    color: var(--ink);
+    letter-spacing: 1px;
+  }
+  .exporter-label {
+    color: var(--ink-soft);
+    font-size: 12px;
+    letter-spacing: 1.5px;
+  }
+  .exporter-name {
+    color: var(--vermillion);
+    font-family: 'ZCOOL XiaoWei', serif;
+    font-size: 14px;
+    letter-spacing: 2px;
+    font-weight: 600;
+  }
+  .exporter-sep {
+    color: var(--gold);
+    opacity: 0.6;
+  }
+  .exporter-region {
+    color: var(--ink);
+    font-family: 'ZCOOL XiaoWei', serif;
+    font-size: 13px;
+    letter-spacing: 1.5px;
+  }
+
   /* ---------- 經典 觀覽器 (v2.4.0) ---------- */
   .classics-list {
     display: flex;
@@ -4156,7 +4195,7 @@
   <div class="title-wrap">
     <div class="title">安東道場 宏化分壇</div>
     <div class="subtitle">道 務 自 我 紀 錄 管 理</div>
-    <div class="version-tag" id="version-tag">v2.5.2</div>
+    <div class="version-tag" id="version-tag">v2.5.3</div>
   </div>
 </header>
 
@@ -4417,6 +4456,12 @@
 <div class="settings-section">
     <div class="settings-title">📤 資料備份匯出</div>
     <div class="settings-desc">將所有資料(道親、行事曆、學習資料、功課紀錄、個人設定)一次匯出為單一 Excel 檔,建議每週備份一次。</div>
+    <div class="exporter-tag" id="exporter-tag">
+      <span class="exporter-label">匯出人:</span>
+      <span class="exporter-name" id="exporter-name">…</span>
+      <span class="exporter-sep">·</span>
+      <span class="exporter-region" id="exporter-region">…</span>
+    </div>
     <div class="settings-actions">
       <button class="btn gold" onclick="exportAllExcel()">📦 一鍵備份所有資料</button>
       <button class="btn outline" onclick="exportExcel('members')">道親名單</button>
@@ -4875,15 +4920,15 @@
 
 <div class="toast" id="toast"></div>
 </div><!-- /#app-wrap -->
-<div class="version-corner" id="version-corner">v2.5.2 · 2026-05-24</div>
+<div class="version-corner" id="version-corner">v2.5.3 · 2026-05-24</div>
 
 <script type="module">
 /* =========================================================
    APP VERSION  ─ 每次改版請更新此處 + 檔名
    ========================================================= */
-const APP_VERSION   = 'v2.5.2';
+const APP_VERSION   = 'v2.5.3';
 const APP_BUILD     = '2026-05-24';
-const APP_CODENAME  = 'iPad 矯正';
+const APP_CODENAME  = '四十八訓';
 document.title = `宏化分壇 渡人管理 · ${APP_VERSION}`;
 
 /* =========================================================
@@ -5362,6 +5407,116 @@ const CLASSICS_LIST = [
       '給六親眷屬　往生淨土　給他們離苦得樂'
     ]}
   ]},
+  { t:'安東家訓',        n:'安東道場 · 家訓', text: [
+    { h:'前言', p:[
+      '「孝」　大孝無極老母',
+      '「悌」　發揮八互精神',
+      '「慈」　提攜敬上愛下',
+      '「誠」　真誠始終如一',
+      '「敬」　恭敬尊師重道',
+      '「信」　信實大信於天'
+    ]},
+    { h:'一、孝', p:[
+      '大化神聖　感念天憫',
+      '孝順齊家　修己化人',
+      '無為而為　上德不德',
+      '極至天命　頂天立地',
+      '老中青少　齊家和合',
+      '母命諸真　不容蹉跎'
+    ]},
+    { h:'二、悌', p:[
+      '發揚道宗　吃苦耐勞',
+      '揮灑生命　正己成人',
+      '八大金剛　四位菩薩',
+      '互勉互勸　同助道盤',
+      '精進不懈　天憫祖慈',
+      '神仙菩薩　凡夫可證'
+    ]},
+    { h:'三、慈', p:[
+      '提拔後進　不遺餘力',
+      '攜手同心　邁向大同',
+      '上慈下孝　孔融讓梨',
+      '敬愛兄長　柔軟言語',
+      '愛人待物　以誠化人',
+      '下苦心去　感動人天'
+    ]},
+    { h:'四、誠', p:[
+      '真心不二　真金百煉',
+      '誠中行外　篤行向前',
+      '始勤終怠　離道可遠',
+      '終點無窮　勇猛向前',
+      '如實呼喚　天時急緊',
+      '一以貫之　邁向天梯'
+    ]},
+    { h:'五、敬', p:[
+      '恭而有禮　有緣有份',
+      '敬汝愛人　以道為重',
+      '尊敬天人　謙卑有禮',
+      '師道授業　傳法解惑',
+      '重道貴德　快馬加鞭',
+      '道在行踐　道範標竿'
+    ]},
+    { h:'六、信', p:[
+      '信用可靠　回天憑證',
+      '實在修道　重聖輕凡',
+      '大步向前　忍辱吃苦',
+      '信心篤定　勇猛向前',
+      '於天於道　速速打點',
+      '天命金線　緊握拳拳'
+    ]}
+  ]},
+  { t:'金勤金仙四十八訓', n:'金勤金仙 · 四十八訓', text: [
+    { h:'四十八訓', p:[
+      '一、孝敬父母　萬神欽助',
+      '二、心慈坦蕩　福報無疆',
+      '三、五倫無虧　如車有軌',
+      '四、凡事無求　心自無憂',
+      '五、心常低下　益必漸加',
+      '六、心量廣大　無所不納',
+      '七、看破放下　絲毫不掛',
+      '八、精進不休　佛果何愁',
+      '九、黑白不分　奚為智人',
+      '十、凡事虛心　量包乾坤',
+      '十一、忍人難忍　自然無瞋',
+      '十二、廣學多聞　久自淵源',
+      '十三、學會常溫　溫故知新',
+      '十四、道為智根　成佛正因',
+      '十五、勿生退心　保爾成真',
+      '十六、多言取憎　不如無聲',
+      '十七、喜怒無形　君子自重',
+      '十八、遇急從容　方合正中',
+      '十九、戒如明燈　菩提可證',
+      '二十、獨處寂靜　自達正定',
+      '二十一、一切平等　道自圓成',
+      '二十二、全始全終　久而自成',
+      '二十三、依愿奉行　庶幾近聖',
+      '二十四、打破人我　自在快樂',
+      '二十五、盡忠彌勒　蓮開見佛',
+      '二十六、無男無女　何憂何喜',
+      '二十七、遇謗即喜　心無我你',
+      '二十八、多行饒益　天人共喜',
+      '二十九、勿近邪師　免受其迷',
+      '三十、經觀了義　即是天梯',
+      '三十一、無事不找　有事不逃',
+      '三十二、事成不驕　事敗不惱',
+      '三十三、常行返照　久自逍遙',
+      '三十四、四相不著　當下覺了',
+      '三十五、明言知音　勝贈黃金',
+      '三十六、八德俱合　何異先賢',
+      '三十七、愩高我慢　親離徒叛',
+      '三十八、善言不辯　辯言不善',
+      '三十九、當斷不斷　反受其亂',
+      '四十、非分不言　眾自親讚',
+      '四十一、盡孝皇天　諸聖助肩',
+      '四十二、一切簡單　萬事無煩',
+      '四十三、精神內斂　道必益堅',
+      '四十四、勿聽閒言　不生煩惱',
+      '四十五、不怕艱難　何事不辦',
+      '四十六、埋頭苦幹　天必加憐',
+      '四十七、理絕文字　事含萬端',
+      '四十八、道離言詮　總強多言'
+    ]}
+  ]},
   { t:'關聖帝君伏魔真經', n:'關聖帝君 · 伏魔真經', text: [
     { h:'開經偈', p:[
       '關考人驗測道心　真心一點貫古今',
@@ -5478,65 +5633,7 @@ const CLASSICS_LIST = [
       '十　叩　首'
     ], a:'c' }
   ]},
-  { t:'安東家訓',        n:'安東道場 · 家訓', text: [
-    { h:'前言', p:[
-      '「孝」　大孝無極老母',
-      '「悌」　發揮八互精神',
-      '「慈」　提攜敬上愛下',
-      '「誠」　真誠始終如一',
-      '「敬」　恭敬尊師重道',
-      '「信」　信實大信於天'
-    ]},
-    { h:'一、孝', p:[
-      '大化神聖　感念天憫',
-      '孝順齊家　修己化人',
-      '無為而為　上德不德',
-      '極至天命　頂天立地',
-      '老中青少　齊家和合',
-      '母命諸真　不容蹉跎'
-    ]},
-    { h:'二、悌', p:[
-      '發揚道宗　吃苦耐勞',
-      '揮灑生命　正己成人',
-      '八大金剛　四位菩薩',
-      '互勉互勸　同助道盤',
-      '精進不懈　天憫祖慈',
-      '神仙菩薩　凡夫可證'
-    ]},
-    { h:'三、慈', p:[
-      '提拔後進　不遺餘力',
-      '攜手同心　邁向大同',
-      '上慈下孝　孔融讓梨',
-      '敬愛兄長　柔軟言語',
-      '愛人待物　以誠化人',
-      '下苦心去　感動人天'
-    ]},
-    { h:'四、誠', p:[
-      '真心不二　真金百煉',
-      '誠中行外　篤行向前',
-      '始勤終怠　離道可遠',
-      '終點無窮　勇猛向前',
-      '如實呼喚　天時急緊',
-      '一以貫之　邁向天梯'
-    ]},
-    { h:'五、敬', p:[
-      '恭而有禮　有緣有份',
-      '敬汝愛人　以道為重',
-      '尊敬天人　謙卑有禮',
-      '師道授業　傳法解惑',
-      '重道貴德　快馬加鞭',
-      '道在行踐　道範標竿'
-    ]},
-    { h:'六、信', p:[
-      '信用可靠　回天憑證',
-      '實在修道　重聖輕凡',
-      '大步向前　忍辱吃苦',
-      '信心篤定　勇猛向前',
-      '於天於道　速速打點',
-      '天命金線　緊握拳拳'
-    ]}
-  ]},
-  { t:'金公祖師 48 訓',  n:'金公祖師 · 四十八訓' }
+
 ];
 let classicsIdx = 0;
 let classicsView = 'list';  // 'list' | 'detail'
@@ -7011,8 +7108,22 @@ async function exportExcel(type){
   const wb=XLSX.utils.book_new();
   XLSX.utils.book_append_sheet(wb, ws, type);
   const stamp=new Date().toISOString().slice(0,10);
-  XLSX.writeFile(wb, `安東道場_${type}_${stamp}.xlsx`);
+  // v2.5.3: 檔名加上匯出人姓名與分區
+  const exporter = await getExporterTag();
+  XLSX.writeFile(wb, `安東道場_${exporter}_${type}_${stamp}.xlsx`);
   toast('已匯出 Excel');
+}
+
+/* v2.5.3: 取得匯出人標籤(姓名+分區),供檔名與 sheet 顯示用 */
+async function getExporterTag(){
+  const profile = (typeof Firebase !== 'undefined' && Firebase.profile) ? Firebase.profile : {};
+  const s = await Store.get('settings') || {};
+  const name = (profile.displayName || s.name || '未署名').trim();
+  const region = (profile.region || s.region || '').trim();
+  // 清理檔名不能用的字元
+  const clean = (str)=>String(str).replace(/[\\/:*?"<>|]/g, '').trim();
+  if(region) return `${clean(region)}_${clean(name)}`;
+  return clean(name);
 }
 
 function importExcel(e){
@@ -7069,6 +7180,13 @@ async function updateSettingsInfo(){
   Firebase._updateStatusBadge();
   const btn = document.getElementById('disconnect-cloud-btn');
   if(btn) btn.style.display = Firebase.ready ? '' : 'none';
+  // v2.5.3: 更新匯出人顯示
+  const profile = (typeof Firebase !== 'undefined' && Firebase.profile) ? Firebase.profile : {};
+  const s = await Store.get('settings') || {};
+  const nameEl = document.getElementById('exporter-name');
+  const regionEl = document.getElementById('exporter-region');
+  if(nameEl) nameEl.textContent = profile.displayName || s.name || '(未署名)';
+  if(regionEl) regionEl.textContent = profile.region || s.region || '(未設定分區)';
 }
 
 /* 一鍵備份所有資料(單一 Excel,含多個工作表) */
@@ -7104,7 +7222,20 @@ async function exportAllExcel(){
   XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(pRows.length?pRows:[{備註:'(尚無資料)'}]), 'practice');
 
   // 設定 & 版本
+  // v2.5.3: 開頭加匯出人標籤,讓 Excel 第一眼就看得到
+  const profile = (typeof Firebase !== 'undefined' && Firebase.profile) ? Firebase.profile : {};
+  const exporterName = profile.displayName || settings.name || '(未署名)';
+  const exporterRegion = profile.region || settings.region || '(未設定)';
+  const exporterVocation = profile.vocation || '';
+  const exporterEmail = (typeof Firebase !== 'undefined' && Firebase.user) ? (Firebase.user.email || '') : '';
   const sRows = [
+    {鍵:'═══ 匯出人 ═══', 值:'═══════════════════'},
+    {鍵:'姓名', 值:exporterName},
+    {鍵:'分區', 值:exporterRegion},
+    {鍵:'職司', 值:exporterVocation},
+    {鍵:'Email', 值:exporterEmail},
+    {鍵:'匯出時間', 值:new Date().toLocaleString('zh-TW')},
+    {鍵:'═══ 系統資訊 ═══', 值:'═══════════════════'},
     {鍵:'region', 值:settings.region||''},
     {鍵:'name', 值:settings.name||''},
     {鍵:'app_version', 值:APP_VERSION},
@@ -7114,7 +7245,9 @@ async function exportAllExcel(){
   XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(sRows), 'settings');
 
   const stamp = new Date().toISOString().slice(0,10);
-  XLSX.writeFile(wb, `安東道場_全部備份_${stamp}_${APP_VERSION}.xlsx`);
+  // v2.5.3: 檔名加上匯出人姓名與分區
+  const exporter = await getExporterTag();
+  XLSX.writeFile(wb, `安東道場_全部備份_${exporter}_${stamp}_${APP_VERSION}.xlsx`);
   toast('已匯出完整備份');
 }
 
