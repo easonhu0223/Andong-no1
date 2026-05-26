@@ -3560,6 +3560,68 @@
     border-top: 1px dashed var(--line);
   }
 
+  /* ---------- 進階成全提示 Modal (v2.5.0) ---------- */
+  .advanced-care-card {
+    max-width: 360px;
+    background: linear-gradient(180deg, #fdf6e3 0%, #f8eecf 100%);
+    border: 1px solid var(--vermillion);
+    box-shadow: 0 8px 32px rgba(138,42,31,0.25);
+  }
+  .advanced-care-head {
+    background: linear-gradient(180deg, rgba(138,42,31,0.12), rgba(138,42,31,0.04));
+    color: var(--vermillion);
+    border-bottom: 1px solid rgba(138,42,31,0.25);
+    font-size: 16px;
+  }
+  .ac-name {
+    text-align: center;
+    font-family: 'Ma Shan Zheng', cursive;
+    font-size: 26px;
+    color: var(--vermillion);
+    letter-spacing: 4px;
+    margin: 4px 0 4px;
+  }
+  .ac-count {
+    text-align: center;
+    font-family: 'ZCOOL XiaoWei', serif;
+    font-size: 13px;
+    color: var(--ink-soft);
+    letter-spacing: 2px;
+    margin-bottom: 10px;
+  }
+  .ac-divider {
+    text-align: center;
+    color: var(--gold);
+    font-size: 12px;
+    margin: 6px 0 12px;
+    opacity: 0.7;
+  }
+  .ac-msg {
+    text-align: center;
+    font-family: 'Noto Serif TC', serif;
+    font-size: 14px;
+    line-height: 2;
+    color: var(--ink);
+    letter-spacing: 1.5px;
+    padding: 0 4px;
+  }
+  .ac-msg strong {
+    color: var(--vermillion);
+    font-weight: 600;
+    margin: 0 2px;
+  }
+  .ac-msg-em {
+    display: inline-block;
+    padding: 2px 10px;
+    margin: 4px 0;
+    background: rgba(176,132,86,0.15);
+    border: 1px solid rgba(176,132,86,0.4);
+    border-radius: 2px;
+    font-family: 'ZCOOL XiaoWei', serif;
+    letter-spacing: 3px;
+    color: var(--ink);
+  }
+
   /* ---------- 經典 觀覽器 (v2.4.0) ---------- */
   .classics-list {
     display: flex;
@@ -3740,6 +3802,19 @@
     .member-body { font-size: 12px; line-height: 1.55; max-height: 90px; padding-top: 7px; }
     .member-footer { font-size: 10px; flex-direction: column; align-items: flex-start; gap: 1px; margin-top: 7px; }
   }
+
+  /* ─── iPad / iPad Mini 直式:道親卡兩欄 (v2.5.0) ─── */
+  @media (min-width: 700px) and (max-width: 900px) and (orientation: portrait) {
+    .member-list { grid-template-columns: repeat(2, 1fr) !important; gap: 14px !important; }
+  }
+  /* ─── iPad / iPad Mini 橫式 + iPad 標準直式:道親卡三欄 (v2.5.0) ─── */
+  @media (min-width: 901px) and (max-width: 1180px) {
+    .member-list { grid-template-columns: repeat(3, 1fr) !important; gap: 14px !important; }
+  }
+  @media (min-width: 901px) and (max-width: 1366px) and (orientation: landscape) and (max-height: 1024px) {
+    .member-list { grid-template-columns: repeat(3, 1fr) !important; gap: 14px !important; }
+  }
+
   /* 平板 */
   @media (min-width: 641px) and (max-width: 1099px) {
     .panel { padding: 24px 28px 120px; }
@@ -4050,7 +4125,7 @@
   <div class="title-wrap">
     <div class="title">安東道場 宏化分壇</div>
     <div class="subtitle">道 務 自 我 紀 錄 管 理</div>
-    <div class="version-tag" id="version-tag">v2.4.7</div>
+    <div class="version-tag" id="version-tag">v2.5.0</div>
   </div>
 </header>
 
@@ -4743,17 +4818,41 @@
   </div>
 </div>
 
+<!-- ============ 進階成全提示 Modal (v2.5.0) ============ -->
+<div class="pwa-modal" id="advanced-care-modal">
+  <div class="pwa-card advanced-care-card">
+    <div class="pwa-card-head advanced-care-head">
+      <span>📿 進階成全提醒</span>
+      <button class="pwa-close" onclick="closeAdvancedCarePrompt()">✕</button>
+    </div>
+    <div class="pwa-card-body">
+      <div class="ac-name" id="ac-name">　</div>
+      <div class="ac-count" id="ac-count">　</div>
+      <div class="ac-divider">❖</div>
+      <div class="ac-msg">
+        關心紀錄已累積至此　誠心可貴<br>
+        建議與<strong>經理</strong>進一步討論<br>
+        <span class="ac-msg-em">進階成全方式</span><br>
+        如:邀約班期、安排家訪、引薦同修…
+      </div>
+    </div>
+    <div class="pwa-card-foot">
+      <button class="btn outline" onclick="closeAdvancedCarePrompt()">我知道了</button>
+    </div>
+  </div>
+</div>
+
 <div class="toast" id="toast"></div>
 </div><!-- /#app-wrap -->
-<div class="version-corner" id="version-corner">v2.4.7 · 2026-05-24</div>
+<div class="version-corner" id="version-corner">v2.5.0 · 2026-05-24</div>
 
 <script type="module">
 /* =========================================================
    APP VERSION  ─ 每次改版請更新此處 + 檔名
    ========================================================= */
-const APP_VERSION   = 'v2.4.7';
+const APP_VERSION   = 'v2.5.0';
 const APP_BUILD     = '2026-05-24';
-const APP_CODENAME  = '逐項補裝';
+const APP_CODENAME  = '成全進階';
 document.title = `宏化分壇 渡人管理 · ${APP_VERSION}`;
 
 /* =========================================================
@@ -4820,6 +4919,22 @@ function closeInstallGuide(){
   document.getElementById('pwa-guide-modal').classList.remove('active');
 }
 window.closeInstallGuide = closeInstallGuide;
+
+/* v2.5.0 · 進階成全提示彈窗 */
+function showAdvancedCarePrompt(name, count){
+  const nameEl = document.getElementById('ac-name');
+  const countEl = document.getElementById('ac-count');
+  if(nameEl) nameEl.textContent = name || '此位道親';
+  if(countEl) countEl.textContent = `累積 ${count} 次關心紀錄`;
+  const m = document.getElementById('advanced-care-modal');
+  if(m) m.classList.add('active');
+}
+function closeAdvancedCarePrompt(){
+  const m = document.getElementById('advanced-care-modal');
+  if(m) m.classList.remove('active');
+}
+window.showAdvancedCarePrompt = showAdvancedCarePrompt;
+window.closeAdvancedCarePrompt = closeAdvancedCarePrompt;
 
 /* =========================================================
    FIREBASE 統一設定 (管理員預先寫入)
@@ -6237,10 +6352,12 @@ async function saveMember(){
     m.region = (s && s.region) || '化真區';
   }
   const note=document.getElementById('m-note').value.trim();
+  let noteAdded = false;
   if(note){
     m.notes=m.notes||[];
     m.notes.push({date:new Date().toISOString().slice(0,10), content:note});
     m.updatedAt=now;
+    noteAdded = true;
   }else{
     m.updatedAt=m.updatedAt||now;
   }
@@ -6248,6 +6365,11 @@ async function saveMember(){
   closeMemberModal();
   toast('已儲存');
   renderMembers();
+  // v2.5.0: 每超過 5 次關心紀錄就提示一次進階成全建議
+  if(noteAdded && m.notes && m.notes.length > 5 && m.notes.length % 5 === 1){
+    // 6, 11, 16, 21… 觸發(每滿 5 次的下一筆)
+    showAdvancedCarePrompt(m.name, m.notes.length);
+  }
 }
 
 async function deleteMember(){
