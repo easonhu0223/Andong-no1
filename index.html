@@ -3803,17 +3803,7 @@
     .member-footer { font-size: 10px; flex-direction: column; align-items: flex-start; gap: 1px; margin-top: 7px; }
   }
 
-  /* ─── iPad / iPad Mini 直式:道親卡兩欄 (v2.5.0) ─── */
-  @media (min-width: 700px) and (max-width: 900px) and (orientation: portrait) {
-    .member-list { grid-template-columns: repeat(2, 1fr) !important; gap: 14px !important; }
-  }
-  /* ─── iPad / iPad Mini 橫式 + iPad 標準直式:道親卡三欄 (v2.5.0) ─── */
-  @media (min-width: 901px) and (max-width: 1180px) {
-    .member-list { grid-template-columns: repeat(3, 1fr) !important; gap: 14px !important; }
-  }
-  @media (min-width: 901px) and (max-width: 1366px) and (orientation: landscape) and (max-height: 1024px) {
-    .member-list { grid-template-columns: repeat(3, 1fr) !important; gap: 14px !important; }
-  }
+  /* iPad 專用規則改至檔案最末,確保不被「平板 641-1099」斷點覆蓋 (v2.5.2) */
 
   /* 平板 */
   @media (min-width: 641px) and (max-width: 1099px) {
@@ -3926,6 +3916,47 @@
     .title { font-size: 20px; letter-spacing: 0.5px; }
     .subtitle { font-size: 9px; letter-spacing: 2px; }
     .header::before, .header::after { display: none; }
+  }
+
+  /* ════════════════════════════════════════════════
+     iPad / iPad Mini 道親卡分欄 (v2.5.2 修正版)
+     放在最末,確保不被任何先前的「平板」斷點覆蓋
+     ════════════════════════════════════════════════ */
+
+  /* iPad Mini 直式 (~768×1024) / iPad 標準直式 (~820×1180) → 三欄 */
+  @media (min-width: 700px) and (max-width: 1024px) and (orientation: portrait) {
+    .member-list {
+      display: grid !important;
+      grid-template-columns: repeat(3, 1fr) !important;
+      gap: 12px !important;
+    }
+    /* iPad 直式三欄時卡片縮小一點以容下三欄 */
+    .member-card { padding: 14px 14px !important; }
+    .avatar { width: 48px !important; height: 48px !important; font-size: 26px !important; }
+    .member-name { font-size: 18px !important; letter-spacing: 2px !important; }
+    .member-meta { font-size: 13px !important; letter-spacing: 1px !important; }
+    .status-tag { font-size: 13px !important; padding: 4px 10px !important; }
+    .member-progress { font-size: 13px !important; padding: 6px 10px !important; letter-spacing: 1px !important; }
+    .member-body { font-size: 14px !important; line-height: 1.65 !important; max-height: 100px !important; padding-top: 8px !important; }
+    .member-footer { font-size: 11px !important; letter-spacing: 1px !important; margin-top: 9px !important; }
+  }
+
+  /* iPad Mini 橫式 (~1024×768) / iPad 標準橫式 (~1180×820) → 四欄 */
+  @media (min-width: 1000px) and (max-width: 1366px) and (orientation: landscape) and (max-height: 900px) {
+    .member-list {
+      display: grid !important;
+      grid-template-columns: repeat(4, 1fr) !important;
+      gap: 10px !important;
+    }
+    /* 四欄時卡片更緊湊 */
+    .member-card { padding: 12px 12px !important; }
+    .avatar { width: 42px !important; height: 42px !important; font-size: 22px !important; }
+    .member-name { font-size: 16px !important; letter-spacing: 1.5px !important; }
+    .member-meta { font-size: 12px !important; letter-spacing: 0.8px !important; line-height: 1.45 !important; }
+    .status-tag { font-size: 12px !important; padding: 3px 9px !important; }
+    .member-progress { font-size: 12px !important; padding: 5px 9px !important; letter-spacing: 0.8px !important; margin-bottom: 7px !important; }
+    .member-body { font-size: 13px !important; line-height: 1.6 !important; max-height: 90px !important; padding-top: 7px !important; }
+    .member-footer { font-size: 10px !important; letter-spacing: 0.5px !important; margin-top: 7px !important; }
   }
 </style>
 </head>
@@ -4125,7 +4156,7 @@
   <div class="title-wrap">
     <div class="title">安東道場 宏化分壇</div>
     <div class="subtitle">道 務 自 我 紀 錄 管 理</div>
-    <div class="version-tag" id="version-tag">v2.5.1</div>
+    <div class="version-tag" id="version-tag">v2.5.2</div>
   </div>
 </header>
 
@@ -4844,15 +4875,15 @@
 
 <div class="toast" id="toast"></div>
 </div><!-- /#app-wrap -->
-<div class="version-corner" id="version-corner">v2.5.1 · 2026-05-24</div>
+<div class="version-corner" id="version-corner">v2.5.2 · 2026-05-24</div>
 
 <script type="module">
 /* =========================================================
    APP VERSION  ─ 每次改版請更新此處 + 檔名
    ========================================================= */
-const APP_VERSION   = 'v2.5.1';
+const APP_VERSION   = 'v2.5.2';
 const APP_BUILD     = '2026-05-24';
-const APP_CODENAME  = '安東家訓';
+const APP_CODENAME  = 'iPad 矯正';
 document.title = `宏化分壇 渡人管理 · ${APP_VERSION}`;
 
 /* =========================================================
