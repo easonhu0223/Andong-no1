@@ -1930,94 +1930,8 @@
   }
 
   /* 搜尋列 */
-  .faq-search-bar {
-    margin-bottom: 18px;
-    padding: 0 4px;
-  }
-  .faq-search-bar input {
-    width: 100%;
-    font-family: inherit;
-    font-size: 14px;
-    padding: 10px 14px;
-    border: 1px solid var(--line);
-    background: rgba(255, 252, 245, 0.7);
-    border-radius: 2px;
-    color: var(--ink);
-    outline: none;
-    letter-spacing: 1px;
-    transition: border-color 0.2s, background 0.2s;
-  }
-  .faq-search-bar input:focus {
-    border-color: var(--gold);
-    background: rgba(255, 252, 245, 0.95);
-  }
 
   /* 題目清單 */
-  .faq-list {
-    display: flex;
-    flex-direction: column;
-    gap: 0;
-    background: rgba(255, 252, 245, 0.55);
-    border: 1px solid var(--line);
-    border-radius: 2px;
-    overflow: hidden;
-  }
-  .faq-item {
-    display: grid;
-    grid-template-columns: 56px 1fr auto;
-    gap: 14px;
-    align-items: center;
-    padding: 14px 18px;
-    cursor: pointer;
-    border-bottom: 1px dashed var(--line);
-    transition: background 0.2s, transform 0.15s;
-  }
-  .faq-item:last-child { border-bottom: none; }
-  .faq-item:hover {
-    background: rgba(176, 132, 86, 0.10);
-  }
-  .faq-item.has-answer .faq-item-num {
-    background: var(--vermillion);
-    color: var(--paper);
-  }
-  .faq-item-num {
-    width: 38px; height: 38px;
-    border-radius: 50%;
-    background: rgba(176, 132, 86, 0.25);
-    color: var(--ink);
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 15px;
-    font-weight: 500;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    letter-spacing: 0;
-    border: 1px solid rgba(176, 132, 86, 0.4);
-    flex-shrink: 0;
-  }
-  .faq-item-text {
-    font-family: 'Noto Serif TC', serif;
-    font-size: 15px;
-    color: var(--ink);
-    line-height: 1.6;
-    letter-spacing: 0.5px;
-  }
-  .faq-item-arrow {
-    color: var(--gold);
-    font-family: serif;
-    font-size: 18px;
-    opacity: 0.6;
-  }
-  .faq-item.no-content {
-    opacity: 0.75;
-  }
-  .faq-item.no-content .faq-item-text::after {
-    content: ' (原文)';
-    font-size: 10px;
-    color: var(--ink-soft);
-    margin-left: 4px;
-    opacity: 0.6;
-  }
 
   /* 詳細內容頁 */
   .faq-detail-wrap {
@@ -2052,8 +1966,6 @@
     margin-bottom: 18px;
     box-shadow: 0 2px 8px rgba(138, 42, 31, 0.3);
   }
-  .faq-num-badge::before { content: '第 '; }
-  .faq-num-badge::after { content: ' 問'; }
   .faq-question {
     font-family: 'Ma Shan Zheng', serif;
     font-size: clamp(20px, 4.6vw, 28px);
@@ -2083,30 +1995,6 @@
     text-indent: 2em;
     white-space: pre-wrap;
   }
-  .faq-answer.empty {
-    text-indent: 0;
-    text-align: center;
-    color: var(--ink-soft);
-    font-style: italic;
-    opacity: 0.7;
-    line-height: 2.4;
-  }
-  .faq-source {
-    margin-top: 28px;
-    padding-top: 18px;
-    border-top: 1px dashed var(--line);
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 11px;
-    color: var(--ink-soft);
-    letter-spacing: 1.5px;
-    opacity: 0.7;
-  }
-  .faq-source a {
-    color: var(--vermillion);
-    text-decoration: none;
-    border-bottom: 1px dashed var(--vermillion);
-    margin-left: 4px;
-  }
 
   /* 上一題/下一題 */
   .faq-nav {
@@ -2125,12 +2013,6 @@
   }
 
   /* FAQ 卡片在學習資料列表中的特別樣式 */
-  .item-row.faq-card {
-    border-left-color: var(--vermillion);
-    background: linear-gradient(90deg, rgba(255, 240, 230, 0.6), rgba(255, 252, 245, 0.4));
-    cursor: pointer;
-    position: relative;
-  }
   .item-row.faq-card::after {
     content: '⮕';
     position: absolute;
@@ -2161,9 +2043,6 @@
     .faq-title { font-size: 18px; letter-spacing: 2px; }
     .faq-back, .faq-close { padding: 5px 10px; font-size: 12px; }
     .faq-content { padding: 20px 14px 100px; }
-    .faq-item { padding: 12px 14px; grid-template-columns: 46px 1fr auto; gap: 10px; }
-    .faq-item-num { width: 34px; height: 34px; font-size: 13px; }
-    .faq-item-text { font-size: 14px; }
     .faq-detail-wrap { padding: 32px 18px 24px; }
     .faq-answer { font-size: 15px; line-height: 1.95; }
     .faq-nav { font-size: 12px; }
@@ -4195,7 +4074,7 @@
   <div class="title-wrap">
     <div class="title">安東道場 宏化分壇</div>
     <div class="subtitle">道 務 自 我 紀 錄 管 理</div>
-    <div class="version-tag" id="version-tag">v2.5.3</div>
+    <div class="version-tag" id="version-tag">v2.5.4</div>
   </div>
 </header>
 
@@ -4681,51 +4560,6 @@
   </div>
 </div>
 
-<!-- ============ 修道百問 觀覽器 ============ -->
-<div class="faq-viewer" id="faq-viewer">
-  <!-- 觀覽器抬頭 -->
-  <div class="faq-header">
-    <button class="faq-back" id="faq-back-btn" onclick="faqBack()">‹ 返回</button>
-    <div class="faq-title-wrap">
-      <div class="faq-title" id="faq-header-title">修道百問</div>
-      <div class="faq-sub" id="faq-header-sub">共 213 題 · 道義精華</div>
-    </div>
-    <button class="faq-close" onclick="closeFaqViewer()">✕</button>
-  </div>
-
-  <!-- 題目索引(預設顯示) -->
-  <div class="faq-content" id="faq-list-view">
-    <div class="faq-intro">
-      <div class="faq-intro-quote">「 修 道 百 問 · 道 義 精 華 」</div>
-      <div class="faq-intro-line"></div>
-      <div class="faq-intro-text">
-        共收錄 <strong>213 題</strong>修道核心問答<br>
-        原文出處 · <a href="https://honlostemple.org/index.php/about/faq100" target="_blank" rel="noopener">宏樂堂 修道百問</a>
-      </div>
-    </div>
-    <div class="faq-search-bar">
-      <input type="text" id="faq-search" placeholder="🔍 搜尋題目關鍵字…" oninput="filterFaqList()">
-    </div>
-    <div class="faq-list" id="faq-list"></div>
-  </div>
-
-  <!-- 問答內容(隱藏) -->
-  <div class="faq-content" id="faq-detail-view" style="display:none;">
-    <div class="faq-detail-wrap">
-      <div class="faq-num-badge" id="faq-detail-num">1</div>
-      <div class="faq-question" id="faq-detail-question"></div>
-      <div class="faq-divider">❖</div>
-      <div class="faq-answer" id="faq-detail-answer"></div>
-      <div class="faq-source" id="faq-detail-source"></div>
-    </div>
-    <div class="faq-nav">
-      <button class="btn outline" id="faq-prev-btn" onclick="faqDetailNav(-1)">‹ 上一題</button>
-      <span class="faq-page-indicator" id="faq-page-indicator">1 / 213</span>
-      <button class="btn outline" id="faq-next-btn" onclick="faqDetailNav(1)">下一題 ›</button>
-    </div>
-  </div>
-</div>
-
 <!-- ============ 喚醒生命實相 祈願文 誦讀器 ============ -->
 <div class="prayer-viewer" id="prayer-viewer">
   <div class="prayer-header">
@@ -4920,15 +4754,15 @@
 
 <div class="toast" id="toast"></div>
 </div><!-- /#app-wrap -->
-<div class="version-corner" id="version-corner">v2.5.3 · 2026-05-24</div>
+<div class="version-corner" id="version-corner">v2.5.4 · 2026-05-24</div>
 
 <script type="module">
 /* =========================================================
    APP VERSION  ─ 每次改版請更新此處 + 檔名
    ========================================================= */
-const APP_VERSION   = 'v2.5.3';
+const APP_VERSION   = 'v2.5.4';
 const APP_BUILD     = '2026-05-24';
-const APP_CODENAME  = '四十八訓';
+const APP_CODENAME  = '精簡';
 document.title = `宏化分壇 渡人管理 · ${APP_VERSION}`;
 
 /* =========================================================
@@ -5031,154 +4865,6 @@ const DISCORD_WEBHOOK_URL = "https://discord.com/api/webhooks/150742344947021020
    DEFAULT CALENDAR EVENTS  (115年安東道場宏宗總壇行事曆 - 內建預設)
    ========================================================= */
 const DEFAULT_CALENDAR_EVENTS = [{"date":"2026-01-02","title":"敦化班(2) / (總壇國語)","content":"農曆:(114.11.14) / (114.11.16) · 星期:五~日 · 天數:三天 三夜 · 截止:2026-01-04 · 主辦:總壇道務組 / 陳正修經理 · 協辦:一貫人才專修苑 · 地點:宏宗 · 勤務:ˇ"},{"date":"2026-01-17","title":"中華宏宗傳統文化推廣協會會員大會","content":"農曆:(114.11.29) · 星期:六 · 天數:下午 · 主辦:傳統文化協會 / 蔡月秀經理 · 協辦:宏教分壇 · 地點:宏宗 · 烹飪:ˇ"},{"date":"2026-01-24","title":"學界敦化班","content":"農曆:(114.12.6) / (114.12.7) · 星期:六~日 · 天數:二天一夜 · 截止:2026-01-25 · 主辦:宏化教育組 · 地點:華林 · 勤務:總務：化善 · 烹飪:烹飪:化定 / 熱血烹飪團"},{"date":"2026-01-31","title":"點傳師會議(4)","content":"農曆:(114.12.13) · 星期:六 · 天數:一天 · 主辦:總壇秘書室 · 協辦:宏世分壇 · 地點:宏宗 · 勤務:ˇ"},{"date":"2026-02-01","title":"2025年年末懺悔班","content":"農曆:(114.12.14) · 星期:日 · 天數:一天 · 主辦:宏化道務組 · 地點:華林 · 勤務:總務：化力 · 烹飪:烹飪:化定"},{"date":"2026-02-17","title":"新春團拜","content":"農曆:正月初一 · 星期:二 · 天數:上午 · 協辦:除夕晚上8點到初一晚上8點(宏教分壇) · 地點:彌勒山 · 勤務:林經理 / 楊文堯 / 黃嘉衛 / 黃建彰 / 王國超 / 黃國財\n主辦:總壇總務組 / 協辦/時段:初一晚上8點到初二早上8點(宏化分壇)\n主辦:李火梨經理 / 協辦/時段:初二早上8點到初二晚上8點(宏世分壇)\n協辦/時段:初二晚上8點到初三早上8點(宏天分壇)\n協辦/時段:初三早上8點到初三晚上6點(宏尊分壇)"},{"date":"2026-02-19","title":"點燈法會","content":"農曆:正月初三 / 正月初四 · 星期:四-五 · 天數:二天 · 截止:2026-02-20 · 主辦:宏化總務組 · 協辦:初三:真善美志慧 / 初四:孝仁勇定力 · 地點:華林 · 勤務:初三:總務化善 / 初四:總務化孝 · 烹飪:2/1前報出勤務名單"},{"date":"2026-02-21","title":"點傳師禪修班","content":"農曆:正月初五 / 正月十一 · 星期:六~五 · 天數:七天 七夜 · 截止:2026-02-27 · 主辦:禪修協會 / 黃火玉經理 · 協辦:總壇總務安排 · 地點:宏宗 · 勤務:ˇ"},{"date":"2026-02-28","title":"家庭指導師進階班","content":"農曆:正月十二 / 正月十三 · 星期:六~日 · 天數:兩天 一夜 · 截止:2026-03-01 · 主辦:傳統文化協會 / 蔡月秀經理 · 協辦:宏尊分壇 · 地點:彌勒山 · 勤務:ˇ"},{"date":"2026-03-04","title":"生活禪(週三)","content":"禪修協會 · 地點:彌勒山致中樓 · 非假日"},{"date":"2026-03-07","title":"生活禪(週日)","content":"禪修協會 · 地點:彌勒山致中樓 · 假日"},{"date":"2026-03-08","title":"全球師資幹部培訓班","content":"農曆:正月二十 · 星期:日 · 天數:一天 · 主辦:總壇教育組 / 陳瓏仁經理 · 協辦:宏教分壇 · 地點:彌勒山 · 勤務:ˇ"},{"date":"2026-03-14","title":"各位老前人掃墓 / 安東彌勒山追思","content":"農曆:正月二十六 · 星期:六 · 天數:上午 下午 · 主辦:總壇總務組 / 李火梨經理 · 協辦:宏化分壇 / 宏教分壇 · 地點:觀音山 / 彌勒山 · 勤務:化仁：總務 / 化孝：主持 · 烹飪:烹飪:化美"},{"date":"2026-03-14","title":"外文道義研習營","content":"農曆:正月二十六 · 星期:六 · 天數:一天 · 主辦:總壇教育組 / 陳瓏仁經理 · 協辦:宏天分壇 · 地點:彌勒山 · 勤務:ˇ"},{"date":"2026-03-15","title":"關懷小組培訓","content":"農曆:正月27日 · 星期:日 · 天數:一天 · 主辦:宏化道務組 · 地點:華林 · 勤務:化美：總務、烹飪"},{"date":"2026-03-21","title":"壇主辦事共修班","content":"農曆:二月初三 / 二月初四 · 星期:六~日 · 天數:兩天 兩夜 · 截止:2026-03-22 · 主辦:總壇道務組 / 陳正修經理 · 協辦:宏化分壇 · 地點:彌勒山 · 勤務:化真：總務、烹飪"},{"date":"2026-04-01","title":"生活禪(週三)","content":"禪修協會 · 地點:彌勒山致中樓 · 非假日"},{"date":"2026-04-04","title":"生活禪(週日)","content":"禪修協會 · 地點:彌勒山致中樓 · 假日"},{"date":"2026-04-11","title":"講員會稿","content":"農曆:(115.2.24) · 星期:六 · 天數:一天 · 主辦:宏化道務組 · 地點:華林 · 烹飪:化仁:烹飪"},{"date":"2026-04-12","title":"關懷小組培訓","content":"農曆:(115.2.25) · 星期:日 · 天數:一天 · 主辦:宏化道務組 · 地點:華林 · 烹飪:化定:烹飪"},{"date":"2026-04-17","title":"樂齡禪修班","content":"農曆:三月初一 / 三月初三 · 星期:五~日 · 天數:三天 兩夜 · 截止:2026-04-19 · 主辦:禪修協會 / 黃火玉經理 · 協辦:宏世分壇 · 地點:宏世 / 佛院 · 勤務:ˇ"},{"date":"2026-04-18","title":"師資研習營","content":"農曆:三月初二 / 三月初三 · 星期:六~日 · 天數:兩天 一夜 · 截止:2026-04-19 · 主辦:總壇教育組 / 陳瓏仁經理 · 協辦:宏尊分壇 · 地點:彌勒山 · 勤務:ˇ"},{"date":"2026-04-25","title":"點傳師會班(1) / (含點傳師會議)","content":"農曆:(115.3.09) / (115.3.15) · 星期:六~五 · 天數:七天 七夜 · 截止:2026-05-01 · 主辦:總壇秘書室 · 協辦:25~27(宏化分壇) / 28~30(宏天分壇) · 地點:宏宗 · 勤務:化善：總務、烹飪"},{"date":"2026-05-01","title":"各位老前人暨厚德大帝成道追思紀念日","content":"農曆:(115.3.15) · 星期:五 · 天數:上午 · 主辦:總壇總務組 / 李火梨經理 · 協辦:宏教分壇 · 地點:彌勒山 · 勤務:ˇ"},{"date":"2026-05-01","title":"禪修協會第五屆第七次理監事會暨第四次會員代表大會","content":"農曆:(115.3.15) · 星期:五 · 天數:下午 · 主辦:禪修協會 / 黃火玉經理 · 協辦:宏教分壇 · 地點:彌勒山 · 勤務:ˇ"},{"date":"2026-05-02","title":"生活禪(週日)","content":"禪修協會 · 地點:彌勒山致中樓 · 假日"},{"date":"2026-05-06","title":"初階敦化班-菲道親","content":"農曆:(115.3.20) / (115.3.27) · 星期:三-三 · 天數:七天 · 截止:2026-05-13 · 主辦:化定 · 地點:華林 / 彌勒山 · 勤務:化定 · 烹飪:視聽支援"},{"date":"2026-05-06","title":"生活禪(週三)","content":"禪修協會 · 地點:彌勒山致中樓 · 非假日"},{"date":"2026-05-16","title":"宏宗聖堂道學院 / 會員大會","content":"農曆:(115.3.30) · 星期:六 · 天數:上午 · 主辦:總務/會計組 / 謝德勝經理 · 協辦:宏教分壇 · 地點:宏宗 · 勤務:ˇ"},{"date":"2026-05-17","title":"分壇師資研習","content":"農曆:(115.4.1) · 星期:日 · 天數:一天 · 主辦:宏化教育組 · 地點:華林 · 勤務:x · 烹飪:化志:烹飪"},{"date":"2026-05-22","title":"進階禪修班","content":"農曆:(115.4.6) / (115.4.8) · 星期:五~日 · 天數:三天 三夜 · 截止:2026-05-24 · 主辦:禪修協會 / 黃火玉經理 · 協辦:禪修協會 · 地點:宏宗 · 勤務:ˇ"},{"date":"2026-05-30","title":"人才團培訓","content":"農曆:(115.4.14) · 星期:六 · 天數:一天 · 主辦:宏化總務組 · 地點:華林 · 勤務:化善：總務 / 化孝：烹飪 · 烹飪:政忠主持"},{"date":"2026-05-31","title":"講員人才培訓 / 開荒人才培訓","content":"農曆:(115.4.15) · 星期:日 · 天數:上午 下午 · 主辦:宏化道務組 · 地點:華林 · 勤務:化真：總務、烹飪"},{"date":"2026-06-03","title":"生活禪(週三)","content":"禪修協會 · 地點:彌勒山致中樓 · 非假日"},{"date":"2026-06-06","title":"生活禪(週日)","content":"禪修協會 · 地點:彌勒山致中樓 · 假日"},{"date":"2026-06-07","title":"專修苑修道實驗班","content":"農曆:(115.4.22) / (115.4.28) · 星期:日~六 · 天數:七天 七夜 · 截止:2026-06-13 · 主辦:總壇教育組陳瓏仁經理 · 協辦:6~9(宏世分壇) / 10~13(宏教分壇) · 地點:宏宗 · 勤務:ˇ"},{"date":"2026-06-20","title":"分壇師資研習","content":"農曆:(115.5.6) · 星期:六 · 天數:一天 · 主辦:宏化教育組 · 地點:華林 · 勤務:x · 烹飪:化美:烹飪"},{"date":"2026-06-21","title":"拾珠之宴","content":"農曆:(115.5.7) · 星期:日 · 天數:一天 · 主辦:總壇教育組 / 陳瓏仁經理 · 協辦:宏教分壇 · 地點:宏宗 · 勤務:ˇ"},{"date":"2026-06-27","title":"帶班人才培訓班","content":"農曆:(115.5.13) / (115.5.14) · 星期:六~日 · 天數:兩天 一夜 · 截止:2026-06-28 · 主辦:總壇道務組 / 陳正修經理 · 協辦:宏化分壇 · 地點:宏宗 · 勤務:化善：總務、烹飪"},{"date":"2026-07-01","title":"生活禪(週三)","content":"禪修協會 · 地點:彌勒山致中樓 · 非假日"},{"date":"2026-07-03","title":"暑期三營","content":"農曆:(115.5.19) / (115.5.21) · 星期:五~日 · 天數:三天 三夜 · 截止:2026-07-05 · 主辦:總壇教育組 / 陳瓏仁經理 · 協辦:勤務：宏天分壇 / 烹飪：宏教分壇 · 地點:彌勒山 · 勤務:ˇ"},{"date":"2026-07-04","title":"生活禪(週日)","content":"禪修協會 · 地點:彌勒山致中樓 · 假日"},{"date":"2026-07-11","title":"點傳師會議(2)","content":"農曆:(115.5.27) · 星期:六 · 天數:一天 · 主辦:總壇秘書室 · 協辦:宏教分壇 · 地點:宏宗 · 勤務:ˇ"},{"date":"2026-07-12","title":"專修苑第十七屆畢業典禮","content":"農曆:(115.5.28) · 星期:日 · 天數:一天 · 主辦:總壇教育組 / 陳瓏仁經理 · 協辦:宏世分壇 · 地點:彌勒山 · 勤務:ˇ"},{"date":"2026-07-12","title":"分壇親子夏令營","content":"農曆:(115.5.28) / (115.6.05) · 星期:日~日 · 天數:七天 六夜 · 截止:2026-07-18 · 主辦:宏化教育組 · 地點:華林 · 勤務:7/12~13化真、7/14~15化善 / 7/16~17化美、7/18化志"},{"date":"2026-07-19","title":"關懷小組培訓","content":"農曆:(115.6.06) · 星期:日 · 天數:一天 · 主辦:宏化道務組 · 地點:華林 · 勤務:化志:總務 · 烹飪:化仁:烹飪"},{"date":"2026-07-24","title":"敦化班(1)","content":"農曆:(115.6.11) / (115.6.13) · 星期:五~日 · 天數:三天 三夜 · 截止:2026-07-26 · 主辦:總壇道務組 / 陳正修經理 · 協辦:宏尊分壇 · 地點:彌勒山 · 勤務:ˇ"},{"date":"2026-07-26","title":"急救教育CPR+AED訓練","content":"農曆:(115.6.13) · 星期:日 · 天數:一天 · 主辦:宏化總務組 · 地點:華林 · 勤務:化善：總務、烹飪"},{"date":"2026-07-29","title":"親子禪修班","content":"農曆:(115.6.16) / (115.6.20) · 星期:三~日 · 天數:五天 四夜 · 截止:2026-08-02 · 主辦:禪修協會 / 黃火玉經理 · 協辦:禪修協會 · 地點:宏世 / 佛院 · 勤務:ˇ"},{"date":"2026-08-01","title":"生活禪(週日)","content":"禪修協會 · 地點:彌勒山致中樓 · 假日"},{"date":"2026-08-05","title":"生活禪(週三)","content":"禪修協會 · 地點:彌勒山致中樓 · 非假日"},{"date":"2026-08-08","title":"暑修營","content":"農曆:(115.6.26) / (115.7.04) · 星期:六-日 · 天數:九天 八夜 · 截止:2026-08-16 · 主辦:宏化教育組 · 地點:華林 · 勤務:8/8~9化孝、8/10~11化仁、8/12~13化定、8/14~15化力、8/16化志"},{"date":"2026-08-15","title":"親子幸福家庭營","content":"農曆:(115.7.03) / (115.7.04) · 星期:六~日 · 天數:兩天 二夜 · 截止:2026-08-16 · 主辦:傳統文化協會 / 蔡月秀經理 · 協辦:宏教分壇 / (只勤務交通視聽) · 勤務:ˇ"},{"date":"2026-08-23","title":"彌勒山中元普渡","content":"農曆:(115.7.11) · 星期:日 · 天數:一天 · 主辦:懷恩堂服務處 · 協辦:宏天分壇 · 地點:勒彌山 · 勤務:ˇ"},{"date":"2026-09-02","title":"生活禪(週三)","content":"禪修協會 · 地點:彌勒山致中樓 · 非假日"},{"date":"2026-09-05","title":"生活禪(週日)","content":"禪修協會 · 地點:彌勒山致中樓 · 假日"},{"date":"2026-09-06","title":"宏教/宏化/宏世分壇 / 青年小會師","content":"農曆:(115.7.25) · 星期:日 · 天數:一天 · 主辦:宏化教育組 · 地點:待確定"},{"date":"2026-09-10","title":"華林中元普渡","content":"農曆:(115.7.29) · 星期:四 · 天數:下午 · 主辦:宏化總務組 · 地點:華林 · 勤務:化孝：總務、烹飪"},{"date":"2026-09-12","title":"精勤金仙成道追思","content":"農曆:(115.8.02) · 星期:六 · 天數:上午 · 主辦:宏化總務組 · 地點:華林 · 勤務:化定：總務、烹飪"},{"date":"2026-09-12","title":"分壇壇辦共修班","content":"農曆:(115.8.02) / (115.8.03) · 星期:六-日 · 天數:二天一夜 · 截止:2026-09-13 · 主辦:宏化道務組 · 地點:華林"},{"date":"2026-09-19","title":"初中級講員評鑑","content":"農曆:(115.8.09) · 星期:六 · 天數:一天 · 主辦:總壇道務組 / 陳正修經理 · 協辦:宏世分壇 · 地點:宏世 / 佛院 · 勤務:ˇ"},{"date":"2026-10-03","title":"初階敦化班-化孝、化仁","content":"農曆:(115.8.23) / (115.8.24) · 星期:六-日 · 天數:二天一夜 · 截止:2026-10-04 · 主辦:化孝、化仁"},{"date":"2026-10-03","title":"生活禪(週日)","content":"禪修協會 · 地點:彌勒山致中樓 · 假日"},{"date":"2026-10-07","title":"生活禪(週三)","content":"禪修協會 · 地點:彌勒山致中樓 · 非假日"},{"date":"2026-10-09","title":"青年禪修班 / (18~25歲)","content":"農曆:(115.8.29) / (115.9.02) · 星期:五~日 · 天數:三天 三夜 · 截止:2026-10-11 · 主辦:禪修協會 / 黃火玉經理 · 協辦:禪修協會 · 地點:宏宗 · 勤務:ˇ"},{"date":"2026-10-10","title":"初階敦化班-化善","content":"農曆:(115.9.01) / (115.9.02) · 星期:六-日 · 天數:二天一夜 · 截止:2026-10-11 · 主辦:化善 · 地點:碩德"},{"date":"2026-10-17","title":"點傳師會議(3) / (兼審核2027年行事曆)","content":"農曆:(115.9.08) · 星期:六 · 天數:一天 · 主辦:總壇秘書室 · 協辦:宏化分壇 · 地點:宏宗 · 勤務:化孝：總務、烹飪"},{"date":"2026-10-24","title":"初階敦化班-化定、化美","content":"農曆:(115.9.15) / (115.9.16) · 星期:六-日 · 天數:二天一夜 · 截止:2026-10-25 · 主辦:化定、化美 · 地點:華林"},{"date":"2026-10-31","title":"初階敦化班-化真","content":"農曆:(115.9.22) / (115.9.23) · 星期:六-日 · 天數:二天一夜 · 截止:2026-11-01 · 主辦:化真 · 地點:宏德"},{"date":"2026-11-04","title":"生活禪(週三)","content":"禪修協會 · 地點:彌勒山致中樓 · 非假日"},{"date":"2026-11-07","title":"初階敦化班-化志","content":"農曆:(115.9.29) / (115.9.30) · 星期:六-日 · 天數:二天 · 截止:2026-11-08 · 主辦:化志 · 地點:高雄"},{"date":"2026-11-07","title":"生活禪(週日)","content":"禪修協會 · 地點:彌勒山致中樓 · 假日"},{"date":"2026-11-14","title":"敬老活動","content":"農曆:(115.10.06) · 星期:六 · 天數:上午 · 主辦:宏化總務組 · 地點:華林 · 勤務:化真：總務、烹飪"},{"date":"2026-11-15","title":"分壇師資研習","content":"農曆:(115.10.07) · 星期:日 · 天數:一天 · 主辦:宏化教育組 · 地點:其它 · 勤務:x · 烹飪:x"},{"date":"2026-11-16","title":"高階禪修班","content":"農曆:(115.10.08) / (115.10.14) · 星期:一~日 · 天數:七天 七夜 · 截止:2026-11-22 · 主辦:禪修協會 / 黃火玉經理 · 協辦:禪修協會 · 地點:宏宗 · 勤務:ˇ"},{"date":"2026-11-28","title":"初階敦化班-化志","content":"農曆:(115.10.20) / (115.10.21) · 星期:六~日 · 天數:二天 · 截止:2026-11-29 · 主辦:化志 · 地點:信東"},{"date":"2026-12-02","title":"生活禪(週三)","content":"禪修協會 · 地點:彌勒山致中樓 · 非假日"},{"date":"2026-12-05","title":"堂慶(青年運動會,獎學金頒獎)","content":"農曆:(115.10.27) / (115.10.28) · 星期:六~日 · 天數:兩天 一夜 · 截止:2026-12-06 · 主辦:總壇教育組 / 陳瓏仁經理 · 協辦:宏尊分壇+ / 宏尊分壇 · 地點:彌勒山 · 勤務:ˇ"},{"date":"2026-12-05","title":"生活禪(週日)","content":"禪修協會 · 地點:彌勒山致中樓 · 假日"},{"date":"2026-12-06","title":"禪修協會第五屆第八次理監事會議","content":"農曆:(115.10.28) · 星期:日 · 天數:下午 · 主辦:禪修協會 / 黃火玉經理 · 協辦:禪修協會 · 地點:彌勒山 · 烹飪:ˇ"},{"date":"2026-12-12","title":"企業主管禪修班","content":"農曆:(115.11.04) / (115.11.08) · 星期:六~三 · 天數:五天 五夜 · 截止:2026-12-16 · 主辦:禪修協會 / 黃火玉經理 · 協辦:禪修協會 · 地點:宏世 / 佛院 · 勤務:ˇ"},{"date":"2027-01-01","title":"敦化班(2)","content":"農曆:(115.11.24) / (115.11.26) · 星期:五~日 · 天數:三天 三夜 · 截止:2027-01-03 · 主辦:總壇道務組 / 陳正修經理 · 協辦:一貫人才專修苑 / +宏世分壇 · 地點:彌勒山 · 勤務:ˇ"},{"date":"2027-01-09","title":"中華宏宗傳統文化推廣協會會員大會","content":"農曆:(115.12.02) · 星期:六 · 天數:下午 · 主辦:傳統文化協會 / 蔡月秀經理 · 協辦:宏教分壇 · 地點:宏宗 · 烹飪:ˇ"},{"date":"2027-01-16","title":"點傳師會議(4)","content":"農曆:(115.12.09) · 星期:六 · 天數:一天 · 主辦:總壇秘書室 · 協辦:宏化分壇 · 地點:宏宗 · 勤務:化定：總務、烹飪"},{"date":"2027-01-17","title":"年末懺悔班","content":"農曆:(115.12.10) · 星期:日 · 天數:一天 · 主辦:宏化道務組 · 地點:華林 · 勤務:化力：總務 · 烹飪:烹飪:化真"},{"date":"2027-01-23","title":"學界敦化班","content":"農曆:(115.12.16) / (115.12.17) · 星期:六~日 · 天數:二天一夜 · 截止:2027-01-24 · 主辦:宏化教育組 · 地點:華林 · 勤務:化孝：總務 / 總務:王國超 · 烹飪:烹飪:化仁"},{"date":"2027-02-06","title":"新春團拜","content":"農曆:(116.01.01) · 星期:日 · 天數:上午 · 主辦:總壇總務組 · 協辦:除夕晚上8點到初一晚上8點(宏教分壇) · 地點:彌勒山 · 勤務:總務： / 楊文堯壇主 / 勤務： / 各區負責67~73人 · 烹飪:烹飪：沈慧愛壇主\n主辦:李火梨經理 / 協辦/時段:初一晚上8點到初二早上8點(宏世分壇)\n協辦/時段:初二早上8點到初二晚上8點(宏化分壇)\n協辦/時段:初二晚上8點到初三早上8點(宏尊分壇)\n協辦/時段:初三早上8點到初三晚上6點(宏天分壇)"}];
-
-const FAQ_100 = [{"n":"1","q":"甚麼是道?","a":"道是天的理、人的性靈。天有天理、地有地理、人有性理、物有物理,無理皆不能立。孔子言「道也者,不可須臾離也」,合理者為光明大道,背理者為黑暗邪途。"},{"n":"2","q":"信仰一貫道要持齋吃素嗎?","a":"一貫道是慧根極高者所信仰。真修者必持齋茹素;若一時做不到,亦應盡早學習,把握當下立清口愿,即是修菩薩道之行者。"},{"n":"3","q":"信仰濟公都是同一尊神明嗎?","a":"未必。若降壇報「某某宮 濟公活佛」者,僅是代理神職的善魂;真正理天濟公活佛不吃肉、不喝酒。"},{"n":"4","q":"信仰宗教都是一樣的嗎?","a":"不一樣。圓周代表不知歸根之宗教,圓心代表佛境(宗教的根)。摸得著根成佛祖,摸不著根瞎修行——歸根之路即求一貫大道。"},{"n":"5","q":"難道上天仙佛不慈悲嗎?","a":"仙佛皆慈悲。災難之發生,源於因果業力——神通難抵業力,神仙難救無命客。應於業力未熟前及早懺悔行功立德。"},{"n":"6","q":"仙佛為什麼不救這些罹難的人?","a":"仙佛慈悲且乘愿救度,但不能破壞「自作自受」的因果法則。仙佛只能在業報成熟前指引眾生懺悔、行功立德以化解災難。"},{"n":"7","q":"求道是一件容易的事嗎?","a":"古云得道四難:人身難得、中土難生、明師難遇、一貫道難逢。能逢普渡又遇明師,實屬六萬年一遇之大福報,應珍惜修辦。"},{"n":"8","q":"「天增歲月人增壽」對嗎?","a":"此說有誤。天地萬物皆在氣數之中,一元會共十二萬九千六百年,過一年實為減壽一年,並非增壽。"},{"n":"9","q":"何謂「天命明師」?","a":"奉上天無極老母之命來救度眾生的仙佛即天命明師。一指可令靈性超脫輪迴,與一般「名師」傳授知識不同——現今天命明師即濟公活佛。"},{"n":"10","q":"我皈依了佛門大師,算是求道嗎?","a":"不算。求道須從天命明師處得「道統真傳、性理真傳、天命真傳」三者俱足。"},{"n":"11","q":"我如果求道了,能娶好幾個太太嗎?","a":"不可。此犯五戒中的淫戒。歷代仙佛皆告誡修行者嚴守殺、盜、淫、妄、酒五戒,方能修成正果。"},{"n":"12","q":"一貫道弟子能關心國家大事嗎?","a":"可以關心,但須以超然態度,不可公開表態支持特定黨派,亦不可參與政治活動,以利道務推展。"},{"n":"13","q":"我們國家的政局,為何如此紛亂?","a":"此為共業所成。眾生累世業力現前、無明蔽心,難分正邪。唯有鼓勵眾生求道修辦,消業增正氣,國家方能安定。"},{"n":"14","q":"世界上發生了這麼多不幸的事,難道仙佛不傷心嗎?","a":"仙佛甚痛心。傷心者眾生不信因果、業上加業;痛心者業力一旦成熟,仙佛雖慈悲亦難挽救。"},{"n":"15","q":"修行法門這麼多,哪一個法門最好?","a":"正派合理者皆好;但須先拜明師求道——道是萬教之根,得根方能成就仙佛。"},{"n":"16","q":"為什麼修行就必須要求道,修法才有益?","a":"唯天命明師能指明「生從何處來、死往何處去」的解脫之路。不求道則不知歸途,縱修一生也無法超脫輪迴。"},{"n":"17","q":"我現在是信奉其他的宗教,我求了道以後,就要離開原本信奉的宗教嗎?","a":"不必。只要能立愿了愿,在哪修都行。求道時所立十條大愿是修行根本;若覺得在一貫道場更能了愿,可選擇此處修辦。"},{"n":"18","q":"五教經典那麼多,我如何讀起?","a":"重在領會聖人留經之旨意——識自本心、見自本性。若不識本心,讀再多經典亦無益;當先求道,再深入經藏。"},{"n":"19","q":"經典那麼深,我看又看不懂,怎麼辦?","a":"可常到佛堂參班共修。三天法會的十一個講題已將五教精義融會,把握講題並落實於日常,即等於通達經典旨意。"},{"n":"20","q":"什麼叫做「道」?","a":"老子云「大道無形生育天地、大道無情運轉日月、大道無名長養萬物」,強名曰道。以仙佛言,即無極老母——道在天為天理、地為地理、人為性理。"},{"n":"21","q":"求道為什麼一定要交功德費?","a":"功德費用於推展道務、刷善書、救濟貧困等善事。亦為上天把關——真有福德者必毫不猶疑布施,金額隨誠意而定。"},{"n":"22","q":"求道以後不結婚,好嗎?","a":"原則上不鼓勵。若為專心辦道而不婚,須先取得家人同意、安排好生計、調適好心理,圓滿處理人道方可。"},{"n":"23","q":"什麼是真正的放生?","a":"口裡放生才是真放生——不吃天上飛、地上走、水中游的有靈動物。市場買物放生反易促成更多殺害。"},{"n":"24","q":"唸佛能解脫生死輪迴嗎?","a":"極難。須念至一心不亂帶業往生極樂,再修至花開見佛方能解脫——印光、廣欽老和尚皆難達。先得後修(求道後再修)較先修後得來得保險。"},{"n":"25","q":"一貫道是真道,為什麼誠心修煉者很少?","a":"「道真冤孽急」——越誠心,累世冤欠考驗越多。被考倒者眾,撐起道場的少數熟面孔正是棟梁。"},{"n":"26","q":"在這新的一年開始,你許下了什麼大愿呢?","a":"願言行皆勸眾生求道、修道、辦道、渡眾,以報天恩師德。希望帶來力量,大愿成就道業。"},{"n":"27","q":"講經說法的人那麼多,那我到底要聽誰的呢?","a":"聽有求過道又真懂正法者所講。外表袈裟、神職身分皆非標準——五祖云「自性若迷,福何可救」,唯有道方為解脫之根。"},{"n":"28","q":"沒有吃素的人,說「肉是香的」,這句話對嗎?","a":"錯。真香的是調味料,皆為植物。生肉腥味難聞,真正吃素者聞肉氣即欲嘔——食肉者實被調味料所騙。"},{"n":"29","q":"我年紀大了,求了道後,將來死了,會上天堂嗎?","a":"求道便能上天堂,惟住多久看後續修為。心境提升、改毛病去脾氣、渡眾守愿,即能解脫長住天堂,終至成佛。"},{"n":"30","q":"何謂「天榜掛號,地府除名」?","a":"求道之刻,名字即被三官大帝登錄於天上仙佛名冊(天榜),同時由閻王生死簿中除去——從此脫離六道輪迴管轄。"},{"n":"31","q":"為什麼求道的人,能「天榜掛號,地府除名」?","a":"因求道乃無極老母直接辦理之大事。天命明師奉老母天命行事,三曹普渡——上渡氣天大仙、中渡善男信女、下渡幽冥鬼魂。"},{"n":"32","q":"人死後,請和尚、道士來唸經超渡(如做七),能接引亡靈到西天嗎?","a":"不能。神職人員無無極老母天命,自度尚難,何況度人?與其花錢做法事,不如將錢拿來行善,將功德迴向亡靈更有助益。"},{"n":"33","q":"誠心的一貫道弟子,死後要請人來「做七」嗎?","a":"不需。求道時已天榜掛號、地府除名,加上誠心修辦,歸空後靈性直回無極理天,無須做七。"},{"n":"34","q":"求道後,沒有誠心修道,死後還要請人來「做七」嗎?","a":"亦無需。誦經作法事對亡靈幫助不大,僅為親人心安。不如將金錢轉作善事,功德迴向亡靈更實際。"},{"n":"35","q":"經典有專屬性嗎?","a":"沒有。經典為各教聖人留給後世開導眾生之用,不論種族、宗教、男女老少皆可閱讀宣講,任何人不得干涉。"},{"n":"36","q":"五教聖人都住在同一層天嗎?","a":"皆住「無極理天」(天外天)。此天不在三十三層天內,以無極老母為主宰,凡修成仙佛皆回此處,是我們靈性的故鄉。"},{"n":"37","q":"求了道,還能去廟裡拜拜嗎?","a":"可拜諸天神聖,但不可皈依法師、受洗、拜師——此犯欺師滅祖之愿,將鉤出天盤,白修一場。"},{"n":"38","q":"吃素的人,煮菜時能加酒嗎?","a":"不可。酒精無法完全揮發,殘留物仍犯酒戒。真修者戒律嚴謹,絲毫不馬虎。"},{"n":"39","q":"酒,是植物去製作的,為什麼不能喝?","a":"酒精會亂性,佛云飲酒易犯人間三十六種過失,死後墮地獄、來世愚痴。為身心健康與正法傳承,當戒之。"},{"n":"40","q":"香菸,也是植物作成的,為什麼不能抽?","a":"煙、酒、毒、檳榔皆害身物,人人當戒,修行者尤須引以為戒——須成為眾生模範。"},{"n":"41","q":"我現在還年輕,等我老了之後,再來求道修行,可以嗎?","a":"不可!呂仙祖云「莫謂老來方學道,孤墳多是少年人」。人生無常,普渡六萬年一遇,把握當下方為上策。"},{"n":"42","q":"世界上為什麼會有戰爭?","a":"煮雲禪師詩云「千百年來碗裡羹,冤深似海恨難平」——殺業千年累積,業熟即化為刀兵劫。屠門夜半聲,即戰爭之伏因。"},{"n":"43","q":"參禪打坐能成道嗎?","a":"不能。六祖云「一具臭骨頭,哪來立功德」——光坐不動違反自然,無法救渡眾生,無功德便不能成道。"},{"n":"44","q":"修道也得「正名」乎?","a":"名字僅為符號,姓名學筆畫之說違反因果法則。一貫道弟子可自取「修士」名號,乾坤兩道皆適用。"},{"n":"45","q":"諸惡莫作,百善奉行,那什麼善事是最好的?","a":"救人靈性超脫生死輪迴最佳。佛云「救人一命,勝造七級浮屠」,功德無量無邊——唯有渡人成道,方能建此功德。"},{"n":"46","q":"一貫道弟子可以信「風水論」嗎?","a":"誠心弟子不信。相由心轉、福地福人居——心念正則隨處皆好風水,德不修則再好風水也成監獄。"},{"n":"47","q":"一貫道弟子要避諱「四」這個字嗎?","a":"不必。避諱「四」乃因諧音之迷信,皆無實理。一貫道弟子當以智慧破迷,不隨俗忌諱。"},{"n":"48","q":"何謂氣天仙?","a":""},{"n":"49","q":"氣天大仙求道容易嗎?","a":""},{"n":"50","q":"鬼魂求道容易嗎?","a":""},{"n":"51","q":"人間的善男信女,求道容易嗎?","a":""},{"n":"52","q":"一貫道弟子,清口茹素,能吃蛋嗎?","a":""},{"n":"53","q":"我立了清口愿,又有吃蛋,算是破戒嗎?將來還能回天嗎?","a":""},{"n":"54","q":"修行既然最好不要吃蛋,那為什麼在道場上會有人吃蛋?","a":""},{"n":"55","q":"何謂「在家出家」?","a":""},{"n":"56","q":"氣天界的神明,扶鸞說法,跟天命明師傳道說法,有何不同?","a":""},{"n":"57","q":"傳說中的濟公活佛是吃肉的,是真的嗎?","a":""},{"n":"58","q":"古人說「真經不在紙上」,那何謂真經?","a":""},{"n":"59","q":"求道得了真經後,要有怎樣的體悟?","a":""},{"n":"60","q":"求了道,得了「性理真傳」,何謂性理真傳?","a":""},{"n":"61","q":"我心好就好,那還需要求道嗎?","a":""},{"n":"62","q":"人生無常,能舉個例嗎?","a":""},{"n":"63","q":"何謂「萬般帶不走,唯有業隨身」?","a":""},{"n":"64","q":"生命在幾時之間?","a":""},{"n":"65","q":"順治皇帝為什麼要出家?","a":""},{"n":"66","q":"什麼才算是真正的「出家」?","a":""},{"n":"67","q":"為什麼生死是無奈的?","a":""},{"n":"68","q":"為什麼「生死事大」?","a":""},{"n":"69","q":"為什麼「迷迷糊糊過一生」是很不值得的?","a":""},{"n":"70","q":"為甚麼彌勒佛說「爾今執退轉,方需不退轉」?","a":""},{"n":"71","q":"我們為什麼要來佛堂?","a":""},{"n":"72","q":"孔子為什麼要說「哀莫大於心死」?","a":""},{"n":"73","q":"請談談你對「現代人」的看法?","a":""},{"n":"74","q":"請問如何救眾生呢?","a":""},{"n":"75","q":"何謂「收圓」?","a":""},{"n":"76","q":"為甚麼要協助彌勒佛來救渡眾生?","a":""},{"n":"77","q":"我們身體的生命,到底算長呢?還是算短呢?","a":""},{"n":"78","q":"生死無常,能再舉個例子嗎?","a":""},{"n":"79","q":"人生是苦海嗎?","a":""},{"n":"80","q":"何謂「生苦」?","a":""},{"n":"81","q":"何謂「老苦」?","a":""},{"n":"82","q":"何謂「病苦」?","a":""},{"n":"83","q":"何謂「死苦」?","a":""},{"n":"84","q":"何謂「求不得苦」?","a":""},{"n":"85","q":"何謂「愛別離苦」?","a":""},{"n":"86","q":"何謂「怨憎會苦」?","a":""},{"n":"87","q":"何謂「五蘊盛苦」?","a":""},{"n":"88","q":"人有靈性嗎?","a":""},{"n":"89","q":"何謂六道輪迴?","a":""},{"n":"90","q":"靈性會死嗎?","a":""},{"n":"91","q":"淺述一下「一貫道法界」好嗎?","a":""},{"n":"92","q":"何謂「為往聖繼絕學」?","a":""},{"n":"93","q":"何謂「為萬世開太平」?","a":""},{"n":"94","q":"今生當官是何因?","a":""},{"n":"95","q":"什麼樣的功德,比蓋廟的功德還大?","a":""},{"n":"96","q":"何謂「明心見性」?","a":""},{"n":"97","q":"佛堂為什麼經常要開班?","a":""},{"n":"98","q":"無極老母教我們如何看破人生?","a":""},{"n":"99","q":"我們人類最大的劫難是什麼?","a":""},{"n":"100","q":"何謂「自性若迷,福何可救」?","a":""},{"n":"101","q":"「萬般皆下品,唯有修行高」,這句話對嗎?","a":""},{"n":"102","q":"如何「消冤解孽」?","a":""},{"n":"103","q":"何謂「孝道」?","a":""},{"n":"104","q":"可以淺談一下「師尊的大德」嗎?","a":""},{"n":"105","q":"可以淺談一下「月慧師母」的大德嗎?","a":""},{"n":"106","q":"可以淺談一下「天然師尊」的大德嗎?","a":""},{"n":"107","q":"可以淺談一下「老前人(白水老人)」的大德嗎?","a":""},{"n":"108","q":"可以淺談一下「我們的張前人(德慧菩薩)」的德行嗎?","a":""},{"n":"109","q":"何謂「尊敬仙佛」?","a":""},{"n":"110","q":"何謂「遵前提後」?","a":""},{"n":"111","q":"何謂「齊莊中正」?","a":""},{"n":"112","q":"為什麼很多人死後無法回天?","a":""},{"n":"113","q":"為什麼「佛要說三世因果經」?","a":""},{"n":"114","q":"何謂「智慧、聰明、凡夫」?","a":""},{"n":"115","q":"何謂「放下屠刀,立地成佛」?","a":""},{"n":"116","q":"「不相信佛法」的果報如何?","a":""},{"n":"117","q":"「生命的真實意」是什麼?","a":""},{"n":"118","q":"「老了才來修道」好嗎?","a":""},{"n":"119","q":"何謂「幸福的人生」?","a":""},{"n":"120","q":"何謂「明師一指」?","a":""},{"n":"121","q":"如何創造「幸福美滿」的人生?","a":""},{"n":"122","q":"為什麼有「好命、壞命」?","a":""},{"n":"123","q":"「命」能改變嗎?","a":""},{"n":"124","q":"如何改變命運?","a":""},{"n":"125","q":"為什麼人死了叫做「過身」?","a":""},{"n":"126","q":"哪些神仙住在「無極理天」?","a":""},{"n":"127","q":"為什麼要找點傳師來傳道呢?","a":""},{"n":"128","q":"如何方能成道?","a":""},{"n":"129","q":"為什麼地府的鬼魂,要排隊來台灣出生?","a":""},{"n":"130","q":"為什麼修一貫道能出好子孫?","a":""},{"n":"131","q":"為什麼一貫道是萬教的根本?","a":""},{"n":"132","q":"為什麼要趕快求道?","a":""},{"n":"133","q":"為什麼不能毀謗一貫道?","a":""},{"n":"134","q":"為什麼修一貫道不能看人而修?","a":""},{"n":"135","q":"誰是最可悲,而又最可憐的人?","a":""},{"n":"136","q":"請你說說「小鳥滅火」的啟示好嗎?","a":""},{"n":"137","q":"何謂「學而時習之,不亦樂乎?」","a":""},{"n":"138","q":"為什麼說「四海之內皆兄弟也」?","a":""},{"n":"139","q":"何謂「凡夫」?","a":""},{"n":"140","q":"何謂「有朋自遠方來,不亦悅乎!」?","a":""},{"n":"141","q":"為什麼我們都被稱為「原胎佛子」?","a":""},{"n":"142","q":"何謂「人不知而不慍,不亦君子乎?」的真正含意?","a":""},{"n":"143","q":"為什麼你解釋孔子學說和學校老師不一樣?","a":""},{"n":"144","q":"彭祖為什麼能活八百多歲?","a":""},{"n":"145","q":"彭祖是怎麼死的?","a":""},{"n":"146","q":"彭祖的故事,給我們什麼樣的啟示?","a":""},{"n":"147","q":"彭祖活了八百多歲,能算是長壽嗎?","a":""},{"n":"148","q":"那怎樣才能算是長壽?","a":""},{"n":"149","q":"沒有求道的好人,死後靈性到哪裡?","a":""},{"n":"150","q":"為什麼大多數的人死後都無法回理天?","a":""},{"n":"151","q":"如何回理天?","a":""},{"n":"152","q":"何謂「末後一著」?","a":""},{"n":"153","q":"為什麼求道就能找到「回理天的明路」?","a":""},{"n":"154","q":"如何才能長壽?","a":""},{"n":"155","q":"何謂「真正的放生」?","a":""},{"n":"156","q":"為什麼一貫道弟子吃素特別多?","a":""},{"n":"157","q":"今生短命是何因?","a":""},{"n":"158","q":"請問講師你的「人生觀」是什麼?","a":""},{"n":"159","q":"我們憑什麼可以成佛?","a":""},{"n":"160","q":"談談「惠能大師」的求道經過,好嗎?","a":""},{"n":"161","q":"今天「佛的正法」,究竟流落在何方呢?","a":""},{"n":"162","q":"為什麼人人喜歡富有?","a":""},{"n":"163","q":"什麼是「有意義的人生」?","a":""},{"n":"164","q":"錢財多少才算夠呢?","a":""},{"n":"165","q":"釋迦牟尼佛,為什麼不當國王而去走修行的路呢?","a":""},{"n":"166","q":"觀世音菩薩為什麼去走修行的路呢?","a":""},{"n":"167","q":"誰最富有?","a":""},{"n":"168","q":"掌控你命運的人是誰?","a":""},{"n":"169","q":"你也能成為最富有的人嗎?","a":""},{"n":"170","q":"「明師一指」有那麼重要嗎?","a":""},{"n":"171","q":"五福中的『康寧』,作何解釋?","a":""},{"n":"172","q":"『平安』,求得到嗎?","a":""},{"n":"173","q":"今天為什麼會產生戰爭?","a":""},{"n":"174","q":"為什麼畜生的肉不是要給我們吃的?","a":""},{"n":"175","q":"『無業不轉人』此話如何解釋?","a":""},{"n":"176","q":"如何獲得真正的平安?","a":""},{"n":"177","q":"『人力能勝天』嗎?","a":""},{"n":"178","q":"一貫道有何寶貴之處?","a":""},{"n":"179","q":"修一貫道九玄七祖也能沾光嗎?","a":""},{"n":"180","q":"真的有活菩薩在世嗎?","a":""},{"n":"181","q":"修一貫道之人,會遭劫難嗎?","a":""},{"n":"182","q":"不修一貫道的後果會如何?","a":""},{"n":"183","q":"何謂『攸好德』?","a":""},{"n":"184","q":"功德大小如何算?","a":""},{"n":"185","q":"什麼是大善事?","a":""},{"n":"186","q":"『三界如火宅』是什麼意思?","a":""},{"n":"187","q":"明師是誰呢?","a":""},{"n":"188","q":"何謂「法華授記」?","a":""},{"n":"189","q":"何謂「救人一命,勝造七級浮屠」?","a":""},{"n":"190","q":"為什麼「蓋廟有大功德」?","a":""},{"n":"191","q":"何謂「考終命」?","a":""},{"n":"192","q":"為什麼「好死」是一種福氣?","a":""},{"n":"193","q":"為什麼「靈性落入閻君管轄」,靈性就沒有好歸宿?","a":""},{"n":"194","q":"為什麼我們不要做鬼?","a":""},{"n":"195","q":"怎樣做人才不會去做鬼?","a":""},{"n":"196","q":"怎樣做才能了斷因果?","a":""},{"n":"197","q":"何謂「人吃人」?","a":""},{"n":"198","q":"何謂「八正道」?","a":""},{"n":"199","q":"何謂〔大人之學〕?","a":""},{"n":"200","q":"什麼叫做道?","a":""},{"n":"201","q":"一貫道弟子在「心性」上應如何自我提升?","a":""},{"n":"202","q":"什麼是改頭換面?","a":""},{"n":"203","q":"什麼是斷惑?","a":""},{"n":"204","q":"如何面對無常?","a":""},{"n":"205","q":"認清真樂與假樂?","a":""},{"n":"206","q":"如何面對物質的誘惑?","a":""},{"n":"207","q":"如何方是學道人?","a":""},{"n":"208","q":"如何才能精神充實?","a":""},{"n":"209","q":"如何才會有光明的明天?","a":""},{"n":"210","q":"什麼是真正的迷失?","a":""},{"n":"211","q":"我們要如何對待同修?","a":""},{"n":"212","q":"如何才能人道完美?","a":""},{"n":"213","q":"天上果位人間定?","a":""}];
-
-/* =========================================================
-   修道百問 (213 題) - 學習資料庫預設內容
-   原文出處: https://honlostemple.org/index.php/about/faq100
-   ========================================================= */
-
-/* 安裝預設學習資料(僅在第一次或回復預設時呼叫) */
-async function installDefaultLibrary(){
-  const now = new Date().toISOString();
-  // 第一項:修道百問
-  await Store.save('library:default_faq100', {
-    id: 'default_faq100',
-    title: '修道百問',
-    content: '宏樂堂修道百問共 213 題,涵蓋道之本質、求道意義、五戒持齋、天命明師、六道輪迴等核心道義。點此進入瀏覽 →',
-    sourceUrl: 'https://honlostemple.org/index.php/about/faq100',
-    isDefault: true,
-    isFAQ: true,
-    createdAt: now,
-    updatedAt: now
-  });
-  // 第二項:喚醒生命實相 祈願文
-  await Store.save('library:default_prayer', {
-    id: 'default_prayer',
-    title: '喚醒生命實相 祈願文',
-    content: '誠心朗誦此文,可喚醒生命實相,得無極老母慈光護持,圓滿無缺。點此進入誦讀 →',
-    isDefault: true,
-    isPrayer: true,
-    createdAt: now,
-    updatedAt: now
-  });
-  // 第三項:經典(七部經文目錄)v2.4.0
-  await Store.save('library:default_classics', {
-    id: 'default_classics',
-    title: '經典',
-    content: '七部經文目錄 · 點此進入研讀 →',
-    isDefault: true,
-    isClassics: true,
-    createdAt: now,
-    updatedAt: now
-  });
-}
-
-/* ─── 修道百問 觀覽器:三層導覽 ─── */
-let faqDetailIdx = 0;        // 目前查看的題目索引(0-based)
-let faqViewState = 'list';   // 'list' 或 'detail'
-
-function openFaqViewer(){
-  faqViewState = 'list';
-  document.getElementById('faq-viewer').classList.add('active');
-  document.getElementById('faq-list-view').style.display = 'block';
-  document.getElementById('faq-detail-view').style.display = 'none';
-  document.getElementById('faq-header-title').textContent = '修道百問';
-  document.getElementById('faq-header-sub').textContent = '共 213 題 · 道義精華';
-  document.getElementById('faq-back-btn').textContent = '‹ 返回';
-  renderFaqList();
-  // 滾到頂端
-  document.getElementById('faq-viewer').scrollTop = 0;
-}
-
-function closeFaqViewer(){
-  document.getElementById('faq-viewer').classList.remove('active');
-  document.getElementById('faq-search').value = '';
-}
-
-function faqBack(){
-  if(faqViewState === 'detail'){
-    // 從詳細頁回到清單
-    faqViewState = 'list';
-    document.getElementById('faq-list-view').style.display = 'block';
-    document.getElementById('faq-detail-view').style.display = 'none';
-    document.getElementById('faq-header-title').textContent = '修道百問';
-    document.getElementById('faq-header-sub').textContent = '共 213 題 · 道義精華';
-    document.getElementById('faq-back-btn').textContent = '‹ 返回';
-    // 嘗試滾動到剛剛點選的題目位置
-    setTimeout(()=>{
-      const el = document.querySelector('.faq-item[data-idx="'+faqDetailIdx+'"]');
-      if(el) el.scrollIntoView({block:'center', behavior:'smooth'});
-    }, 50);
-  }else{
-    // 從清單回到學習資料庫
-    closeFaqViewer();
-  }
-}
-
-function renderFaqList(){
-  const list = document.getElementById('faq-list');
-  list.innerHTML = '';
-  FAQ_100.forEach((q, idx)=>{
-    const row = document.createElement('div');
-    row.className = 'faq-item' + (q.a ? ' has-answer' : ' no-content');
-    row.dataset.idx = idx;
-    row.dataset.searchText = (q.n + ' ' + q.q).toLowerCase();
-    row.innerHTML = `
-      <div class="faq-item-num">${q.n}</div>
-      <div class="faq-item-text">${escapeHtml(q.q)}</div>
-      <div class="faq-item-arrow">›</div>
-    `;
-    row.onclick = ()=>showFaqDetail(idx);
-    list.appendChild(row);
-  });
-}
-
-function filterFaqList(){
-  const kw = document.getElementById('faq-search').value.trim().toLowerCase();
-  const items = document.querySelectorAll('.faq-item');
-  items.forEach(el=>{
-    const t = el.dataset.searchText || '';
-    el.style.display = (!kw || t.includes(kw)) ? '' : 'none';
-  });
-}
-
-function showFaqDetail(idx){
-  if(idx < 0 || idx >= FAQ_100.length) return;
-  faqDetailIdx = idx;
-  faqViewState = 'detail';
-  const q = FAQ_100[idx];
-  document.getElementById('faq-detail-num').textContent = q.n;
-  document.getElementById('faq-detail-question').textContent = q.q;
-  const ansEl = document.getElementById('faq-detail-answer');
-  if(q.a){
-    ansEl.textContent = q.a;
-    ansEl.classList.remove('empty');
-  }else{
-    ansEl.textContent = '本題為延伸題目,完整詳細解答請點選下方連結至原文網址閱讀。';
-    ansEl.classList.add('empty');
-  }
-  document.getElementById('faq-detail-source').innerHTML =
-    `原文出處 · <a href="https://honlostemple.org/index.php/about/faq100#${q.n}" target="_blank" rel="noopener">宏樂堂修道百問 第 ${q.n} 問</a>`;
-  document.getElementById('faq-page-indicator').textContent = `${idx+1} / ${FAQ_100.length}`;
-  document.getElementById('faq-prev-btn').disabled = (idx===0);
-  document.getElementById('faq-next-btn').disabled = (idx===FAQ_100.length-1);
-
-  document.getElementById('faq-list-view').style.display = 'none';
-  document.getElementById('faq-detail-view').style.display = 'block';
-  document.getElementById('faq-header-title').textContent = '第 ' + q.n + ' 問';
-  document.getElementById('faq-header-sub').textContent = q.q.length > 22 ? q.q.slice(0,22)+'…' : q.q;
-  document.getElementById('faq-back-btn').textContent = '‹ 題目索引';
-  document.getElementById('faq-viewer').scrollTop = 0;
-}
-
-function faqDetailNav(delta){
-  const nextIdx = faqDetailIdx + delta;
-  if(nextIdx >= 0 && nextIdx < FAQ_100.length){
-    showFaqDetail(nextIdx);
-  }
-}
 
 /* ─── 祈願文 誦讀器 ─── */
 function openPrayerViewer(){
@@ -6586,11 +6272,8 @@ async function renderList(type){
   items.forEach(it=>{
     const row=document.createElement('div');
     row.className='item-row';
-    // v2.2.0: 用 isFAQ/isPrayer 或 id 雙重判斷（避免欄位遺失）
-    const isFAQ = type==='library' && (it.isFAQ || it.id==='default_faq100');
     const isPrayer = type==='library' && (it.isPrayer || it.id==='default_prayer');
     const isClassics = type==='library' && (it.isClassics || it.id==='default_classics');
-    if(isFAQ) row.className += ' faq-card';
     if(isPrayer) row.className += ' prayer-card';
     if(isClassics) row.className += ' classics-card';
 
@@ -6598,8 +6281,6 @@ async function renderList(type){
     if(type==='calendar'&&it.date){
       const d=new Date(it.date);
       dateBlock=`<div class="item-date">${d.getMonth()+1}月<strong>${d.getDate()}</strong>${['日','一','二','三','四','五','六'][d.getDay()]}</div>`;
-    }else if(isFAQ){
-      dateBlock=`<div class="item-date">📜<br>百問</div>`;
     }else if(isPrayer){
       dateBlock=`<div class="item-date">🕉<br>祈願</div>`;
     }else if(isClassics){
@@ -6607,7 +6288,7 @@ async function renderList(type){
     }else{
       dateBlock=`<div class="item-date" style="font-size:11px;">${(it.updatedAt||'').slice(0,10)}</div>`;
     }
-    const actionText = (isFAQ || isPrayer || isClassics) ? '閱覽 ›' : '編輯 ›';
+    const actionText = (isPrayer || isClassics) ? '閱覽 ›' : '編輯 ›';
     row.innerHTML=`
       ${dateBlock}
       <div>
@@ -6615,9 +6296,7 @@ async function renderList(type){
         <div class="item-body">${escapeHtml(it.content||'')}</div>
       </div>
       <div class="item-action">${actionText}</div>`;
-    if(isFAQ){
-      row.onclick=()=>openFaqViewer();
-    }else if(isPrayer){
+    if(isPrayer){
       row.onclick=()=>openPrayerViewer();
     }else if(isClassics){
       row.onclick=()=>openClassicsViewer();
@@ -7822,16 +7501,11 @@ async function ensureDefaultsInstalled(){
   const mem = await Store.list('members:');
   if(mem.length === 0) await installDefaultMembers();
 
-  // ─── 學習資料:v2.4.7 改為三項各別 ID 冪等補裝 ───
-  // 避免因為「經典」已存在導致 length>0,讓修道百問/祈願文被誤跳過
-  await ensureLibraryDefault('library:default_faq100', () => ({
-    id: 'default_faq100',
-    title: '修道百問',
-    content: '宏樂堂修道百問共 213 題,涵蓋道之本質、求道意義、五戒持齋、天命明師、六道輪迴等核心道義。點此進入瀏覽 →',
-    sourceUrl: 'https://honlostemple.org/index.php/about/faq100',
-    isDefault: true,
-    isFAQ: true
-  }));
+  // ─── 學習資料:各別 ID 冪等補裝 ───
+  // v2.5.4: 移除修道百問,並清除既有用戶資料庫中的殘留
+  const oldFaq = await Store.get('library:default_faq100');
+  if(oldFaq) await Store.remove('library:default_faq100');
+
   await ensureLibraryDefault('library:default_prayer', () => ({
     id: 'default_prayer',
     title: '喚醒生命實相 祈願文',
@@ -8325,8 +7999,6 @@ Object.assign(window, {
   openPracticeModal, editPractice,
   // Quotes
   drawQuote,
-  // FAQ viewer
-  openFaqViewer, closeFaqViewer, faqBack, filterFaqList, faqDetailNav,
   // Prayer viewer
   openPrayerViewer, closePrayerViewer,
   // Calendar reset
